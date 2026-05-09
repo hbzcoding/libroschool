@@ -176,3 +176,43 @@ Possible future features:
 - official school partnerships
 
 Do not build future features until MVP is validated.
+
+## Admin / Backoffice Phase Clarification
+
+Backoffice is part of the project.
+
+However, it must not be implemented during Phase 1 project initialization.
+
+Admin/backoffice should be implemented after:
+
+1. Auth
+2. Schools
+3. Books
+4. Book Requests
+5. Conversations
+6. Classrooms
+7. Notes
+8. Reports
+
+Admin/backoffice implementation includes:
+
+Backend:
+
+* /api/admin/users
+* /api/admin/books
+* /api/admin/book-requests
+* /api/admin/notes
+* /api/admin/classrooms
+* /api/admin/reports
+* /api/admin/schools
+
+Frontend:
+
+* /admin
+* /admin/users
+* /admin/books
+* /admin/requests
+* /admin/notes
+* /admin/classrooms
+* /admin/reports
+* /admin/schools

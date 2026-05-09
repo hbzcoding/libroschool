@@ -397,3 +397,58 @@ Admin MVP:
 - manage notes
 - manage reports
 - manage schools
+
+## Admin API
+
+Admin API endpoints must live under:
+
+```text
+/api/admin
+```
+
+The admin API is consumed by the Next.js backoffice UI.
+
+The admin UI is not built in Laravel Blade.
+
+Planned admin endpoints:
+
+```http
+GET /api/admin/users
+GET /api/admin/users/{id}
+PUT /api/admin/users/{id}
+POST /api/admin/users/{id}/ban
+
+GET /api/admin/books
+GET /api/admin/books/{id}
+POST /api/admin/books/{id}/hide
+DELETE /api/admin/books/{id}
+
+GET /api/admin/book-requests
+GET /api/admin/book-requests/{id}
+POST /api/admin/book-requests/{id}/hide
+DELETE /api/admin/book-requests/{id}
+
+GET /api/admin/notes
+GET /api/admin/notes/{id}
+POST /api/admin/notes/{id}/hide
+DELETE /api/admin/notes/{id}
+
+GET /api/admin/classrooms
+GET /api/admin/classrooms/{id}
+POST /api/admin/classrooms/{id}/lock
+DELETE /api/admin/classrooms/{id}
+
+GET /api/admin/reports
+GET /api/admin/reports/{id}
+POST /api/admin/reports/{id}/resolve
+
+GET /api/admin/schools
+POST /api/admin/schools
+PUT /api/admin/schools/{id}
+DELETE /api/admin/schools/{id}
+```
+
+Admin endpoints require:
+
+* authenticated user
+* role = admin

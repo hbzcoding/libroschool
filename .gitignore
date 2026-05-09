@@ -1,0 +1,43 @@
+.env
+.env.*
+!.env.example
+.codebuddy/models.json
+.codebuddy/settings.local.json
+node_modules
+vendor
+.DS_Store
+
+# Frontend
+frontend/.next
+frontend/node_modules
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Backend
+backend/vendor
+backend/.env
+backend/.env.backup
+backend/.env.production
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+frontend/dist
+frontend/build
+frontend/out
+
+# Test
+backend/.phpunit.result.cache
+frontend/coverage

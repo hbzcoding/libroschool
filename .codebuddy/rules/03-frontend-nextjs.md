@@ -38,3 +38,37 @@ UI must be:
 - card-based
 - student-friendly
 - simple
+
+## Admin / Backoffice Frontend
+
+The Next.js frontend includes both:
+
+* user-facing product pages
+* admin/backoffice pages
+
+Admin pages must live under:
+
+```text
+src/app/admin
+```
+
+Backoffice UI is part of the project.
+
+Do not build admin pages during project initialization.
+
+When the admin phase starts, build:
+
+* /admin
+* /admin/users
+* /admin/books
+* /admin/requests
+* /admin/notes
+* /admin/classrooms
+* /admin/reports
+* /admin/schools
+
+Admin pages must call Laravel admin APIs under:
+
+```text
+/api/admin/*
+```

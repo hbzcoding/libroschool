@@ -1,0 +1,126 @@
+# LibroSchool
+
+A student book marketplace and learning resource platform for Italian high school students.
+
+## Tech Stack
+
+### Backend
+- Laravel
+- PHP 8.3+
+- PostgreSQL
+- Laravel Sanctum
+
+### Frontend
+- Next.js
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+
+## Project Structure
+
+```
+LibroSchool/
+├── backend/          # Laravel API
+├── frontend/         # Next.js frontend
+├── docs/             # Documentation
+├── AGENTS.md         # Agent instructions
+├── CODEBUDDY.md      # CodeBuddy context
+└── .codebuddy/       # CodeBuddy rules
+```
+
+## How to Run Backend
+
+1. Make sure PostgreSQL is running and create a database:
+   ```bash
+   createdb libroschool
+   ```
+
+2. Navigate to backend directory:
+   ```bash
+   cd backend
+   ```
+
+3. Install dependencies:
+   ```bash
+   composer install
+   ```
+
+4. Copy environment file:
+   ```bash
+   cp .env.example .env
+   ```
+
+5. Generate application key:
+   ```bash
+   php artisan key:generate
+   ```
+
+6. Run migrations (when available):
+   ```bash
+   php artisan migrate
+   ```
+
+7. Start the development server:
+   ```bash
+   php artisan serve
+   ```
+
+The backend will run at http://localhost:8000
+
+## How to Run Frontend
+
+1. Navigate to frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Copy environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+The frontend will run at http://localhost:3000
+
+## How to Test Health Check
+
+Once the backend is running, you can test the health check endpoint:
+
+```bash
+curl http://localhost:8000/api/health
+```
+
+Expected response:
+```json
+{
+  "status": "ok",
+  "service": "libroschool-api"
+}
+```
+
+## Current Status
+
+**Project initialization only, no business features yet.**
+
+The following modules are NOT implemented:
+- Books
+- Book Requests
+- Notes
+- Classrooms
+- Messages
+- Payment
+- Shipping
+- Mobile App
+- Parent Portal
+- AI Features
+
+See docs/ROADMAP.md for the planned development phases.

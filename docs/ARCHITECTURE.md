@@ -158,3 +158,47 @@ To keep future migration easy:
 ## Important Principle
 
 Laravel API is the single source of truth for data and permissions.
+
+## Backend and Backoffice Separation
+
+The `backend/` service is Laravel JSON API only.
+
+Laravel responsibilities:
+
+* authentication
+* authorization
+* business logic
+* database access
+* file uploads
+* user APIs
+* admin APIs
+
+Laravel must not render:
+
+* public pages
+* user dashboard pages
+* admin/backoffice UI pages
+
+The `frontend/` service is the Next.js web application.
+
+Next.js responsibilities:
+
+* public UI
+* authenticated user UI
+* student dashboard
+* book/request/note/classroom pages
+* admin/backoffice UI
+
+Admin/backoffice pages live under:
+
+```text
+frontend/src/app/admin
+```
+
+Admin APIs live under:
+
+```text
+/api/admin/*
+```
+
+This separation keeps the Laravel API reusable for a future Flutter app.

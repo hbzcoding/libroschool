@@ -37,3 +37,25 @@ Authorization rules:
 - Conversations are visible only to conversation members.
 
 Do not trust frontend permission checks.
+
+## Backend API Only
+
+The Laravel backend is JSON API only.
+
+Do not create:
+
+* Blade public pages
+* Blade user dashboard
+* Blade admin panel
+* Laravel-rendered backoffice UI
+
+Admin functionality must be exposed through:
+
+```text
+/api/admin/*
+```
+
+Admin API must require:
+
+* authentication
+* admin role authorization

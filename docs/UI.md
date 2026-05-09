@@ -176,3 +176,93 @@ Use:
 - visible focus states
 - button labels
 - form labels
+
+## Admin / Backoffice UI
+
+The admin/backoffice UI is part of the project.
+
+It must be implemented in the Next.js frontend, not in Laravel Blade.
+
+Admin routes:
+
+```text
+/admin
+/admin/users
+/admin/books
+/admin/requests
+/admin/notes
+/admin/classrooms
+/admin/reports
+/admin/schools
+```
+
+Admin dashboard should include:
+
+* summary cards
+
+  * total users
+  * total books
+  * total requests
+  * total notes
+  * open reports
+* recent reports
+* latest user registrations
+* content moderation shortcuts
+
+Admin users page:
+
+* list users
+* search users
+* view user detail
+* ban or unban user
+* change role if needed
+
+Admin books page:
+
+* list books
+* filter by status
+* view book detail
+* hide book
+* delete book
+
+Admin requests page:
+
+* list requests
+* filter by status
+* hide request
+* delete request
+
+Admin notes page:
+
+* list notes
+* filter by visibility
+* hide or delete note
+
+Admin classrooms page:
+
+* list classrooms
+* lock classroom
+* delete classroom
+* view members
+
+Admin reports page:
+
+* list reports
+* view reported target
+* mark resolved
+* dismiss report
+
+Admin schools page:
+
+* list schools
+* create school
+* edit school
+* delete school if unused
+
+Admin UI style:
+
+* clear tables
+* search and filters
+* moderation actions
+* confirmation dialogs for destructive actions
+* no heavy animations

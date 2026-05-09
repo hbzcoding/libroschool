@@ -80,3 +80,23 @@ Before coding:
 Do not freely invent product scope.
 
 If something is not specified, ask or keep it simple.
+
+## Backend vs Backoffice
+
+In this project:
+
+`backend/` means Laravel JSON API backend.
+
+It does not mean admin UI.
+
+Laravel must not render Blade pages for the user app or admin panel.
+
+`frontend/` means Next.js web application.
+
+The Next.js frontend must eventually contain:
+
+* user-facing pages
+* dashboard pages
+* admin/backoffice pages under `/admin`
+
+The backoffice is part of the product, but it must be built later after the main MVP modules are stable.

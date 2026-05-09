@@ -137,3 +137,33 @@ Use:
 - report system
 
 Do not require admin approval for every classroom.
+
+## Backend and Backoffice Clarification
+
+The `backend/` directory is Laravel JSON API only.
+
+The Laravel backend must not include:
+- Blade user pages
+- Blade admin pages
+- Laravel-based backoffice UI
+
+The `frontend/` directory is the Next.js web application.
+
+The Next.js frontend includes:
+- public pages
+- authenticated student pages
+- future admin/backoffice pages
+
+Admin/backoffice UI must live in:
+
+```text
+frontend/src/app/admin
+```
+
+Laravel only provides admin APIs under:
+
+```text
+/api/admin/*
+```
+
+Admin/backoffice is part of the project, but it must be implemented in a later phase, not during project initialization.
