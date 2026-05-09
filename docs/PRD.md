@@ -53,9 +53,74 @@ LibroSchool helps students:
 - share notes
 - study with flashcards
 
-## MVP Scope
+## MVP Strategy
 
-The MVP must include:
+LibroSchool should not build the full product in one step.
+
+The first release must validate whether students will use a school-based platform to buy and sell books directly.
+
+The product is divided into four MVP layers.
+
+## MVP 1: Book Marketplace
+
+MVP 1 includes:
+1. User registration and login
+2. Basic user profile
+3. School search and selection
+4. Book selling listings
+5. Book requests
+6. Book search and filters
+7. Request search and filters
+8. Simple conversations between buyers and sellers
+
+MVP 1 does not include:
+- classrooms
+- notes
+- flashcards
+- reports
+- admin backoffice
+- payment
+- shipping
+- mobile app
+- parent portal
+- official school systems
+- AI features
+- complex social networking
+
+## MVP 2: Classrooms
+
+MVP 2 includes:
+1. User-generated classroom rooms
+2. Classroom join code
+3. Classroom membership
+4. Classroom books
+5. Classroom requests
+6. Basic classroom resources
+
+## MVP 3: Notes and Flashcards
+
+MVP 3 includes:
+1. Notes
+2. Note visibility
+3. Classroom notes
+4. Flashcards
+5. Flashcard study UI
+
+## MVP 4: Reports and Admin
+
+MVP 4 includes:
+1. Report system
+2. Admin dashboard
+3. User moderation
+4. Book moderation
+5. Request moderation
+6. Note moderation
+7. Classroom moderation
+8. School management
+
+## Full Product Scope
+
+The full product vision includes:
 
 1. User registration and login
 2. User profile with school, grade, and track
@@ -73,19 +138,19 @@ The MVP must include:
 14. Basic admin tools
 15. Image upload to Cloudflare R2
 
-## Out of Scope for MVP
+## Out of Scope
 
-Do not build in MVP:
+Do not build:
 
 - payment
 - shipping
-- mobile app
+- mobile app in the first web MVP
 - parent portal
 - official school attendance
 - official grades
 - official absence letters
 - official school signatures
-- AI features
+- AI features in the first MVP
 - complex recommendation system
 - complex social networking
 - full LMS system
@@ -134,15 +199,21 @@ Do not build in MVP:
 
 ## Success Metrics
 
-MVP success metrics:
+MVP 1 success metrics:
 - number of registered users
 - number of active schools
 - number of book listings
 - number of book requests
 - number of conversations started
+- number of completed or marked sold listings
+- number of returning users
+
+Full product success metrics:
 - number of classroom rooms
 - number of notes created
-- number of returning users
+- number of flashcards created
+- number of reports handled
+- number of admin moderation actions
 
 ## Product Principle
 
