@@ -81,6 +81,26 @@ Do not freely invent product scope.
 
 If something is not specified, ask or keep it simple.
 
+## Project Sub-Agents
+
+Available agents:
+
+- `backend-agent` - Laravel backend, migrations, models, API
+- `frontend-agent` - Next.js pages, components, services
+- `api-agent` - API contract review
+- `test-agent` - tests, lint, build
+- `reviewer-agent` - diff review
+- `planner-agent` - implementation plans
+- `docs-agent` - documentation updates
+
+Agents must be called explicitly by name.
+
+Example:
+
+```text
+用 backend-agent 执行 Task 1: Database Foundation。
+```
+
 ## Backend vs Backoffice
 
 In this project:

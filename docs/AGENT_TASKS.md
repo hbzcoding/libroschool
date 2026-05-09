@@ -21,6 +21,50 @@ Every task must follow this workflow:
 5. Human commits the changes.
 6. Only then can the next task begin.
 
+## Permission Scope Rules
+
+All tasks must declare an Agent, Scope, and Task header.
+
+Reference: `.codebuddy/rules/08-permission-scope.md`
+
+Agents should apply the matching permission scope automatically.
+
+Agents must not ask for approval file-by-file when editing files inside the allowed scope.
+
+Agents must not edit files outside the allowed scope.
+
+Agents must not commit automatically.
+
+### Required Task Header
+
+Every task prompt should include:
+
+```text
+Agent: <agent-name>
+Scope: <scope-name>
+Task: <task-name>
+```
+
+Examples:
+
+```text
+Agent: backend-agent
+Scope: backend-task
+Task: Task 1 Database Foundation
+```
+
+```text
+Agent: frontend-agent
+Scope: frontend-task
+Task: Task 6 Books Frontend
+```
+
+```text
+Agent: docs-agent
+Scope: docs-task
+Task: Update API documentation
+```
+
 ## Available Agents
 
 Use only these agents:
@@ -30,6 +74,8 @@ Use only these agents:
 - `frontend-agent`
 - `reviewer-agent`
 - `test-agent`
+- `planner-agent`
+- `docs-agent`
 - `code-explorer`
 
 There is no separate `database-agent`.
@@ -104,6 +150,32 @@ Use for:
 - checking permission issues
 - checking if an agent added unrelated features
 - checking if the implementation matches docs
+
+### planner-agent
+
+Use for:
+- creating short implementation plans before large tasks
+- breaking down complex phases into steps
+- identifying dependencies between tasks
+
+Do not use `planner-agent` to:
+- implement code
+- create migrations
+- create pages
+
+### docs-agent
+
+Use for:
+- updating project documentation
+- updating README.md
+- updating plan files
+- syncing docs with implementation
+
+Do not use `docs-agent` to:
+- write business code
+- create migrations
+- create controllers
+- create pages
 
 ### code-explorer
 

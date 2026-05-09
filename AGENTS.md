@@ -138,6 +138,26 @@ Use:
 
 Do not require admin approval for every classroom.
 
+## Project Sub-Agents
+
+Available agents for LibroSchool:
+
+- `backend-agent` - Laravel backend, migrations, models, API
+- `frontend-agent` - Next.js pages, components, services
+- `api-agent` - API contract review, route consistency
+- `test-agent` - tests, lint, build, migrations
+- `reviewer-agent` - diff review, scope control, security
+- `planner-agent` - implementation plans for complex tasks
+- `docs-agent` - documentation updates
+
+Agents must be called explicitly by name.
+
+Example:
+
+```text
+用 backend-agent 执行 Task 1: Database Foundation。
+```
+
 ## Backend and Backoffice Clarification
 
 The `backend/` directory is Laravel JSON API only.

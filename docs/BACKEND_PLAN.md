@@ -10,6 +10,16 @@ Do not build Laravel-rendered admin UI.
 
 Admin/backoffice UI belongs in the Next.js frontend.
 
+## Agent Workflow
+
+All backend phases must be executed by `backend-agent`.
+
+After `backend-agent` completes:
+- `test-agent` must run backend tests
+- `reviewer-agent` must review backend diff and authorization
+
+`api-agent` may be used after backend implementation to check API contract consistency.
+
 ## Backend Tech Stack
 
 ```text

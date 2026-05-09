@@ -8,6 +8,65 @@ The agent must only execute the currently assigned phase.
 
 After each phase, the agent must stop and wait for human review.
 
+## Permission Scope Rules
+
+All tasks must declare an Agent, Scope, and Task header.
+
+Reference: `.codebuddy/rules/08-permission-scope.md`
+
+Agents should apply the matching permission scope automatically.
+
+Agents must not ask for approval file-by-file when editing files inside the allowed scope.
+
+Agents must not edit files outside the allowed scope.
+
+Agents must not commit automatically.
+
+### Required Task Header
+
+Every task prompt should include:
+
+```text
+Agent: <agent-name>
+Scope: <scope-name>
+Task: <task-name>
+```
+
+Examples:
+
+```text
+Agent: backend-agent
+Scope: backend-task
+Task: Task 1 Database Foundation
+```
+
+```text
+Agent: frontend-agent
+Scope: frontend-task
+Task: Task 6 Books Frontend
+```
+
+```text
+Agent: docs-agent
+Scope: docs-task
+Task: Update API documentation
+```
+
+## Agent Workflow
+
+For every phase:
+
+1. `planner-agent` can be used to produce a short plan if the phase is complex.
+2. Implementation is done by the specified agent:
+   - `backend-agent` for backend/database/API work
+   - `frontend-agent` for frontend/UI work
+   - `docs-agent` for docs-only work
+   - `api-agent` for API contract review
+3. `test-agent` validates tests, migrations, lint, and build.
+4. `reviewer-agent` reviews diff, scope, security, and docs consistency.
+5. Human reviews and commits.
+6. No agent may start the next phase automatically.
+
 ## Execution Workflow
 
 For every phase:

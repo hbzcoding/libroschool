@@ -9,6 +9,16 @@ It contains:
 - authenticated student pages
 - future admin/backoffice pages
 
+## Agent Workflow
+
+All frontend phases must be executed by `frontend-agent`.
+
+After `frontend-agent` completes:
+- `test-agent` must run lint/build
+- `reviewer-agent` must review frontend diff and scope
+
+`api-agent` may be used to check frontend services against backend API.
+
 ## Frontend Tech Stack
 
 ```text
