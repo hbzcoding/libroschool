@@ -7,7 +7,7 @@ A student book marketplace and learning resource platform for Italian high schoo
 ### Backend
 - Laravel 12
 - PHP 8.3+
-- SQLite (default for development, PostgreSQL for production)
+- PostgreSQL
 - Laravel Sanctum
 
 ### Frontend
@@ -34,6 +34,44 @@ LibroSchool/
 └── .codebuddy/       # CodeBuddy rules
 ```
 
+## Local PostgreSQL Setup (macOS Homebrew)
+
+1. Install PostgreSQL:
+
+   ```bash
+   brew install postgresql@16
+   ```
+
+2. Add PostgreSQL to PATH.
+
+   **Apple Silicon (M1/M2/M3/M4):**
+
+   ```bash
+   echo 'export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+   **Intel Mac:**
+
+   ```bash
+   echo 'export PATH="/usr/local/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+3. Start PostgreSQL:
+
+   ```bash
+   brew services start postgresql@16
+   ```
+
+4. Create database:
+
+   ```bash
+   createdb libroschool
+   ```
+
+   If `createdb` is not found, make sure the PATH step above was applied correctly.
+
 ## How to Run Backend
 
 1. Navigate to backend directory:
@@ -46,7 +84,7 @@ LibroSchool/
    composer install
    ```
 
-3. Copy environment file (if needed):
+3. Copy environment file:
    ```bash
    cp .env.example .env
    ```
@@ -56,24 +94,17 @@ LibroSchool/
    php artisan key:generate
    ```
 
-5. Create SQLite database file:
-   ```bash
-   touch database/database.sqlite
-   ```
-
-6. Run migrations:
+5. Run migrations:
    ```bash
    php artisan migrate
    ```
 
-7. Start the development server:
+6. Start the development server:
    ```bash
    php artisan serve
    ```
 
 The backend API will run at http://localhost:8000
-
-**Note:** The default configuration uses SQLite for simplicity during development. You can switch to PostgreSQL later by updating the `.env` file.
 
 ## How to Run Frontend
 
@@ -104,7 +135,7 @@ The frontend will run at http://localhost:3000
 Once the backend is running, you can test the health check endpoint:
 
 ```bash
-curl http://localhost:8000/api/health
+curl http://127.0.0.1:8000/api/health
 ```
 
 Expected response:
