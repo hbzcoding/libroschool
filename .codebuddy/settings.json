@@ -15,6 +15,9 @@
   "model": "custom-local:tc-code-latest",
   "alwaysThinkingEnabled": false,
   "permissions": {
-    "allow": ["Edit", "Bash", "Read"]
+    "allow": [
+      "Bash",
+      "Read"
+    ]
   }
 }

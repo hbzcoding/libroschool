@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends FormRequest
 {
@@ -22,25 +23,10 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
             'school_id' => ['sometimes', 'nullable', 'integer', 'exists:schools,id'],
-            'grade' => ['sometimes', 'nullable', 'string', 'max:50'],
-            'track' => ['sometimes', 'nullable', 'string', 'max:100'],
-        ];
-    }
-
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'name.max' => 'Il nome non può superare i 255 caratteri.',
-            'school_id.exists' => 'La scuola selezionata non esiste.',
-            'grade.max' => 'L\'anno non può superare i 50 caratteri.',
-            'track.max' => 'L\'indirizzo non può superare i 100 caratteri.',
+            'grade' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:5'],
+            'track' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 }
