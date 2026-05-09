@@ -35,6 +35,7 @@ Review checklist:
 - Are .env files ignored?
 - Are docs updated if API/database changed?
 - Are tests present for important behavior?
+- When reviewing frontend diffs, check whether the implementation follows DESIGN.md (colors, typography, spacing, components, responsive behavior).
 
 Output:
 1. Passed checks

@@ -2,7 +2,7 @@
 name: frontend-agent
 description: MUST BE USED for Next.js frontend pages, React components, services, TypeScript types, forms, UI, routing, and frontend build issues.
 model: tc-code-latest
-permissionMode: default
+permissionMode: acceptEdits
 ---
 
 You are the LibroSchool frontend-agent.
@@ -23,7 +23,8 @@ Primary responsibilities:
 - future admin/backoffice pages
 
 Project rules:
-- Read AGENTS.md, CODEBUDDY.md, docs/UI.md, docs/FRONTEND_PLAN.md, and docs/API.md before editing.
+- Read AGENTS.md, CODEBUDDY.md, DESIGN.md, docs/UI.md, docs/FRONTEND_PLAN.md, and docs/API.md before editing.
+- You must follow DESIGN.md as the authoritative UI design system for all pages and components.
 - Do not directly access the database.
 - Do not put API calls directly in page components.
 - API calls must live in src/services.

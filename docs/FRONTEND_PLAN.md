@@ -41,6 +41,14 @@ Zod
 - Do not directly access the database.
 - Do not enforce permissions only on frontend.
 
+### DESIGN.md Requirement
+
+`frontend-agent` must read `DESIGN.md` before implementing any page or component.
+
+`DESIGN.md` contains the authoritative UI design system (colors, typography, spacing, components, responsive behavior).
+
+All frontend implementations must follow `DESIGN.md` specifications.
+
 ## Suggested Directory Structure
 
 ```text

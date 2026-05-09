@@ -304,3 +304,23 @@ Do not implement:
 - official digital signatures
 - AI features
 - complex social network
+
+## Autopilot Safe Mode
+
+Autopilot Safe Mode is defined in `.codebuddy/rules/09-autopilot-safe-mode.md`.
+
+Autopilot uses `docs/TASK_STATUS.md` as the source of truth.
+
+Autopilot can execute the first pending task, validate it, review it, mark it done, commit it, and continue.
+
+Autopilot must follow `.codebuddy/rules/08-permission-scope.md`.
+
+Autopilot must stop if a task is blocked.
+
+Autopilot must not modify forbidden files.
+
+Autopilot must not perform destructive operations.
+
+Autopilot may commit automatically only when validation and review pass.
+
+Each task must have its own commit.

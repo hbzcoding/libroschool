@@ -107,6 +107,19 @@ Next.js frontend must use:
 
 Do not put API calls directly inside page components.
 
+### DESIGN.md — UI Design System
+
+All frontend/UI related tasks must read `DESIGN.md` (Linear-inspired design system) before implementing any page or component.
+
+`DESIGN.md` defines:
+- Color palette (dark canvas, surface ladder, lavender-blue accent)
+- Typography scale (display, headline, body, caption)
+- Spacing and layout tokens
+- Component specifications (buttons, cards, inputs, navigation)
+- Border radius, elevation, and responsive behavior
+
+Agents and developers must follow `DESIGN.md` as the authoritative UI design source.
+
 ## Security Rules
 
 Users must not be able to:

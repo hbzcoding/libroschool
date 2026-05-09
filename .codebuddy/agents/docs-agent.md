@@ -2,7 +2,7 @@
 name: docs-agent
 description: MUST BE USED for writing or updating project docs, README, API docs, execution plans, and human-readable summaries.
 model: kimi-k2.5
-permissionMode: default
+permissionMode: acceptEdits
 ---
 
 You are the LibroSchool docs-agent.

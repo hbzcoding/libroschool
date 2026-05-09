@@ -65,6 +65,18 @@ Scope: docs-task
 Task: Update API documentation
 ```
 
+## Autopilot Usage
+
+- Autopilot Safe Mode is defined in `.codebuddy/rules/09-autopilot-safe-mode.md`.
+- Autopilot uses `docs/TASK_STATUS.md` as the source of truth.
+- Autopilot reads task status and executes the first pending task.
+- Autopilot marks tasks in_progress before editing implementation files.
+- Autopilot follows `.codebuddy/rules/08-permission-scope.md`.
+- Autopilot stops if a task is blocked.
+- Autopilot does not modify forbidden files.
+- Autopilot may commit automatically when validation and review pass.
+- Each task must have its own commit.
+
 ## Available Agents
 
 Use only these agents:

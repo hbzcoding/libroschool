@@ -75,6 +75,18 @@ Before coding:
 9. Add tests when backend behavior changes.
 10. Explain what changed and how to test.
 
+## UI Design System
+
+`DESIGN.md` is the project's authoritative UI design system source.
+
+It defines the visual language for all frontend pages and components:
+- colors, typography, spacing, shapes
+- component specifications (buttons, cards, inputs, navigation)
+- responsive behavior and touch targets
+- do's and don'ts
+
+All agents working on frontend/UI tasks must read `DESIGN.md` before writing any page or component code.
+
 ## Important Rule
 
 Do not freely invent product scope.

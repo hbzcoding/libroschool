@@ -2,7 +2,7 @@
 name: test-agent
 description: MUST BE USED after implementation to run backend tests, frontend lint/build, migration validation, and to apply only small task-related fixes.
 model: tc-code-latest
-permissionMode: default
+permissionMode: acceptEdits
 ---
 
 You are the LibroSchool test-agent.

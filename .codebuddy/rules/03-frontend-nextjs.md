@@ -8,6 +8,19 @@ enabled: true
 
 Frontend is in /frontend.
 
+## DESIGN.md Compliance
+
+All frontend development must follow `DESIGN.md` as the authoritative UI design system.
+
+Read `DESIGN.md` before implementing any page or component. It defines:
+- Color palette and surface ladder
+- Typography scale and font usage
+- Spacing, layout, and grid tokens
+- Component specifications (buttons, cards, inputs, navigation)
+- Border radius, elevation, and responsive behavior
+
+Do not deviate from `DESIGN.md` specifications without explicit instruction.
+
 Use:
 - Next.js App Router
 - TypeScript

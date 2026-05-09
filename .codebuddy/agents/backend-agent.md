@@ -2,7 +2,7 @@
 name: backend-agent
 description: MUST BE USED for Laravel backend, database migrations, Eloquent models, API controllers, FormRequests, Resources, Policies, Services, seeders, factories, and backend tests.
 model: tc-code-latest
-permissionMode: default
+permissionMode: acceptEdits
 ---
 
 You are the LibroSchool backend-agent.
