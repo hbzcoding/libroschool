@@ -5,9 +5,9 @@ A student book marketplace and learning resource platform for Italian high schoo
 ## Tech Stack
 
 ### Backend
-- Laravel
+- Laravel 12
 - PHP 8.3+
-- PostgreSQL
+- SQLite (default for development, PostgreSQL for production)
 - Laravel Sanctum
 
 ### Frontend
@@ -15,6 +15,12 @@ A student book marketplace and learning resource platform for Italian high schoo
 - TypeScript
 - Tailwind CSS
 - shadcn/ui
+
+## Architecture
+
+- `backend/` - Laravel JSON API only (no Blade UI)
+- `frontend/` - Next.js web application
+- Admin/backoffice UI will be implemented in `frontend/src/app/admin` in future phases (not in this initialization)
 
 ## Project Structure
 
@@ -30,32 +36,32 @@ LibroSchool/
 
 ## How to Run Backend
 
-1. Make sure PostgreSQL is running and create a database:
-   ```bash
-   createdb libroschool
-   ```
-
-2. Navigate to backend directory:
+1. Navigate to backend directory:
    ```bash
    cd backend
    ```
 
-3. Install dependencies:
+2. Install dependencies:
    ```bash
    composer install
    ```
 
-4. Copy environment file:
+3. Copy environment file (if needed):
    ```bash
    cp .env.example .env
    ```
 
-5. Generate application key:
+4. Generate application key:
    ```bash
    php artisan key:generate
    ```
 
-6. Run migrations (when available):
+5. Create SQLite database file:
+   ```bash
+   touch database/database.sqlite
+   ```
+
+6. Run migrations:
    ```bash
    php artisan migrate
    ```
@@ -65,7 +71,9 @@ LibroSchool/
    php artisan serve
    ```
 
-The backend will run at http://localhost:8000
+The backend API will run at http://localhost:8000
+
+**Note:** The default configuration uses SQLite for simplicity during development. You can switch to PostgreSQL later by updating the `.env` file.
 
 ## How to Run Frontend
 
@@ -122,5 +130,6 @@ The following modules are NOT implemented:
 - Mobile App
 - Parent Portal
 - AI Features
+- Admin/Backoffice UI
 
 See docs/ROADMAP.md for the planned development phases.
