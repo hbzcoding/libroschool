@@ -67,9 +67,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 10B | Classrooms Frontend | frontend-agent | frontend-task | done | classrooms pages, service, types, components |
 | 10B-test | Validate Classrooms Frontend | test-agent | test-task | done | lint passed (0 errors), build passed |
 | 10B-review | Review Classrooms Frontend | reviewer-agent | review-task | done | passed - follows patterns, API aligned, no must-fix issues |
-| 11A | Notes Backend | backend-agent | backend-task | pending | notes API and visibility |
-| 11A-test | Validate Notes Backend | test-agent | test-task | pending | backend tests |
-| 11A-review | Review Notes Backend | reviewer-agent | review-task | pending | note visibility and security review |
+| 11A | Notes Backend | backend-agent | backend-task | done | notes API, visibility rules, 57 tests |
+| 11A-test | Validate Notes Backend | test-agent | test-task | done | 215 tests passed (1061 assertions) |
+| 11A-review | Review Notes Backend | reviewer-agent | review-task | done | passed - visibility rules correct, authorization enforced |
 | 11B | Notes Frontend | frontend-agent | frontend-task | pending | notes pages |
 | 11B-test | Validate Notes Frontend | test-agent | test-task | pending | lint and build |
 | 11B-review | Review Notes Frontend | reviewer-agent | review-task | pending | UI and API service review |
