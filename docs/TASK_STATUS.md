@@ -43,9 +43,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 4 | Books Backend | backend-agent | backend-task | done | books API - BookController, BookPolicy, BookResource, FormRequests, 30 tests |
 | 4-test | Validate Books Backend | test-agent | test-task | done | 53 tests passed (387 assertions) |
 | 4-review | Review Books Backend | reviewer-agent | review-task | done | passed - no must-fix issues |
-| 5 | Book Image Upload Backend | backend-agent | backend-task | pending | Cloudflare R2 upload |
-| 5-test | Validate Book Image Upload | test-agent | test-task | pending | backend tests |
-| 5-review | Review Book Image Upload | reviewer-agent | review-task | pending | upload security and env review |
+| 5 | Book Image Upload Backend | backend-agent | backend-task | done | BookImageService, UploadBookImageRequest, R2 config, 10 tests |
+| 5-test | Validate Book Image Upload | test-agent | test-task | done | 63 tests passed (424 assertions) |
+| 5-review | Review Book Image Upload | reviewer-agent | review-task | done | passed - no must-fix issues |
 | 6 | Books Frontend | frontend-agent | frontend-task | pending | books list, create, detail |
 | 6-test | Validate Books Frontend | test-agent | test-task | pending | lint and build |
 | 6-review | Review Books Frontend | reviewer-agent | review-task | pending | UI and API service review |

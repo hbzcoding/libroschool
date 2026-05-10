@@ -69,4 +69,13 @@ class BookPolicy
     {
         return $user->id === $book->seller_id;
     }
+
+    /**
+     * Determine whether the user can upload images for the book.
+     * Only the seller can upload images for their own book.
+     */
+    public function uploadImage(User $user, Book $book): bool
+    {
+        return $user->id === $book->seller_id;
+    }
 }

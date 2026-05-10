@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Http\Requests\UploadBookImageRequest;
+use App\Http\Resources\BookImageResource;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Services\BookImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -196,5 +199,19 @@ class BookController extends Controller
         return response()->json([
             'data' => new BookResource($book),
         ]);
+    }
+
+    /**
+     * Upload an image for a book.
+     */
+    public function uploadImage(UploadBookImageRequest $request, Book $book, BookImageService $service): JsonResponse
+    {
+        $this->authorize('uploadImage', $book);
+
+        $image = $service->upload($book, $request->file('image'));
+
+        return response()->json([
+            'data' => new BookImageResource($image),
+        ], 201);
     }
 }

@@ -53,4 +53,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/books/{book}', [BookController::class, 'destroy']);
     Route::post('/books/{book}/mark-reserved', [BookController::class, 'markReserved']);
     Route::post('/books/{book}/mark-sold', [BookController::class, 'markSold']);
+    Route::post('/books/{book}/images', [BookController::class, 'uploadImage']);
 });
