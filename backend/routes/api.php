@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\BookRequestController;
+use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\SchoolController;
 use Illuminate\Support\Facades\Route;
@@ -77,4 +78,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/conversations', [ConversationController::class, 'store']);
     Route::get('/conversations/{conversation}/messages', [ConversationController::class, 'messages']);
     Route::post('/conversations/{conversation}/messages', [ConversationController::class, 'sendMessage']);
+});
+
+// Classrooms routes (public list/show for public classrooms, optional auth for private)
+Route::middleware('auth.optional')->group(function () {
+    Route::get('/classrooms', [ClassroomController::class, 'index']);
+    Route::get('/classrooms/{classroom}', [ClassroomController::class, 'show']);
+});
+
+// Classrooms routes (protected)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/classrooms', [ClassroomController::class, 'store']);
+    Route::put('/classrooms/{classroom}', [ClassroomController::class, 'update']);
+    Route::delete('/classrooms/{classroom}', [ClassroomController::class, 'destroy']);
+    Route::post('/classrooms/{classroom}/join', [ClassroomController::class, 'join']);
+    Route::post('/classrooms/{classroom}/leave', [ClassroomController::class, 'leave']);
+    Route::get('/classrooms/{classroom}/members', [ClassroomController::class, 'members']);
+    Route::post('/classrooms/{classroom}/members/{user}/role', [ClassroomController::class, 'updateMemberRole']);
+    Route::delete('/classrooms/{classroom}/members/{user}', [ClassroomController::class, 'removeMember']);
+    Route::post('/classrooms/join-by-code', [ClassroomController::class, 'joinByCode']);
+    Route::post('/classrooms/{classroom}/regenerate-join-code', [ClassroomController::class, 'regenerateJoinCode']);
 });

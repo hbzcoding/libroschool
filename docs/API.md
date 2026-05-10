@@ -273,11 +273,33 @@ GET /api/classrooms/{id}
 POST /api/classrooms
 PUT /api/classrooms/{id}
 DELETE /api/classrooms/{id}
-POST /api/classrooms/join
+POST /api/classrooms/{id}/join
 POST /api/classrooms/{id}/leave
 GET /api/classrooms/{id}/members
+POST /api/classrooms/{id}/members/{user_id}/role
 DELETE /api/classrooms/{id}/members/{user_id}
+POST /api/classrooms/join-by-code
+POST /api/classrooms/{id}/regenerate-join-code
 ```
+
+### GET /api/classrooms
+
+Paginated classroom list.
+
+Public for public classrooms.
+Private classrooms visible only to members (requires auth).
+
+Filters:
+- school_id
+- grade
+- academic_year
+- is_private
+- search (name)
+
+### GET /api/classrooms/{id}
+
+Public classrooms are visible to all users (including guests).
+Private classrooms are visible only to members (requires auth).
 
 ### POST /api/classrooms
 
@@ -290,24 +312,83 @@ Required fields:
 - section
 
 Optional fields:
+- name
+- description
 - track
+- join_policy (default: code)
+- visibility (default: private)
+
+System generates:
+- join_code (if name not provided, auto-generates from grade/section/track/year)
+- join_code (unique 6-character code)
+
+Owner is automatically added as owner member.
+
+### PUT /api/classrooms/{id}
+
+Only owner can update.
+
+Optional fields:
+- name
+- description
 - join_policy
 - visibility
 
-System generates:
-- name
-- join_code
+### DELETE /api/classrooms/{id}
 
-### POST /api/classrooms/join
+Only owner can delete.
 
-Join classroom.
+### POST /api/classrooms/{id}/join
+
+Join an open classroom.
+
+Only works for classrooms with join_policy = open.
+For code-protected classrooms, use join-by-code.
+
+### POST /api/classrooms/join-by-code
+
+Join a classroom by code.
 
 Fields:
 - join_code
 
+For code policy: user becomes active member.
+For approval policy: user becomes pending member.
+
+### POST /api/classrooms/{id}/leave
+
+Leave a classroom.
+
+Owner cannot leave. Transfer ownership or delete instead.
+
 ### GET /api/classrooms/{id}/members
 
+Paginated member list.
+
 Only members can view.
+
+### POST /api/classrooms/{id}/members/{user_id}/role
+
+Change member role.
+
+Only owner or moderator can change roles.
+Cannot change owner's role.
+
+Fields:
+- role (member, moderator)
+
+### DELETE /api/classrooms/{id}/members/{user_id}
+
+Remove a member.
+
+Only owner can remove members.
+Cannot remove the owner.
+
+### POST /api/classrooms/{id}/regenerate-join-code
+
+Generate a new join code.
+
+Only owner or moderator can regenerate.
 
 ## Notes Endpoints
 

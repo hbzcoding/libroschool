@@ -21,6 +21,7 @@ class Classroom extends Model
         'school_id',
         'owner_id',
         'name',
+        'description',
         'grade',
         'section',
         'track',
@@ -103,5 +104,61 @@ class Classroom extends Model
     public function isApprovalJoin(): bool
     {
         return $this->join_policy === 'approval';
+    }
+
+    /**
+     * Check if classroom is public.
+     */
+    public function isPublic(): bool
+    {
+        return $this->visibility === 'public';
+    }
+
+    /**
+     * Check if a user is a member of this classroom.
+     */
+    public function hasMember(int $userId): bool
+    {
+        return $this->members()
+            ->where('user_id', $userId)
+            ->where('status', 'active')
+            ->exists();
+    }
+
+    /**
+     * Get the membership record for a user.
+     */
+    public function getMember(int $userId): ?ClassroomMember
+    {
+        return $this->members()
+            ->where('user_id', $userId)
+            ->where('status', 'active')
+            ->first();
+    }
+
+    /**
+     * Check if a user is the owner.
+     */
+    public function isOwnedBy(int $userId): bool
+    {
+        return $this->owner_id === $userId;
+    }
+
+    /**
+     * Check if a user has owner or moderator role in this classroom.
+     */
+    public function isModeratedBy(int $userId): bool
+    {
+        $member = $this->getMember($userId);
+
+        return $member !== null && in_array($member->role, ['owner', 'moderator']);
+    }
+
+    /**
+     * Get active members count.
+     */
+    public function activeMembersCount(): int
+    {
+        return $this->members()->where('status', 'active')->count();
     }
 }
