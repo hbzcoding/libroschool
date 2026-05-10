@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\BookRequestController;
 use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\ConversationController;
+use App\Http\Controllers\Api\NoteController;
 use App\Http\Controllers\Api\SchoolController;
 use Illuminate\Support\Facades\Route;
 
@@ -98,4 +99,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/classrooms/{classroom}/members/{user}', [ClassroomController::class, 'removeMember']);
     Route::post('/classrooms/join-by-code', [ClassroomController::class, 'joinByCode']);
     Route::post('/classrooms/{classroom}/regenerate-join-code', [ClassroomController::class, 'regenerateJoinCode']);
+});
+
+// Notes routes (public list/show for public notes, optional auth for visibility-based access)
+Route::middleware('auth.optional')->group(function () {
+    Route::get('/notes', [NoteController::class, 'index']);
+    Route::get('/notes/{note}', [NoteController::class, 'show']);
+});
+
+// Notes routes (protected)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/notes', [NoteController::class, 'store']);
+    Route::put('/notes/{note}', [NoteController::class, 'update']);
+    Route::delete('/notes/{note}', [NoteController::class, 'destroy']);
+    Route::post('/notes/{note}/permissions', [NoteController::class, 'grantPermission']);
+    Route::delete('/notes/{note}/permissions/{user}', [NoteController::class, 'revokePermission']);
 });
