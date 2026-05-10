@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\BookRequestController;
+use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\SchoolController;
 use Illuminate\Support\Facades\Route;
 
@@ -67,4 +68,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/book-requests/{bookRequest}', [BookRequestController::class, 'update']);
     Route::delete('/book-requests/{bookRequest}', [BookRequestController::class, 'destroy']);
     Route::post('/book-requests/{bookRequest}/close', [BookRequestController::class, 'close']);
+});
+
+// Conversations routes (protected)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/conversations', [ConversationController::class, 'index']);
+    Route::get('/conversations/{conversation}', [ConversationController::class, 'show']);
+    Route::post('/conversations', [ConversationController::class, 'store']);
+    Route::get('/conversations/{conversation}/messages', [ConversationController::class, 'messages']);
+    Route::post('/conversations/{conversation}/messages', [ConversationController::class, 'sendMessage']);
 });
