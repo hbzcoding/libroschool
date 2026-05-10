@@ -88,9 +88,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 14A | Admin Backend | backend-agent | backend-task | done | admin APIs - 7 controllers, routes, 27 tests |
 | 14A-test | Validate Admin Backend | test-agent | test-task | done | 298 tests passed (1556 assertions) |
 | 14A-review | Review Admin Backend | reviewer-agent | review-task | done | passed - authorization enforced, pagination correct, no security issues |
-| 14B | Admin Frontend | frontend-agent | frontend-task | pending | admin backoffice UI |
-| 14B-test | Validate Admin Frontend | test-agent | test-task | pending | lint and build |
-| 14B-review | Review Admin Frontend | reviewer-agent | review-task | pending | admin UI review |
+| 14B | Admin Frontend | frontend-agent | frontend-task | done | admin backoffice UI - all pages, services, types, components |
+| 14B-test | Validate Admin Frontend | test-agent | test-task | done | lint 0 errors, build passed |
+| 14B-review | Review Admin Frontend | reviewer-agent | review-task | done | passed - follows patterns, admin routes protected, no must-fix issues |
 
 ## How Autopilot Should Continue
 
