@@ -1,6 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminBookController;
+use App\Http\Controllers\Api\Admin\AdminBookRequestController;
+use App\Http\Controllers\Api\Admin\AdminClassroomController;
+use App\Http\Controllers\Api\Admin\AdminNoteController;
 use App\Http\Controllers\Api\Admin\AdminReportController;
+use App\Http\Controllers\Api\Admin\AdminSchoolController;
+use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\BookRequestController;
@@ -130,7 +136,45 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Admin routes (authenticated, admin only)
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+    // Users
+    Route::get('/users', [AdminUserController::class, 'index']);
+    Route::get('/users/{user}', [AdminUserController::class, 'show']);
+    Route::put('/users/{user}', [AdminUserController::class, 'update']);
+    Route::post('/users/{user}/ban', [AdminUserController::class, 'ban']);
+
+    // Books
+    Route::get('/books', [AdminBookController::class, 'index']);
+    Route::get('/books/{book}', [AdminBookController::class, 'show']);
+    Route::post('/books/{book}/hide', [AdminBookController::class, 'hide']);
+    Route::delete('/books/{book}', [AdminBookController::class, 'destroy']);
+
+    // Book Requests
+    Route::get('/book-requests', [AdminBookRequestController::class, 'index']);
+    Route::get('/book-requests/{bookRequest}', [AdminBookRequestController::class, 'show']);
+    Route::post('/book-requests/{bookRequest}/hide', [AdminBookRequestController::class, 'hide']);
+    Route::delete('/book-requests/{bookRequest}', [AdminBookRequestController::class, 'destroy']);
+
+    // Notes
+    Route::get('/notes', [AdminNoteController::class, 'index']);
+    Route::get('/notes/{note}', [AdminNoteController::class, 'show']);
+    Route::post('/notes/{note}/hide', [AdminNoteController::class, 'hide']);
+    Route::delete('/notes/{note}', [AdminNoteController::class, 'destroy']);
+
+    // Classrooms
+    Route::get('/classrooms', [AdminClassroomController::class, 'index']);
+    Route::get('/classrooms/{classroom}', [AdminClassroomController::class, 'show']);
+    Route::post('/classrooms/{classroom}/lock', [AdminClassroomController::class, 'lock']);
+    Route::delete('/classrooms/{classroom}', [AdminClassroomController::class, 'destroy']);
+
+    // Reports
     Route::get('/reports', [AdminReportController::class, 'index']);
     Route::get('/reports/{report}', [AdminReportController::class, 'show']);
     Route::post('/reports/{report}/resolve', [AdminReportController::class, 'resolve']);
+
+    // Schools
+    Route::get('/schools', [AdminSchoolController::class, 'index']);
+    Route::post('/schools', [AdminSchoolController::class, 'store']);
+    Route::get('/schools/{school}', [AdminSchoolController::class, 'show']);
+    Route::put('/schools/{school}', [AdminSchoolController::class, 'update']);
+    Route::delete('/schools/{school}', [AdminSchoolController::class, 'destroy']);
 });

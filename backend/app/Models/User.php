@@ -149,4 +149,15 @@ class User extends Authenticatable
     {
         return $this->role === 'student';
     }
+
+    /**
+     * Authorize that the user is an admin.
+     * Throws AuthorizationException if not.
+     */
+    public function authorizeAdmin(): void
+    {
+        if (!$this->isAdmin()) {
+            abort(403, 'This action is unauthorized.');
+        }
+    }
 }
