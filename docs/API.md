@@ -151,7 +151,13 @@ Only seller can update.
 
 ### DELETE /api/books/{id}
 
-Only seller or admin can delete.
+Only seller can delete through the public books API.
+
+Admin deletion is handled by the later admin endpoint:
+
+```http
+DELETE /api/admin/books/{id}
+```
 
 ### POST /api/books/{id}/images
 

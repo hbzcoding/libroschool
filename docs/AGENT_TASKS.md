@@ -88,11 +88,30 @@ Use only these agents:
 - `test-agent`
 - `planner-agent`
 - `docs-agent`
-- `code-explorer`
 
-There is no separate `database-agent`.
+There is no separate database agent.
 
 Database Foundation must be executed by `backend-agent`, because migrations, models, relationships, factories, and seeders are Laravel backend work.
+
+Agent names must match files in `.codebuddy/agents/` and the valid agents listed in `.codebuddy/rules/09-autopilot-safe-mode.md`.
+
+## Task ID Rules
+
+Task IDs in this file must match `docs/TASK_STATUS.md`.
+
+`docs/EXECUTION_PLAN.md` uses high-level phase numbers for context. Phase numbers are not task IDs.
+
+From Conversations onward, split backend/frontend work uses uppercase A/B task IDs:
+
+```text
+9A, 9B, 10A, 10B, 11A, 11B, 12A, 12B, 13A, 13B, 14A, 14B
+```
+
+## Frontend Design Requirement
+
+Every `frontend-agent` task must read `DESIGN.md` before implementing any page or component.
+
+`DESIGN.md` is the authoritative UI design system. `docs/UI.md` and `docs/FRONTEND_PLAN.md` provide product-specific UI structure, but they do not replace `DESIGN.md`.
 
 ## Agent Responsibilities
 
@@ -188,15 +207,6 @@ Do not use `docs-agent` to:
 - create migrations
 - create controllers
 - create pages
-
-### code-explorer
-
-Use for:
-- searching files
-- understanding existing structure
-- locating relevant code
-
-Usually this agent is used automatically.
 
 ---
 
@@ -390,6 +400,7 @@ After review, stop and wait for human commit.
 ## Read Before Starting
 
 - `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
 - `docs/UI.md`
 - `docs/API.md`
 - `.codebuddy/rules/03-frontend-nextjs.md`
@@ -485,7 +496,8 @@ Requirements:
 - BookService
 - pagination
 - filters
-- seller-only update/delete
+- seller-only update/delete on the public books API
+- admin book deletion is handled later through `/api/admin/books/{id}`
 - seller-only mark reserved/sold
 - Feature tests
 
@@ -589,6 +601,14 @@ After review, stop and wait for human commit.
 
 `frontend-agent`
 
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
+
 ## Task
 
 Create:
@@ -638,7 +658,7 @@ npm run build
 `reviewer-agent`
 
 Check:
-- UI follows `docs/UI.md`
+- UI follows `DESIGN.md` and `docs/UI.md`
 - no backend changes unless necessary
 - API service layer used
 
@@ -712,6 +732,14 @@ After review, stop and wait for human commit.
 ## Implementation Agent
 
 `frontend-agent`
+
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
 
 ## Task
 
@@ -812,6 +840,14 @@ After review, stop and wait for human commit.
 
 `frontend-agent`
 
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
+
 ## Task
 
 Create:
@@ -877,6 +913,14 @@ After review, stop and wait for human commit.
 
 `frontend-agent`
 
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
+
 ## Task
 
 Create:
@@ -938,6 +982,14 @@ After review, stop and wait for human commit.
 
 `frontend-agent`
 
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
+
 ## Task
 
 Create:
@@ -991,6 +1043,14 @@ After review, stop and wait for human commit.
 ## Implementation Agent
 
 `frontend-agent`
+
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
 
 ## Task
 
@@ -1046,6 +1106,14 @@ After review, stop and wait for human commit.
 ## Implementation Agent
 
 `frontend-agent`
+
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
 
 ## Task
 
@@ -1112,6 +1180,14 @@ After review, stop and wait for human commit.
 ## Implementation Agent
 
 `frontend-agent`
+
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
 
 ## Task
 

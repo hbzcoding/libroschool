@@ -1,5 +1,11 @@
 # LibroSchool UI Guidelines
 
+## DESIGN.md Priority
+
+`DESIGN.md` is the authoritative UI design system for colors, typography, spacing, components, borders, elevation, and responsive behavior.
+
+This file provides product-specific UI structure and page guidance. If this file conflicts with `DESIGN.md`, follow `DESIGN.md`.
+
 ## Design Style
 
 LibroSchool UI should be:

@@ -123,6 +123,10 @@ git commit -m "Meaningful commit message"
 
 ## Phase Order
 
+Phase numbers are high-level project milestones.
+
+Executable task IDs are defined in `docs/TASK_STATUS.md` and detailed in `docs/AGENT_TASKS.md`. For example, `Phase 2: Database Foundation` maps to `Task 1: Database Foundation`.
+
 ### Phase 0: Documentation and Rules
 
 Includes:

@@ -16,7 +16,7 @@ name
 email
 email_verified_at
 password
-role enum: student, teacher, admin
+role string allowed: student, teacher, admin
 school_id nullable foreign schools.id
 grade nullable
 track nullable
@@ -75,10 +75,10 @@ grade nullable
 track nullable
 publisher nullable
 author nullable
-condition enum: new, very_good, good, acceptable
+condition string allowed: new, very_good, good, acceptable
 price decimal(8,2)
 description text nullable
-status enum: available, reserved, sold, hidden
+status string allowed: available, reserved, sold, hidden
 created_at
 updated_at
 ```
@@ -133,7 +133,7 @@ grade nullable
 track nullable
 max_price decimal(8,2) nullable
 description text nullable
-status enum: open, matched, closed, hidden
+status string allowed: open, matched, closed, hidden
 created_at
 updated_at
 ```
@@ -166,10 +166,10 @@ section
 track nullable
 academic_year
 join_code unique
-join_policy enum: open, code, approval
-visibility enum: public, private
+join_policy string allowed: open, code, approval
+visibility string allowed: public, private
 is_verified boolean default false
-status enum: active, reported, locked, deleted
+status string allowed: active, reported, locked, deleted
 created_at
 updated_at
 ```
@@ -201,8 +201,8 @@ Fields:
 id
 classroom_id foreign classrooms.id
 user_id foreign users.id
-role enum: owner, moderator, member
-status enum: active, pending, banned
+role string allowed: owner, moderator, member
+status string allowed: active, pending, banned
 created_at
 updated_at
 ```
@@ -235,8 +235,8 @@ title
 subject nullable
 grade nullable
 content longtext nullable
-visibility enum: public, private, classroom, specific_users
-mode enum: normal, flashcard
+visibility string allowed: public, private, classroom, specific_users
+mode string allowed: normal, flashcard
 created_at
 updated_at
 ```
@@ -380,7 +380,7 @@ reporter_id foreign users.id
 target_type
 target_id
 reason text
-status enum: open, reviewed, dismissed
+status string allowed: open, reviewed, dismissed
 created_at
 updated_at
 ```
