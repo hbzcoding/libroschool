@@ -52,9 +52,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 7 | Book Requests Backend | backend-agent | backend-task | done | BookRequestController, BookRequestPolicy, BookRequestResource, FormRequests, 27 tests |
 | 7-test | Validate Book Requests Backend | test-agent | test-task | done | 90 tests passed (578 assertions) |
 | 7-review | Review Book Requests Backend | reviewer-agent | review-task | done | passed - no must-fix issues |
-| 8 | Book Requests Frontend | frontend-agent | frontend-task | pending | requests list, create, detail |
-| 8-test | Validate Book Requests Frontend | test-agent | test-task | pending | lint and build |
-| 8-review | Review Book Requests Frontend | reviewer-agent | review-task | pending | UI and API service review |
+| 8 | Book Requests Frontend | frontend-agent | frontend-task | done | /requests, /requests/new, /requests/[id], /requests/[id]/edit, RequestCard, RequestFilters, CreateRequestForm, EditRequestForm |
+| 8-test | Validate Book Requests Frontend | test-agent | test-task | done | lint passed (0 errors, 9 warnings), build passed |
+| 8-review | Review Book Requests Frontend | reviewer-agent | review-task | done | passed - follows same patterns as Task 6 |
 | 9A | Conversations Backend | backend-agent | backend-task | pending | conversations and messages API |
 | 9A-test | Validate Conversations Backend | test-agent | test-task | pending | backend tests |
 | 9A-review | Review Conversations Backend | reviewer-agent | review-task | pending | conversation authorization review |
