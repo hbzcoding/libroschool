@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\SchoolController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,4 +40,17 @@ Route::get('/schools/{school}', [SchoolController::class, 'show']);
 // Schools routes (protected)
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/schools', [SchoolController::class, 'store']);
+});
+
+// Books routes (public list/show)
+Route::get('/books', [BookController::class, 'index']);
+Route::get('/books/{book}', [BookController::class, 'show']);
+
+// Books routes (protected)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/books', [BookController::class, 'store']);
+    Route::put('/books/{book}', [BookController::class, 'update']);
+    Route::delete('/books/{book}', [BookController::class, 'destroy']);
+    Route::post('/books/{book}/mark-reserved', [BookController::class, 'markReserved']);
+    Route::post('/books/{book}/mark-sold', [BookController::class, 'markSold']);
 });
