@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\BookRequestController;
 use App\Http\Controllers\Api\SchoolController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,4 +55,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/books/{book}/mark-reserved', [BookController::class, 'markReserved']);
     Route::post('/books/{book}/mark-sold', [BookController::class, 'markSold']);
     Route::post('/books/{book}/images', [BookController::class, 'uploadImage']);
+});
+
+// Book requests routes (public list/show)
+Route::get('/book-requests', [BookRequestController::class, 'index']);
+Route::get('/book-requests/{bookRequest}', [BookRequestController::class, 'show']);
+
+// Book requests routes (protected)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/book-requests', [BookRequestController::class, 'store']);
+    Route::put('/book-requests/{bookRequest}', [BookRequestController::class, 'update']);
+    Route::delete('/book-requests/{bookRequest}', [BookRequestController::class, 'destroy']);
+    Route::post('/book-requests/{bookRequest}/close', [BookRequestController::class, 'close']);
 });

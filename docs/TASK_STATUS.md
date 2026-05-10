@@ -49,9 +49,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 6 | Books Frontend | frontend-agent | frontend-task | done | /books, /books/new, /books/[id], /books/[id]/edit, BookCard, BookFilters, ImageUploader, CreateBookForm, EditBookForm |
 | 6-test | Validate Books Frontend | test-agent | test-task | done | lint passed (0 errors, 4 warnings), build passed |
 | 6-review | Review Books Frontend | reviewer-agent | review-task | done | passed after edit page fix |
-| 7 | Book Requests Backend | backend-agent | backend-task | pending | book requests API |
-| 7-test | Validate Book Requests Backend | test-agent | test-task | pending | backend tests |
-| 7-review | Review Book Requests Backend | reviewer-agent | review-task | pending | authorization and scope review |
+| 7 | Book Requests Backend | backend-agent | backend-task | done | BookRequestController, BookRequestPolicy, BookRequestResource, FormRequests, 27 tests |
+| 7-test | Validate Book Requests Backend | test-agent | test-task | done | 90 tests passed (578 assertions) |
+| 7-review | Review Book Requests Backend | reviewer-agent | review-task | done | passed - no must-fix issues |
 | 8 | Book Requests Frontend | frontend-agent | frontend-task | pending | requests list, create, detail |
 | 8-test | Validate Book Requests Frontend | test-agent | test-task | pending | lint and build |
 | 8-review | Review Book Requests Frontend | reviewer-agent | review-task | pending | UI and API service review |
