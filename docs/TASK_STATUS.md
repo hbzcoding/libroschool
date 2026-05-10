@@ -76,9 +76,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 12A | Flashcards Backend | backend-agent | backend-task | done | flashcard API - FlashcardController, FlashcardPolicy, FlashcardResource, FormRequests, 25 tests |
 | 12A-test | Validate Flashcards Backend | test-agent | test-task | done | 240 tests passed (1166 assertions) |
 | 12A-review | Review Flashcards Backend | reviewer-agent | review-task | done | passed - authorization correct, API aligned, no must-fix issues |
-| 12B | Flashcards Frontend | frontend-agent | frontend-task | pending | flashcard UI |
-| 12B-test | Validate Flashcards Frontend | test-agent | test-task | pending | lint and build |
-| 12B-review | Review Flashcards Frontend | reviewer-agent | review-task | pending | UI and API service review |
+| 12B | Flashcards Frontend | frontend-agent | frontend-task | done | flashcard UI - FlashcardViewer, FlashcardEditor, study mode with flip/shuffle |
+| 12B-test | Validate Flashcards Frontend | test-agent | test-task | done | lint 0 errors, build passed |
+| 12B-review | Review Flashcards Frontend | reviewer-agent | review-task | done | passed - follows patterns, API aligned, no must-fix issues |
 | 13A | Reports Backend | backend-agent | backend-task | pending | report API |
 | 13A-test | Validate Reports Backend | test-agent | test-task | pending | backend tests |
 | 13A-review | Review Reports Backend | reviewer-agent | review-task | pending | report security review |
