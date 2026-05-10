@@ -2,6 +2,7 @@
 
 import { PaginationMeta } from "@/types/api";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export interface Column<T> {
   key: string;
@@ -36,9 +37,11 @@ export function DataTable<T extends { id: number }>({
   meta,
   onPageChange,
   renderMobileCard,
-  emptyMessage = "No data found",
+  emptyMessage,
   isLoading = false,
 }: DataTableProps<T>) {
+  const { t } = useTranslation();
+  const fallbackEmptyMessage = emptyMessage || t("admin.noDataFound");
   if (isLoading) {
     return <TableSkeleton />;
   }
@@ -46,7 +49,7 @@ export function DataTable<T extends { id: number }>({
   if (data.length === 0) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-sm text-[#8a8f98]">{emptyMessage}</p>
+        <p className="text-sm text-[#8a8f98]">{fallbackEmptyMessage}</p>
       </div>
     );
   }
@@ -123,7 +126,7 @@ export function DataTable<T extends { id: number }>({
       {meta && meta.last_page > 1 && (
         <div className="flex items-center justify-between mt-4 px-1">
           <p className="text-xs text-[#8a8f98]">
-            Page {meta.current_page} of {meta.last_page} ({meta.total} total)
+            {t("admin.pagination.page")} {meta.current_page} {t("admin.pagination.of")} {meta.last_page} ({meta.total} {t("admin.pagination.total")})
           </p>
           <div className="flex items-center gap-1">
             <button
@@ -131,7 +134,7 @@ export function DataTable<T extends { id: number }>({
               disabled={meta.current_page <= 1}
               className="rounded-md border border-[#23252a] bg-[#0f1011] px-3 py-1.5 text-xs text-[#8a8f98] hover:bg-[#141516] hover:text-[#f7f8f8] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Previous
+              {t("admin.pagination.previous")}
             </button>
             {Array.from({ length: Math.min(meta.last_page, 5) }, (_, i) => {
               let page: number;
@@ -164,7 +167,7 @@ export function DataTable<T extends { id: number }>({
               disabled={meta.current_page >= meta.last_page}
               className="rounded-md border border-[#23252a] bg-[#0f1011] px-3 py-1.5 text-xs text-[#8a8f98] hover:bg-[#141516] hover:text-[#f7f8f8] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Next
+              {t("admin.pagination.next")}
             </button>
           </div>
         </div>
@@ -204,18 +207,20 @@ export function StatusBadge({
 export function SearchInput({
   value,
   onChange,
-  placeholder = "Search...",
+  placeholder,
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
 }) {
+  const { t } = useTranslation();
+  const fallbackPlaceholder = placeholder || t("admin.search");
   return (
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
+      placeholder={fallbackPlaceholder}
       className="w-full rounded-lg border border-[#23252a] bg-[#0f1011] px-3 py-2 text-sm text-[#f7f8f8] placeholder:text-[#62666d] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50 focus:border-[#5e6ad2] transition-colors"
     />
   );
@@ -226,20 +231,22 @@ export function FilterSelect<T extends string>({
   value,
   onChange,
   options,
-  placeholder = "All",
+  placeholder,
 }: {
   value: string;
   onChange: (value: T) => void;
   options: { value: T; label: string }[];
   placeholder?: string;
 }) {
+  const { t } = useTranslation();
+  const fallbackPlaceholder = placeholder || t("admin.filters.all");
   return (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as T)}
       className="rounded-lg border border-[#23252a] bg-[#0f1011] px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50 focus:border-[#5e6ad2] transition-colors"
     >
-      <option value="">{placeholder}</option>
+      <option value="">{fallbackPlaceholder}</option>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -274,11 +281,12 @@ export function PageHeader({
 
 // Loading state
 export function AdminLoadingState() {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center py-24">
       <div className="flex flex-col items-center gap-3">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#23252a] border-t-[#5e6ad2]" />
-        <p className="text-sm text-[#8a8f98]">Loading...</p>
+        <p className="text-sm text-[#8a8f98]">{t("admin.loading")}</p>
       </div>
     </div>
   );
@@ -292,6 +300,7 @@ export function AdminErrorState({
   message: string;
   onRetry?: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center py-24">
       <div className="flex flex-col items-center gap-3">
@@ -301,7 +310,7 @@ export function AdminErrorState({
             onClick={onRetry}
             className="rounded-lg bg-[#0f1011] border border-[#23252a] px-4 py-2 text-sm text-[#d0d6e0] hover:bg-[#141516] hover:text-[#f7f8f8] transition-colors"
           >
-            Retry
+            {t("admin.retry")}
           </button>
         )}
       </div>

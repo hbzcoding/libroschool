@@ -11,11 +11,13 @@ import { notesService } from "@/services/notes";
 import { Note } from "@/types/note";
 import { EditNoteForm } from "@/features/notes";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowLeft } from "lucide-react";
 
 export default function EditNotePage() {
   const params = useParams();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const noteId = Number(params.id);
 
   const [note, setNote] = useState<Note | null>(null);
@@ -32,7 +34,7 @@ export default function EditNotePage() {
         const response = await notesService.getNote(noteId);
         setNote(response);
       } catch {
-        setError("Failed to load note details.");
+        setError(t("notes.loadError"));
       } finally {
         setIsLoading(false);
       }
@@ -46,13 +48,13 @@ export default function EditNotePage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <PageHeader title="Edit Note" />
+          <PageHeader title={t("notes.editNoteTitle")} />
           <EmptyState
-            title="Access Denied"
-            description="You can only edit your own notes."
+            title={t("notes.accessDenied")}
+            description={t("notes.editDeniedDesc")}
             action={
               <Link href={`/notes/${noteId}`}>
-                <Button variant="outline">View Note</Button>
+                <Button variant="outline">{t("notes.viewNote")}</Button>
               </Link>
             }
           />
@@ -65,7 +67,7 @@ export default function EditNotePage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <LoadingState message="Loading note..." />
+          <LoadingState message={t("notes.loadingNotes")} />
         </div>
       </AppLayout>
     );
@@ -75,13 +77,13 @@ export default function EditNotePage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <PageHeader title="Edit Note" />
+          <PageHeader title={t("notes.editNoteTitle")} />
           <EmptyState
-            title="Note Not Found"
-            description={error || "This note does not exist or has been deleted."}
+            title={t("notes.noteNotFound")}
+            description={error || t("notes.noteNotFoundDesc")}
             action={
               <Link href="/notes">
-                <Button variant="outline">Back to Notes</Button>
+                <Button variant="outline">{t("notes.backToNotes")}</Button>
               </Link>
             }
           />
@@ -97,12 +99,12 @@ export default function EditNotePage() {
           <Link href={`/notes/${noteId}`}>
             <Button variant="ghost" size="sm" className="gap-2">
               <ArrowLeft className="size-4" />
-              Back to Note
+              {t("notes.backToNote")}
             </Button>
           </Link>
         </div>
 
-        <PageHeader title="Edit Note" description={note.title} />
+        <PageHeader title={t("notes.editNoteTitle")} description={note.title} />
 
         <Card>
           <CardContent className="p-6">

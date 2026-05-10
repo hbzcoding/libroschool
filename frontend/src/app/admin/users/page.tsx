@@ -14,8 +14,10 @@ import {
 } from "@/features/admin/components/DataTable";
 import { ConfirmDialog } from "@/features/admin/components/ConfirmDialog";
 import { Column } from "@/features/admin/components/DataTable";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminUsersPage() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +50,7 @@ export default function AdminUsersPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load users");
+          setError(t("admin.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -62,7 +64,7 @@ export default function AdminUsersPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, roleFilter, page]);
+  }, [search, roleFilter, page, t]);
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -80,7 +82,7 @@ export default function AdminUsersPage() {
       setTotal(response.meta.total);
       setError(null);
     } catch {
-      setError("Failed to load users");
+      setError(t("admin.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -121,7 +123,7 @@ export default function AdminUsersPage() {
   const columns: Column<AdminUser>[] = [
     {
       key: "name",
-      label: "Name",
+      label: t("admin.tables.name"),
       render: (user) => (
         <div>
           <p className="text-sm font-medium text-[#f7f8f8]">{user.name}</p>
@@ -131,7 +133,7 @@ export default function AdminUsersPage() {
     },
     {
       key: "role",
-      label: "Role",
+      label: t("admin.tables.role"),
       render: (user) => (
         <StatusBadge
           status={user.role}
@@ -141,7 +143,7 @@ export default function AdminUsersPage() {
     },
     {
       key: "school_id",
-      label: "School",
+      label: t("admin.tables.school"),
       render: (user) => (
         <span className="text-sm text-[#8a8f98]">
           {user.school_id ? `#${user.school_id}` : "—"}
@@ -150,48 +152,48 @@ export default function AdminUsersPage() {
     },
     {
       key: "banned_at",
-      label: "Status",
+      label: t("admin.tables.status"),
       render: (user) => (
         user.banned_at ? (
-          <StatusBadge status="Banned" variant="danger" />
+          <StatusBadge status={t("admin.filters.suspended")} variant="danger" />
         ) : (
-          <StatusBadge status="Active" variant="success" />
+          <StatusBadge status={t("admin.filters.active")} variant="success" />
         )
       ),
     },
     {
       key: "created_at",
-      label: "Joined",
+      label: t("admin.tables.createdAt"),
       render: (user) => (
         <span className="text-xs text-[#62666d]">{formatDate(user.created_at)}</span>
       ),
     },
     {
       key: "actions",
-      label: "Actions",
+      label: t("admin.tables.actions"),
       render: (user) => (
         <div className="flex items-center gap-1">
           {user.role !== "admin" && (
             user.banned_at ? (
               <ConfirmDialog
-                title="Unban User"
+                title={t("admin.actions.activateUser")}
                 description={`Unban ${user.name}? They will regain access to the platform.`}
-                confirmLabel="Unban"
+                confirmLabel={t("admin.actions.activateUser")}
                 onConfirm={() => handleUnban(user.id)}
                 trigger={
                   <button
                     disabled={actionLoading === user.id}
                     className="rounded-md border border-[#23252a] bg-[#0f1011] px-2.5 py-1 text-xs text-[#d0d6e0] hover:bg-[#141516] transition-colors disabled:opacity-50"
                   >
-                    Unban
+                    {t("admin.actions.activateUser")}
                   </button>
                 }
               />
             ) : (
               <ConfirmDialog
-                title="Ban User"
+                title={t("admin.actions.suspendUser")}
                 description={`Ban ${user.name}? They will lose access to the platform.`}
-                confirmLabel="Ban"
+                confirmLabel={t("admin.actions.suspendUser")}
                 variant="destructive"
                 onConfirm={() => handleBan(user.id)}
                 trigger={
@@ -199,7 +201,7 @@ export default function AdminUsersPage() {
                     disabled={actionLoading === user.id}
                     className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
                   >
-                    Ban
+                    {t("admin.actions.suspendUser")}
                   </button>
                 }
               />
@@ -221,8 +223,8 @@ export default function AdminUsersPage() {
   return (
     <div>
       <PageHeader
-        title="Users"
-        description={`${total} total users`}
+        title={t("admin.users")}
+        description={`${total} ${t("admin.totalUsers")}`}
       />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -230,16 +232,16 @@ export default function AdminUsersPage() {
           <SearchInput
             value={search}
             onChange={(v) => { setSearch(v); setPage(1); }}
-            placeholder="Search by name or email..."
+            placeholder={t("admin.searchNameOrEmail")}
           />
         </div>
         <FilterSelect
           value={roleFilter}
           onChange={(v) => { setRoleFilter(v); setPage(1); }}
-          placeholder="All Roles"
+          placeholder={t("admin.filters.all")}
           options={[
-            { value: "student", label: "Student" },
-            { value: "admin", label: "Admin" },
+            { value: "student", label: t("admin.roles.student") },
+            { value: "admin", label: t("admin.roles.admin") },
           ]}
         />
       </div>
@@ -255,7 +257,7 @@ export default function AdminUsersPage() {
         }}
         onPageChange={setPage}
         isLoading={isLoading}
-        emptyMessage="No users found"
+        emptyMessage={t("admin.empty.users")}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Flashcard } from "@/types/flashcard";
 import { cn } from "@/lib/utils";
 import { RotateCcw, FileText } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FlashcardCardProps {
   flashcard: Flashcard;
@@ -12,6 +13,7 @@ interface FlashcardCardProps {
 }
 
 export function FlashcardCard({ flashcard, onClick, className }: FlashcardCardProps) {
+  const { t } = useTranslation();
   return (
     <Card
       className={cn(
@@ -31,13 +33,13 @@ export function FlashcardCard({ flashcard, onClick, className }: FlashcardCardPr
 
         {/* Front text */}
         <div>
-          <p className="text-xs text-muted-foreground mb-1">Front</p>
+          <p className="text-xs text-muted-foreground mb-1">{t("flashcards.fields.front")}</p>
           <p className="text-sm font-medium line-clamp-3">{flashcard.front_text}</p>
         </div>
 
         {/* Back text */}
         <div className="border-t pt-3">
-          <p className="text-xs text-muted-foreground mb-1">Back</p>
+          <p className="text-xs text-muted-foreground mb-1">{t("flashcards.fields.back")}</p>
           <p className="text-sm text-muted-foreground line-clamp-3">
             {flashcard.back_text}
           </p>
@@ -46,7 +48,7 @@ export function FlashcardCard({ flashcard, onClick, className }: FlashcardCardPr
         {/* Updated date */}
         <div className="flex items-center gap-1 text-xs text-muted-foreground pt-1">
           <RotateCcw className="size-3" />
-          <span>Updated {new Date(flashcard.updated_at).toLocaleDateString()}</span>
+          <span>{t("flashcards.updated")} {new Date(flashcard.updated_at).toLocaleDateString()}</span>
         </div>
       </CardContent>
     </Card>

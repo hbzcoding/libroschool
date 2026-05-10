@@ -91,6 +91,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 14B | Admin Frontend | frontend-agent | frontend-task | done | admin backoffice UI - all pages, services, types, components |
 | 14B-test | Validate Admin Frontend | test-agent | test-task | done | lint 0 errors, build passed |
 | 14B-review | Review Admin Frontend | reviewer-agent | review-task | done | passed - follows patterns, admin routes protected, no must-fix issues |
+| 15 | Frontend Localization English and Italian | frontend-agent | frontend-task | done | add frontend i18n foundation for English and Italian UI copy only; do not add other languages yet |
+| 15-test | Validate Frontend Localization | test-agent | test-task | done | 0 errors (35 warnings), build passed |
+| 15-review | Review Frontend Localization | reviewer-agent | review-task | done | passed - scope controlled, DESIGN.md consistent, no API changes, 0 errors build |
 
 ## How Autopilot Should Continue
 

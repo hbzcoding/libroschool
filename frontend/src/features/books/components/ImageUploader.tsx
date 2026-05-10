@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form";
 import { Upload, X, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
@@ -30,6 +31,7 @@ export function ImageUploader({
   className,
   error,
 }: ImageUploaderProps) {
+  const { t } = useTranslation();
   const [images, setImages] = useState<ImageFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -38,17 +40,17 @@ export function ImageUploader({
   const validateFile = useCallback(
     (file: File): string | null => {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        return "Invalid file type. Use JPG, PNG, or WebP.";
+        return t("books.images.invalidType");
       }
       if (file.size > MAX_SIZE) {
-        return "File too large. Max 5MB.";
+        return t("books.images.tooLarge");
       }
       if (images.length + 1 > maxImages) {
-        return `Maximum ${maxImages} images allowed.`;
+        return t("books.images.maxImages", { count: maxImages });
       }
       return null;
     },
-    [images.length, maxImages]
+    [images.length, maxImages, t]
   );
 
   const handleFiles = useCallback(
@@ -59,7 +61,7 @@ export function ImageUploader({
 
       for (const file of fileArray) {
         if (newImages.length + images.length >= maxImages) {
-          errors.push(`Maximum ${maxImages} images allowed.`);
+          errors.push(t("books.images.maxImages", { count: maxImages }));
           break;
         }
         const validationError = validateFile(file);
@@ -142,7 +144,7 @@ export function ImageUploader({
     } catch {
       setImages((prev) =>
         prev.map((img) =>
-          !img.error ? { ...img, error: "Upload failed", progress: 0 } : img
+          !img.error ? { ...img, error: t("books.images.uploadFailed"), progress: 0 } : img
         )
       );
     } finally {
@@ -175,10 +177,10 @@ export function ImageUploader({
         </div>
         <div className="text-center">
           <p className="text-sm font-medium">
-            {isUploading ? "Uploading..." : "Click or drag to upload"}
+            {isUploading ? t("books.images.uploading") : t("books.images.clickOrDrag")}
           </p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            JPG, PNG, or WebP. Max 5MB each. Up to {maxImages} images.
+            {t("books.images.constraints", { maxImages })}
           </p>
         </div>
       </div>
@@ -250,7 +252,7 @@ export function ImageUploader({
           disabled={isUploading}
           className="w-full"
         >
-          {isUploading ? "Uploading..." : "Upload Images"}
+          {isUploading ? t("books.images.uploading") : t("books.images.uploadButton")}
         </Button>
       )}
 

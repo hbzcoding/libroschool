@@ -16,6 +16,7 @@ import {
 import { reportsService } from "@/services/reports";
 import type { ReportableType } from "@/types/report";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ReportButtonProps {
   reportableType: ReportableType;
@@ -27,9 +28,11 @@ interface ReportButtonProps {
 export function ReportButton({
   reportableType,
   reportableId,
-  label = "Report",
+  label,
   className,
 }: ReportButtonProps) {
+  const { t } = useTranslation();
+  const resolvedLabel = label ?? t("reports.report");
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +40,7 @@ export function ReportButton({
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
-      setError("Please provide a reason for your report.");
+      setError(t("reports.reasonRequired"));
       return;
     }
 
@@ -54,9 +57,9 @@ export function ReportButton({
       setReason("");
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Failed to submit report.";
+        err instanceof Error ? err.message : t("reports.reportError");
       if (message.includes("already reported")) {
-        setError("You have already reported this content.");
+        setError(t("reports.alreadyReported"));
       } else {
         setError(message);
       }
@@ -77,14 +80,13 @@ export function ReportButton({
         }
       >
         <Flag className="size-3.5" />
-        {label}
+        {resolvedLabel}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Report Content</DialogTitle>
+          <DialogTitle>{t("reports.confirmTitle")}</DialogTitle>
           <DialogDescription>
-            Please explain why you are reporting this content. Reports are
-            reviewed by our team.
+            {t("reports.confirmDesc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,7 +97,7 @@ export function ReportButton({
               setReason(e.target.value);
               setError(null);
             }}
-            placeholder="Describe the issue..."
+            placeholder={t("reports.reasonPlaceholder")}
             rows={4}
             maxLength={1000}
             className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -112,7 +114,7 @@ export function ReportButton({
 
         <DialogFooter>
           <DialogClose render={<Button variant="outline" disabled={isSubmitting} />}>
-            Cancel
+            {t("common.cancel")}
           </DialogClose>
           <Button
             onClick={handleSubmit}
@@ -121,10 +123,10 @@ export function ReportButton({
             {isSubmitting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                Submitting...
+                {t("reports.submitting")}
               </>
             ) : (
-              "Submit Report"
+              t("reports.report")
             )}
           </Button>
         </DialogFooter>

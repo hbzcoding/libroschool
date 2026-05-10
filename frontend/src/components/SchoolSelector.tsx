@@ -5,6 +5,7 @@ import { schoolsService } from "@/services/schools";
 import { School } from "@/types/school";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface SchoolSelectorProps {
   value?: number | null;
@@ -17,8 +18,11 @@ export function SchoolSelector({
   value,
   onChange,
   className,
-  placeholder = "Search school...",
+  placeholder,
 }: SchoolSelectorProps) {
+  const { t } = useTranslation();
+  const defaultPlaceholder = t("selectors.searchSchool");
+  const resolvedPlaceholder = placeholder ?? defaultPlaceholder;
   const [search, setSearch] = useState("");
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(false);
@@ -80,7 +84,7 @@ export function SchoolSelector({
         placeholder={
           selectedSchool
             ? `${selectedSchool.name} - ${selectedSchool.city}`
-            : placeholder
+            : resolvedPlaceholder
         }
         value={selectedSchool ? "" : search}
         onChange={(e) => {
@@ -101,7 +105,7 @@ export function SchoolSelector({
             onClick={handleClear}
             className="text-muted-foreground hover:text-foreground text-xs"
           >
-            Change
+            {t("selectors.change")}
           </button>
         </div>
       )}
@@ -121,10 +125,10 @@ export function SchoolSelector({
         </div>
       )}
       {loading && (
-        <p className="text-sm text-muted-foreground">Searching...</p>
+        <p className="text-sm text-muted-foreground">{t("selectors.searching")}</p>
       )}
       {search.length >= 2 && !loading && schools.length === 0 && !selectedSchool && (
-        <p className="text-sm text-muted-foreground">No schools found</p>
+        <p className="text-sm text-muted-foreground">{t("selectors.noSchoolsFound")}</p>
       )}
     </div>
   );

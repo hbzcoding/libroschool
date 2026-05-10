@@ -12,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ConfirmDialogProps {
   title: string;
@@ -26,12 +27,15 @@ interface ConfirmDialogProps {
 export function ConfirmDialog({
   title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  confirmLabel,
+  cancelLabel,
   variant = "default",
   onConfirm,
   trigger,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation();
+  const fallbackConfirmLabel = confirmLabel || t("admin.confirm");
+  const fallbackCancelLabel = cancelLabel || t("admin.cancel");
   return (
     <AlertDialog>
       <AlertDialogTrigger render={<Button variant="outline" />}>
@@ -46,7 +50,7 @@ export function ConfirmDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="bg-[#0f1011] border border-[#23252a] text-[#8a8f98] hover:bg-[#141516] hover:text-[#f7f8f8]">
-            {cancelLabel}
+            {fallbackCancelLabel}
           </AlertDialogCancel>
           <AlertDialogAction
             className={
@@ -56,7 +60,7 @@ export function ConfirmDialog({
             }
             onClick={onConfirm}
           >
-            {confirmLabel}
+            {fallbackConfirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

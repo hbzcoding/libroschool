@@ -10,6 +10,7 @@ import {
 } from "@/types/note";
 import { cn } from "@/lib/utils";
 import { GraduationCap, Tag, Calendar, Layers } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface NoteCardProps {
   note: Note;
@@ -23,6 +24,7 @@ const VISIBILITY_COLORS: Record<NoteVisibility, string> = {
 };
 
 export function NoteCard({ note }: NoteCardProps) {
+  const { t } = useTranslation();
   return (
     <Link href={`/notes/${note.id}`}>
       <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer">
@@ -63,7 +65,7 @@ export function NoteCard({ note }: NoteCardProps) {
             {note.grade && (
               <span className="inline-flex items-center gap-1">
                 <GraduationCap className="size-3" />
-                Grade {note.grade}
+                {t("notes.gradeLabel", { grade: note.grade })}
               </span>
             )}
           </div>

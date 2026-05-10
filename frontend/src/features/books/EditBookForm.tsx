@@ -24,6 +24,7 @@ import { booksService } from "@/services/books";
 import { CONDITION_LABELS, STATUS_LABELS, BookCondition, BookStatus, Book } from "@/types/book";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const CONDITIONS: { value: BookCondition; label: string }[] = [
   { value: "new", label: CONDITION_LABELS.new },
@@ -66,6 +67,7 @@ interface EditBookFormProps {
 }
 
 export function EditBookForm({ book, className }: EditBookFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pendingImages, setPendingImages] = useState<File[]>([]);
@@ -111,7 +113,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
   const onSubmit = async (data: BookFormData) => {
     if (!schoolId) {
-      setFieldErrors({ school_id: "School is required" });
+      setFieldErrors({ school_id: t("books.fields.schoolRequired") });
       return;
     }
 
@@ -132,7 +134,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
             await booksService.uploadImage(book.id, file);
           }
         } catch {
-          setImageError("Book updated, but some images failed to upload.");
+          setImageError(t("books.imageUploadUpdateFailed"));
           router.push(`/books/${book.id}`);
           return;
         }
@@ -167,12 +169,12 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
       {/* Title */}
       <div className="space-y-2">
         <label htmlFor="title" className="text-sm font-medium">
-          Title <span className="text-destructive">*</span>
+          {t("books.fields.title")} <span className="text-destructive">*</span>
         </label>
         <Input
           id="title"
           {...register("title")}
-          placeholder="Book title"
+          placeholder={t("books.fields.titlePlaceholder")}
           disabled={isSubmitting}
           aria-invalid={!!formErrors.title}
         />
@@ -184,7 +186,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
       {/* School */}
       <div className="space-y-2">
         <label className="text-sm font-medium">
-          School <span className="text-destructive">*</span>
+          {t("books.fields.school")} <span className="text-destructive">*</span>
         </label>
         <SchoolSelector
           value={schoolId}
@@ -198,7 +200,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
       {/* Condition */}
       <div className="space-y-2">
         <label className="text-sm font-medium">
-          Condition <span className="text-destructive">*</span>
+          {t("books.fields.condition")} <span className="text-destructive">*</span>
         </label>
         <Select
           value={selectedCondition}
@@ -207,7 +209,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select condition" />
+            <SelectValue placeholder={t("selectors.selectCondition")} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -226,7 +228,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
       {/* Status */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Status</label>
+        <label className="text-sm font-medium">{t("books.fields.status")}</label>
         <Select
           value={selectedStatus}
           onValueChange={(value) =>
@@ -234,7 +236,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select status" />
+            <SelectValue placeholder={t("books.fields.selectStatus")} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -254,7 +256,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
       {/* Price */}
       <div className="space-y-2">
         <label htmlFor="price" className="text-sm font-medium">
-          Price (&euro;) <span className="text-destructive">*</span>
+          {t("books.price")} (&euro;) <span className="text-destructive">*</span>
         </label>
         <Input
           id="price"
@@ -273,11 +275,11 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
       {/* ISBN */}
       <div className="space-y-2">
-        <label htmlFor="isbn" className="text-sm font-medium">ISBN</label>
+        <label htmlFor="isbn" className="text-sm font-medium">{t("books.fields.isbn")}</label>
         <Input
           id="isbn"
           {...register("isbn")}
-          placeholder="ISBN-10 or ISBN-13"
+          placeholder={t("books.fields.isbnPlaceholder")}
           disabled={isSubmitting}
         />
         {(formErrors.isbn || fieldErrors.isbn) && (
@@ -287,11 +289,11 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
       {/* Subject */}
       <div className="space-y-2">
-        <label htmlFor="subject" className="text-sm font-medium">Subject</label>
+        <label htmlFor="subject" className="text-sm font-medium">{t("books.fields.subject")}</label>
         <Input
           id="subject"
           {...register("subject")}
-          placeholder="e.g., Mathematics, History..."
+          placeholder={t("books.fields.subjectPlaceholder")}
           disabled={isSubmitting}
         />
         {(formErrors.subject || fieldErrors.subject) && (
@@ -302,7 +304,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
       {/* Grade & Track */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Grade</label>
+          <label className="text-sm font-medium">{t("books.fields.grade")}</label>
           <GradeSelector
             value={watch("grade") || null}
             onChange={(value) => setValue("grade", value)}
@@ -312,7 +314,7 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
           )}
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium">Track</label>
+          <label className="text-sm font-medium">{t("books.fields.track")}</label>
           <TrackSelector
             value={watch("track") || null}
             onChange={(value) => setValue("track", value)}
@@ -325,11 +327,11 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
       {/* Publisher */}
       <div className="space-y-2">
-        <label htmlFor="publisher" className="text-sm font-medium">Publisher</label>
+        <label htmlFor="publisher" className="text-sm font-medium">{t("books.fields.publisher")}</label>
         <Input
           id="publisher"
           {...register("publisher")}
-          placeholder="Publisher name"
+          placeholder={t("books.fields.publisherPlaceholder")}
           disabled={isSubmitting}
         />
         {(formErrors.publisher || fieldErrors.publisher) && (
@@ -339,11 +341,11 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
       {/* Author */}
       <div className="space-y-2">
-        <label htmlFor="author" className="text-sm font-medium">Author</label>
+        <label htmlFor="author" className="text-sm font-medium">{t("books.fields.author")}</label>
         <Input
           id="author"
           {...register("author")}
-          placeholder="Author name"
+          placeholder={t("books.fields.authorPlaceholder")}
           disabled={isSubmitting}
         />
         {(formErrors.author || fieldErrors.author) && (
@@ -353,11 +355,11 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
       {/* Description */}
       <div className="space-y-2">
-        <label htmlFor="description" className="text-sm font-medium">Description</label>
+        <label htmlFor="description" className="text-sm font-medium">{t("books.fields.description")}</label>
         <textarea
           id="description"
           {...register("description")}
-          placeholder="Additional details about the book..."
+          placeholder={t("books.fields.descriptionPlaceholder")}
           disabled={isSubmitting}
           rows={4}
           className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -369,15 +371,14 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
 
       {/* Image Uploader */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Add More Images</label>
+        <label className="text-sm font-medium">{t("books.fields.addImages")}</label>
         <ImageUploader
           onUpload={handleImageUpload}
           error={imageError || undefined}
         />
         {book.images.length > 0 && (
           <p className="text-sm text-muted-foreground">
-            This book has {book.images.length} existing image(s).
-            New images will be added.
+            {t("books.fields.existingImages", { count: book.images.length })}
           </p>
         )}
       </div>
@@ -387,10 +388,10 @@ export function EditBookForm({ book, className }: EditBookFormProps) {
         {isSubmitting ? (
           <>
             <Loader2 className="size-4 animate-spin mr-2" />
-            Saving...
+            {t("common.saving")}
           </>
         ) : (
-          "Save Changes"
+          t("common.save")
         )}
       </Button>
     </form>

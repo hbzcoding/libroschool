@@ -23,6 +23,7 @@ import { notesService } from "@/services/notes";
 import { MODE_LABELS, NoteMode } from "@/types/note";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const MODES: { value: NoteMode; label: string }[] = [
   { value: "note", label: MODE_LABELS.note },
@@ -45,6 +46,7 @@ interface CreateNoteFormProps {
 }
 
 export function CreateNoteForm({ className }: CreateNoteFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -108,12 +110,12 @@ export function CreateNoteForm({ className }: CreateNoteFormProps) {
       {/* Title */}
       <div className="space-y-2">
         <label htmlFor="title" className="text-sm font-medium">
-          Title <span className="text-destructive">*</span>
+          {t("notes.fields.title")} <span className="text-destructive">*</span>
         </label>
         <Input
           id="title"
           {...register("title")}
-          placeholder="Note title"
+          placeholder={t("notes.fields.titlePlaceholder")}
           disabled={isSubmitting}
           aria-invalid={!!formErrors.title}
         />
@@ -124,13 +126,13 @@ export function CreateNoteForm({ className }: CreateNoteFormProps) {
 
       {/* Mode */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Type</label>
+        <label className="text-sm font-medium">{t("notes.fields.type")}</label>
         <Select
           value={selectedMode}
           onValueChange={(value) => setValue("mode", value as NoteMode)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select type" />
+            <SelectValue placeholder={t("notes.fields.selectType")} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -153,24 +155,24 @@ export function CreateNoteForm({ className }: CreateNoteFormProps) {
 
       {/* School (optional) */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">School (optional)</label>
+        <label className="text-sm font-medium">{t("notes.fields.school")} ({t("common.optional")})</label>
         <SchoolSelector value={schoolId} onChange={(value) => setSchoolId(value)} />
       </div>
 
       {/* Subject */}
       <div className="space-y-2">
-        <label htmlFor="subject" className="text-sm font-medium">Subject</label>
+        <label htmlFor="subject" className="text-sm font-medium">{t("notes.fields.subject")}</label>
         <Input
           id="subject"
           {...register("subject")}
-          placeholder="e.g., Mathematics, History..."
+          placeholder={t("notes.fields.subjectPlaceholder")}
           disabled={isSubmitting}
         />
       </div>
 
       {/* Grade */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Grade</label>
+        <label className="text-sm font-medium">{t("notes.fields.grade")}</label>
         <GradeSelector
           value={watch("grade") || null}
           onChange={(value) => setValue("grade", value)}
@@ -180,14 +182,14 @@ export function CreateNoteForm({ className }: CreateNoteFormProps) {
       {/* Content */}
       <div className="space-y-2">
         <label htmlFor="content" className="text-sm font-medium">
-          Content <span className="text-destructive">*</span>
+          {t("notes.fields.content")} <span className="text-destructive">*</span>
         </label>
         <textarea
           id="content"
           {...register("content")}
           placeholder={selectedMode === "flashcard"
-            ? "Create flashcards from this content..."
-            : "Write your note content here..."}
+            ? t("notes.fields.flashcardContentPlaceholder")
+            : t("notes.fields.noteContentPlaceholder")}
           disabled={isSubmitting}
           rows={12}
           className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -202,10 +204,10 @@ export function CreateNoteForm({ className }: CreateNoteFormProps) {
         {isSubmitting ? (
           <>
             <Loader2 className="size-4 animate-spin mr-2" />
-            Creating...
+            {t("common.creating")}
           </>
         ) : (
-          "Create Note"
+          t("notes.actions.create")
         )}
       </Button>
     </form>

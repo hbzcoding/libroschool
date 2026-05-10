@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,13 +17,13 @@ import { ApiError } from "@/types/api";
 
 const registerSchema = z
   .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Please enter a valid email"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    password_confirmation: z.string().min(1, "Please confirm your password"),
+    name: z.string().min(2, "auth.nameMinLength"),
+    email: z.string().email("auth.invalidEmail"),
+    password: z.string().min(8, "auth.passwordMinLength"),
+    password_confirmation: z.string().min(1, "auth.confirmPasswordRequired"),
   })
   .refine((data) => data.password === data.password_confirmation, {
-    message: "Passwords do not match",
+    message: "auth.passwordsDoNotMatch",
     path: ["password_confirmation"],
   });
 
@@ -31,6 +32,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const router = useRouter();
   const { register: registerUser } = useAuth();
+  const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +59,7 @@ export default function RegisterPage() {
         setFieldErrors(apiError.errors);
       }
       setError(
-        apiError.message || "Registration failed. Please try again."
+        apiError.message || t("auth.registerFailed")
       );
     } finally {
       setIsLoading(false);
@@ -68,7 +70,7 @@ export default function RegisterPage() {
     <AuthLayout>
       <Card>
         <CardHeader>
-          <CardTitle>Register</CardTitle>
+          <CardTitle>{t("auth.registerTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -79,16 +81,16 @@ export default function RegisterPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">{t("auth.name")}</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="Your name"
+                placeholder={t("auth.namePlaceholder")}
                 {...register("name")}
                 disabled={isLoading}
               />
               {errors.name && (
-                <p className="text-sm text-destructive">{errors.name.message}</p>
+                <p className="text-sm text-destructive">{t(errors.name.message ?? "")}</p>
               )}
               {fieldErrors.name && (
                 <p className="text-sm text-destructive">{fieldErrors.name[0]}</p>
@@ -96,16 +98,16 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("auth.email")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="your@email.com"
+                placeholder={t("auth.emailPlaceholder")}
                 {...register("email")}
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
+                <p className="text-sm text-destructive">{t(errors.email.message ?? "")}</p>
               )}
               {fieldErrors.email && (
                 <p className="text-sm text-destructive">{fieldErrors.email[0]}</p>
@@ -113,16 +115,16 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="At least 8 characters"
+                placeholder={t("auth.passwordMinPlaceholder")}
                 {...register("password")}
                 disabled={isLoading}
               />
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message}</p>
+                <p className="text-sm text-destructive">{t(errors.password.message ?? "")}</p>
               )}
               {fieldErrors.password && (
                 <p className="text-sm text-destructive">{fieldErrors.password[0]}</p>
@@ -130,29 +132,29 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password_confirmation">Confirm Password</Label>
+              <Label htmlFor="password_confirmation">{t("auth.confirmPassword")}</Label>
               <Input
                 id="password_confirmation"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder={t("auth.confirmPasswordPlaceholder")}
                 {...register("password_confirmation")}
                 disabled={isLoading}
               />
               {errors.password_confirmation && (
                 <p className="text-sm text-destructive">
-                  {errors.password_confirmation.message}
+                  {t(errors.password_confirmation.message ?? "")}
                 </p>
               )}
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating account..." : "Register"}
+              {isLoading ? t("auth.creatingAccount") : t("auth.register")}
             </Button>
 
             <p className="text-sm text-center text-muted-foreground">
-              Already have an account?{" "}
+              {t("auth.hasAccount")}{" "}
               <Link href="/login" className="text-primary hover:underline">
-                Login
+                {t("auth.login")}
               </Link>
             </p>
           </form>

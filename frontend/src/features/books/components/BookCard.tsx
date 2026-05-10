@@ -5,12 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Book, CONDITION_LABELS, STATUS_LABELS } from "@/types/book";
 import { cn } from "@/lib/utils";
 import { BookOpen } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface BookCardProps {
   book: Book;
 }
 
 export function BookCard({ book }: BookCardProps) {
+  const { t } = useTranslation();
   const imageUrl = book.images.length > 0 ? book.images[0].url : null;
 
   return (
@@ -72,7 +74,7 @@ export function BookCard({ book }: BookCardProps) {
           {/* Grade & subject */}
           {(book.grade || book.subject) && (
             <p className="text-xs text-muted-foreground truncate">
-              {[book.grade ? `Grade ${book.grade}` : null, book.subject]
+              {[book.grade ? `${t("books.fields.grade")} ${book.grade}` : null, book.subject]
                 .filter(Boolean)
                 .join(" · ")}
             </p>

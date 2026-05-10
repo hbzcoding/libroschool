@@ -20,6 +20,7 @@ import { ClassroomCard, JoinClassroomForm } from "@/features/classrooms";
 import { classroomsService } from "@/services/classrooms";
 import { ClassroomsFilters, Classroom } from "@/types/classroom";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Plus, Users, Loader2, Search, SlidersHorizontal, X } from "lucide-react";
 import {
   Dialog,
@@ -33,6 +34,7 @@ import { cn } from "@/lib/utils";
 export default function ClassroomsPage() {
   const router = useRouter();
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +74,7 @@ export default function ClassroomsPage() {
         setTotalPages(response.meta.last_page);
         setCurrentPage(response.meta.current_page);
       } catch {
-        setError("Failed to load classrooms. Please try again.");
+        setError(t("classrooms.loadError"));
       } finally {
         setIsLoading(false);
         setIsLoadingMore(false);
@@ -101,7 +103,7 @@ export default function ClassroomsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load classrooms. Please try again.");
+          setError(t("classrooms.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -161,18 +163,18 @@ export default function ClassroomsPage() {
     <AppLayout>
       <div className="p-4 max-w-2xl mx-auto space-y-6 pb-20 md:pb-4">
         <PageHeader
-          title="Classrooms"
-          description="Join or create a classroom"
+          title={t("classrooms.title")}
+          description={t("classrooms.browseTitle")}
           actions={
             <div className="flex items-center gap-2">
               <Dialog open={joinDialogOpen} onOpenChange={setJoinDialogOpen}>
                 <DialogTrigger render={<Button variant="outline" size="sm" />}>
                   <Users className="size-4" />
-                  Join
+                  {t("classrooms.join")}
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Join a Classroom</DialogTitle>
+                    <DialogTitle>{t("classrooms.joinTitle")}</DialogTitle>
                   </DialogHeader>
                   <JoinClassroomForm onSuccess={() => setJoinDialogOpen(false)} />
                 </DialogContent>
@@ -180,7 +182,7 @@ export default function ClassroomsPage() {
               <Link href="/classes/new">
                 <Button size="sm">
                   <Plus className="size-4" />
-                  Create
+                  {t("classrooms.createClass")}
                 </Button>
               </Link>
             </div>
@@ -195,7 +197,7 @@ export default function ClassroomsPage() {
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search classrooms..."
+                placeholder={t("classrooms.searchPlaceholder")}
                 value={filters.search || ""}
                 onChange={(e) =>
                   updateFilter("search", e.target.value || undefined)
@@ -219,7 +221,7 @@ export default function ClassroomsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-lg bg-muted/50">
               {/* Grade */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">Grade</label>
+                <label className="text-xs font-medium">{t("classrooms.fields.grade")}</label>
                 <GradeSelector
                   value={filters.grade || null}
                   onChange={(value) => updateFilter("grade", value || undefined)}
@@ -228,10 +230,10 @@ export default function ClassroomsPage() {
 
               {/* Academic Year */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">Academic Year</label>
+                <label className="text-xs font-medium">{t("classrooms.fields.academicYear")}</label>
                 <Input
                   type="text"
-                  placeholder="e.g., 2025/2026"
+                  placeholder={t("classrooms.fields.academicYearPlaceholder")}
                   value={filters.academic_year || ""}
                   onChange={(e) =>
                     updateFilter("academic_year", e.target.value || undefined)
@@ -241,7 +243,7 @@ export default function ClassroomsPage() {
 
               {/* Visibility */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">Visibility</label>
+                <label className="text-xs font-medium">{t("classrooms.fields.visibility")}</label>
                 <Select
                   value={
                     filters.is_private === undefined
@@ -263,9 +265,9 @@ export default function ClassroomsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="public">Public</SelectItem>
-                      <SelectItem value="private">Private</SelectItem>
+                      <SelectItem value="all">{t("classrooms.visibility.all")}</SelectItem>
+                      <SelectItem value="public">{t("classrooms.visibility.public")}</SelectItem>
+                      <SelectItem value="private">{t("classrooms.visibility.private")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -282,7 +284,7 @@ export default function ClassroomsPage() {
                     className="text-muted-foreground"
                   >
                     <X className="size-3.5 mr-1" />
-                    Clear filters
+                    {t("classrooms.clearFilters")}
                   </Button>
                 </div>
               )}
@@ -290,7 +292,7 @@ export default function ClassroomsPage() {
           )}
         </div>
 
-        {isLoading && <LoadingState message="Loading classrooms..." />}
+        {isLoading && <LoadingState message={t("classrooms.loadingClasses")} />}
 
         {error && (
           <div className="text-center py-8">
@@ -301,30 +303,30 @@ export default function ClassroomsPage() {
               onClick={() => loadClassrooms(1)}
               className="mt-3"
             >
-              Try Again
+              {t("common.tryAgain")}
             </Button>
           </div>
         )}
 
         {!isLoading && !error && classrooms.length === 0 && (
           <EmptyState
-            title="No classrooms found"
-            description="Create a new classroom or join one with a code."
+            title={t("classrooms.noClasses")}
+            description={t("classrooms.noClassesDesc")}
             action={
               <div className="flex gap-2">
                 <Dialog>
                   <DialogTrigger render={<Button variant="outline" size="sm" />}>
-                    Join by Code
+                    {t("classrooms.joinByCode")}
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Join a Classroom</DialogTitle>
+                      <DialogTitle>{t("classrooms.joinTitle")}</DialogTitle>
                     </DialogHeader>
                     <JoinClassroomForm />
                   </DialogContent>
                 </Dialog>
                 <Link href="/classes/new">
-                  <Button size="sm">Create Classroom</Button>
+                  <Button size="sm">{t("classrooms.createClass")}</Button>
                 </Link>
               </div>
             }
@@ -349,10 +351,10 @@ export default function ClassroomsPage() {
                   {isLoadingMore ? (
                     <>
                       <Loader2 className="size-4 animate-spin mr-2" />
-                      Loading...
+                      {t("common.loading")}
                     </>
                   ) : (
-                    "Load More"
+                    t("classrooms.loadMore")
                   )}
                 </Button>
               </div>

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { AppLayout } from "@/components/Layouts";
 import { PageHeader } from "@/components/States";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +21,7 @@ import { authService } from "@/services/auth";
 import { ApiError } from "@/types/api";
 
 const profileSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  name: z.string().min(2, "profile.nameMinLength"),
   school_id: z.number().nullable(),
   grade: z.number().min(1).max(5).nullable(),
   track: z.string().nullable(),
@@ -30,6 +31,7 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function ProfilePage() {
   const { user, isLoading, isAuthenticated, refreshUser } = useAuth();
+  const { t } = useTranslation();
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -98,11 +100,11 @@ export default function ProfilePage() {
       };
       await authService.updateProfile(updateData);
       await refreshUser();
-      setSuccess("Profile updated successfully!");
+      setSuccess(t("profile.updateSuccess"));
     } catch (err: unknown) {
       const apiError = err as ApiError;
       setError(
-        apiError.message || "Failed to update profile. Please try again."
+        apiError.message || t("profile.updateFailed")
       );
     } finally {
       setIsSaving(false);
@@ -126,11 +128,11 @@ export default function ProfilePage() {
   return (
     <AppLayout>
       <div className="p-4 max-w-2xl mx-auto space-y-6">
-        <PageHeader title="Profile" />
+        <PageHeader title={t("profile.title")} />
 
         <Card>
           <CardHeader>
-            <CardTitle>Account Information</CardTitle>
+            <CardTitle>{t("profile.accountInfo")}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -147,21 +149,21 @@ export default function ProfilePage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">{t("profile.name")}</Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Your name"
+                  placeholder={t("profile.namePlaceholder")}
                   {...register("name")}
                   disabled={isSaving}
                 />
                 {errors.name && (
-                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                  <p className="text-sm text-destructive">{t(errors.name.message ?? "")}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label>Email</Label>
+                <Label>{t("profile.email")}</Label>
                 <Input
                   type="email"
                   value={user.email}
@@ -169,12 +171,12 @@ export default function ProfilePage() {
                   className="bg-muted"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Email cannot be changed
+                  {t("profile.emailCannotChange")}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label>School</Label>
+                <Label>{t("profile.school")}</Label>
                 <SchoolSelector
                   value={selectedSchoolId}
                   onChange={(schoolId) => {
@@ -185,7 +187,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Grade</Label>
+                <Label>{t("profile.grade")}</Label>
                 <GradeSelector
                   value={selectedGrade}
                   onChange={(grade) => {
@@ -196,7 +198,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Track</Label>
+                <Label>{t("profile.track")}</Label>
                 <TrackSelector
                   value={selectedTrack}
                   onChange={(track) => {
@@ -207,7 +209,7 @@ export default function ProfilePage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={isSaving}>
-                {isSaving ? "Saving..." : "Save Changes"}
+                {isSaving ? t("profile.saving") : t("profile.saveChanges")}
               </Button>
             </form>
           </CardContent>

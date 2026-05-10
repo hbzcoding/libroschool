@@ -1242,3 +1242,57 @@ Requirements:
 ## Stop Rule
 
 Normal manual mode: after review, stop and wait for human commit.
+
+---
+
+# Task 15: Frontend Localization English and Italian
+
+## Implementation Agent
+
+`frontend-agent`
+
+## Read Before Starting
+
+- `docs/FRONTEND_PLAN.md`
+- `DESIGN.md`
+- `docs/UI.md`
+- `docs/API.md`
+- `.codebuddy/rules/03-frontend-nextjs.md`
+
+## Task
+
+Add frontend localization support for English and Italian.
+
+Requirements:
+- support exactly English and Italian for now
+- keep English as an available locale
+- add Italian translations for user-facing MVP UI copy
+- include navigation, page titles, buttons, labels, placeholders, empty states, and frontend-controlled validation/error text
+- add a simple locale selector in an existing layout or account area that follows `DESIGN.md`
+- persist the selected locale in the browser
+- do not add other language catalogs yet
+- do not translate user-generated content
+- do not change API contracts
+- do not move business logic to the frontend
+
+## Validation Agent
+
+`test-agent`
+
+Validation must include:
+- frontend lint
+- frontend build
+
+## Review Agent
+
+`reviewer-agent`
+
+Review must check:
+- `DESIGN.md` consistency
+- scope control
+- no API contract changes
+- English and Italian UI paths both remain usable
+
+## Stop Rule
+
+Normal manual mode: after review, stop and wait for human commit.

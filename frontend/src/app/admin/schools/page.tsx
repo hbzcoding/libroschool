@@ -12,8 +12,10 @@ import {
 } from "@/features/admin/components/DataTable";
 import { ConfirmDialog } from "@/features/admin/components/ConfirmDialog";
 import { Column } from "@/features/admin/components/DataTable";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminSchoolsPage() {
+  const { t } = useTranslation();
   const [schools, setSchools] = useState<School[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +58,7 @@ export default function AdminSchoolsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load schools");
+          setError(t("admin.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -70,7 +72,7 @@ export default function AdminSchoolsPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, page]);
+  }, [search, page, t]);
 
   const fetchSchools = useCallback(async () => {
     try {
@@ -87,7 +89,7 @@ export default function AdminSchoolsPage() {
       setTotal(response.meta.total);
       setError(null);
     } catch {
-      setError("Failed to load schools");
+      setError(t("admin.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +97,7 @@ export default function AdminSchoolsPage() {
 
   const handleCreate = async () => {
     if (!formCode || !formName || !formCity || !formProvince || !formRegion || !formType) {
-      setFormError("All fields are required");
+      setFormError(t("admin.allFieldsRequired"));
       return;
     }
     try {
@@ -120,7 +122,7 @@ export default function AdminSchoolsPage() {
       setFormType("");
       await fetchSchools();
     } catch {
-      setFormError("Failed to create school");
+      setFormError(t("admin.createError"));
     } finally {
       setFormSubmitting(false);
     }
@@ -141,17 +143,17 @@ export default function AdminSchoolsPage() {
   const columns: Column<School>[] = [
     {
       key: "name",
-      label: "School",
+      label: t("admin.tables.school"),
       render: (school) => (
         <div>
           <p className="text-sm font-medium text-[#f7f8f8] max-w-xs truncate">{school.name}</p>
-          <p className="text-xs text-[#8a8f98]">Code: {school.code}</p>
+          <p className="text-xs text-[#8a8f98]">{t("admin.tables.code")}: {school.code}</p>
         </div>
       ),
     },
     {
       key: "city",
-      label: "Location",
+      label: t("admin.tables.location"),
       render: (school) => (
         <div>
           <p className="text-sm text-[#d0d6e0]">{school.city}</p>
@@ -161,20 +163,20 @@ export default function AdminSchoolsPage() {
     },
     {
       key: "school_type",
-      label: "Type",
+      label: t("admin.tables.type"),
       render: (school) => (
         <span className="text-xs text-[#d0d6e0]">{school.school_type}</span>
       ),
     },
     {
       key: "actions",
-      label: "Actions",
+      label: t("admin.tables.actions"),
       render: (school) => (
         <div className="flex items-center gap-1">
           <ConfirmDialog
-            title="Delete School"
-            description={`Permanently delete "${school.name}"? This cannot be undone.`}
-            confirmLabel="Delete"
+            title={t("admin.actions.deleteSchool")}
+            description={`${t("admin.confirmDeleteSchool")} "${school.name}"? ${t("admin.confirmDelete")}`}
+            confirmLabel={t("admin.actions.deleteSchool")}
             variant="destructive"
             onConfirm={() => handleDelete(school.id)}
             trigger={
@@ -182,7 +184,7 @@ export default function AdminSchoolsPage() {
                 disabled={actionLoading === school.id}
                 className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
               >
-                Delete
+                {t("admin.actions.deleteSchool")}
               </button>
             }
           />
@@ -202,21 +204,21 @@ export default function AdminSchoolsPage() {
   return (
     <div>
       <PageHeader
-        title="Schools"
-        description={`${total} total schools`}
+        title={t("admin.schools")}
+        description={`${total} ${t("admin.totalSchools")}`}
       >
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
           className="rounded-lg bg-[#5e6ad2] px-4 py-2 text-sm font-medium text-white hover:bg-[#828fff] transition-colors"
         >
-          {showCreateForm ? "Cancel" : "Add School"}
+          {showCreateForm ? t("admin.cancel") : t("admin.actions.addSchool")}
         </button>
       </PageHeader>
 
       {/* Create School Form */}
       {showCreateForm && (
         <div className="rounded-lg border border-[#23252a] bg-[#0f1011] p-4 mb-6">
-          <h3 className="text-sm font-medium text-[#f7f8f8] mb-4">New School</h3>
+          <h3 className="text-sm font-medium text-[#f7f8f8] mb-4">{t("admin.newSchool")}</h3>
           {formError && (
             <p className="text-xs text-red-400 mb-3">{formError}</p>
           )}
@@ -270,7 +272,7 @@ export default function AdminSchoolsPage() {
               disabled={formSubmitting}
               className="rounded-lg bg-[#5e6ad2] px-4 py-2 text-sm font-medium text-white hover:bg-[#828fff] transition-colors disabled:opacity-50"
             >
-              {formSubmitting ? "Creating..." : "Create School"}
+              {formSubmitting ? t("admin.creating") : t("admin.actions.addSchool")}
             </button>
           </div>
         </div>
@@ -280,7 +282,7 @@ export default function AdminSchoolsPage() {
         <SearchInput
           value={search}
           onChange={(v) => { setSearch(v); setPage(1); }}
-          placeholder="Search by name or city..."
+          placeholder={t("admin.searchNameOrCity")}
         />
       </div>
 
@@ -295,7 +297,7 @@ export default function AdminSchoolsPage() {
         }}
         onPageChange={setPage}
         isLoading={isLoading}
-        emptyMessage="No schools found"
+        emptyMessage={t("admin.empty.schools")}
       />
     </div>
   );

@@ -16,6 +16,7 @@ import {
   CLASSROOM_STATUS_LABELS,
 } from "@/types/classroom";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { MemberList } from "@/features/classrooms";
 import { ReportButton } from "@/components/ReportButton";
 import {
@@ -56,6 +57,7 @@ export default function ClassroomDetailPage() {
   const params = useParams();
   const classroomId = parseInt(params.id as string, 10);
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [classroom, setClassroom] = useState<Classroom | null>(null);
   const [currentUserMember, setCurrentUserMember] =
     useState<ClassroomMember | null>(null);
@@ -92,7 +94,7 @@ export default function ClassroomDetailPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load classroom. Please try again.");
+          setError(t("classrooms.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -151,7 +153,7 @@ export default function ClassroomDetailPage() {
       const updated = await classroomsService.regenerateJoinCode(classroom.id);
       setClassroom(updated);
     } catch {
-      alert("Failed to regenerate join code.");
+      alert(t("classrooms.regenerateCodeError"));
     } finally {
       setIsUpdating(false);
     }
@@ -164,7 +166,7 @@ export default function ClassroomDetailPage() {
       await classroomsService.leaveClassroom(classroom.id);
       router.push("/classes");
     } catch {
-      alert("Failed to leave classroom.");
+      alert(t("classrooms.leaveError"));
       setIsUpdating(false);
     }
   };
@@ -176,7 +178,7 @@ export default function ClassroomDetailPage() {
       await classroomsService.deleteClassroom(classroom.id);
       router.push("/classes");
     } catch {
-      alert("Failed to delete classroom.");
+      alert(t("classrooms.deleteError"));
       setIsUpdating(false);
     }
   };
@@ -191,7 +193,7 @@ export default function ClassroomDetailPage() {
         await classroomsService.joinClassroom(classroom.id);
         router.refresh();
       } catch {
-        alert("Failed to join classroom.");
+        alert(t("classrooms.joinError"));
       } finally {
         setIsJoining(false);
       }
@@ -200,7 +202,7 @@ export default function ClassroomDetailPage() {
 
   const handleJoinByCode = async () => {
     if (!joinCodeInput.trim()) {
-      setJoinCodeError("Please enter a join code.");
+      setJoinCodeError(t("classrooms.enterJoinCode"));
       return;
     }
     setIsJoining(true);
@@ -215,7 +217,7 @@ export default function ClassroomDetailPage() {
         router.push(`/classes/${result.id}`);
       }
     } catch {
-      setJoinCodeError("Invalid join code.");
+      setJoinCodeError(t("classrooms.invalidJoinCode"));
     } finally {
       setIsJoining(false);
     }
@@ -225,7 +227,7 @@ export default function ClassroomDetailPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <LoadingState message="Loading classroom..." />
+          <LoadingState message={t("classrooms.loadingClassroom")} />
         </div>
       </AppLayout>
     );
@@ -240,11 +242,11 @@ export default function ClassroomDetailPage() {
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
           <EmptyState
-            title="Classroom not found"
-            description={error || "This classroom may have been removed."}
+            title={t("classrooms.notFound")}
+            description={error || t("classrooms.maybeRemoved")}
             action={
               <Link href="/classes">
-                <Button size="sm">Browse Classrooms</Button>
+                <Button size="sm">{t("classrooms.browseTitle")}</Button>
               </Link>
             }
           />
@@ -265,7 +267,7 @@ export default function ClassroomDetailPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Classrooms
+          {t("classrooms.backToClassrooms")}
         </Link>
 
         {/* Header */}
@@ -328,7 +330,7 @@ export default function ClassroomDetailPage() {
               <div className="flex items-start gap-2">
                 <School className="size-4 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-xs text-muted-foreground">School</p>
+                  <p className="text-xs text-muted-foreground">{t("classrooms.fields.school")}</p>
                   <p className="text-sm font-medium">{classroom.school?.name}</p>
                   {classroom.school?.city && (
                     <p className="text-xs text-muted-foreground">
@@ -342,10 +344,10 @@ export default function ClassroomDetailPage() {
               <div className="flex items-start gap-2">
                 <GraduationCap className="size-4 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Grade</p>
+                  <p className="text-xs text-muted-foreground">{t("classrooms.fields.grade")}</p>
                   <p className="text-sm font-medium">
                     {classroom.grade}
-                    {classroom.section && ` - Section ${classroom.section}`}
+                    {classroom.section && ` - ${t("classrooms.fields.section")} ${classroom.section}`}
                   </p>
                 </div>
               </div>
@@ -355,7 +357,7 @@ export default function ClassroomDetailPage() {
                 <div className="flex items-start gap-2">
                   <Shield className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Track</p>
+                    <p className="text-xs text-muted-foreground">{t("classrooms.fields.track")}</p>
                     <p className="text-sm font-medium capitalize">
                       {classroom.track}
                     </p>
@@ -367,7 +369,7 @@ export default function ClassroomDetailPage() {
               <div className="flex items-start gap-2">
                 <Calendar className="size-4 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Academic Year</p>
+                  <p className="text-xs text-muted-foreground">{t("classrooms.fields.academicYear")}</p>
                   <p className="text-sm font-medium">{classroom.academic_year}</p>
                 </div>
               </div>
@@ -376,7 +378,7 @@ export default function ClassroomDetailPage() {
               <div className="flex items-start gap-2">
                 <Users className="size-4 text-muted-foreground mt-0.5" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Members</p>
+                  <p className="text-xs text-muted-foreground">{t("classrooms.members")}</p>
                   <p className="text-sm font-medium">{classroom.members_count}</p>
                 </div>
               </div>
@@ -385,7 +387,7 @@ export default function ClassroomDetailPage() {
             {/* Description */}
             {classroom.description && (
               <div className="pt-2 border-t">
-                <p className="text-xs text-muted-foreground mb-1">Description</p>
+                <p className="text-xs text-muted-foreground mb-1">{t("classrooms.fields.description")}</p>
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">
                   {classroom.description}
                 </p>
@@ -399,7 +401,7 @@ export default function ClassroomDetailPage() {
           <Card className="border-dashed">
             <CardContent className="pt-4 pb-4 space-y-3">
               <p className="text-sm font-medium text-muted-foreground">
-                Join Code
+                {t("classrooms.fields.joinCode")}
               </p>
               <div className="flex items-center gap-2">
                 <code className="flex-1 px-3 py-2 bg-muted rounded-lg text-lg font-mono tracking-wider">
@@ -411,7 +413,7 @@ export default function ClassroomDetailPage() {
                   onClick={handleCopyJoinCode}
                 >
                   {copiedCode ? (
-                    "Copied!"
+                    t("classrooms.codeCopied")
                   ) : (
                     <Copy className="size-4" />
                   )}
@@ -426,7 +428,7 @@ export default function ClassroomDetailPage() {
                   className="text-muted-foreground"
                 >
                   <RefreshCw className="size-3.5 mr-1" />
-                  Regenerate Code
+                  {t("classrooms.regenerateCode")}
                 </Button>
               )}
             </CardContent>
@@ -438,12 +440,12 @@ export default function ClassroomDetailPage() {
           <Card className="border-dashed">
             <CardContent className="pt-4 pb-4 space-y-3">
               <p className="text-sm font-medium text-muted-foreground">
-                Owner Actions
+                {t("classrooms.ownerActions")}
               </p>
               <div className="flex flex-wrap gap-2">
                 <Link href={`/classes/${classroom.id}/edit`}>
                   <Button variant="outline" size="sm">
-                    Edit Settings
+                    {t("classrooms.editSettings")}
                   </Button>
                 </Link>
                 <Button
@@ -452,7 +454,7 @@ export default function ClassroomDetailPage() {
                   onClick={() => setShowDeleteDialog(true)}
                   disabled={isUpdating}
                 >
-                  Delete Classroom
+                  {t("classrooms.deleteClassroom")}
                 </Button>
               </div>
             </CardContent>
@@ -469,7 +471,7 @@ export default function ClassroomDetailPage() {
               onClick={() => setShowLeaveDialog(true)}
             >
               <LogOut className="size-3.5" />
-              Leave Classroom
+              {t("classrooms.leave")}
             </Button>
           </div>
         )}
@@ -479,19 +481,19 @@ export default function ClassroomDetailPage() {
           <Card className="border-dashed">
             <CardContent className="pt-4 pb-4">
               <p className="text-sm text-muted-foreground mb-3">
-                You are not a member of this classroom.
+                {t("classrooms.notMemberDesc")}
               </p>
               {classroom.join_policy === "open" && (
                 <Button onClick={handleJoin} disabled={isJoining}>
                   {isJoining ? (
                     <>
                       <Loader2 className="size-4 animate-spin mr-2" />
-                      Joining...
+                      {t("classrooms.joining")}
                     </>
                   ) : (
                     <>
                       <Users className="size-4" />
-                      Join Classroom
+                      {t("classrooms.join")}
                     </>
                   )}
                 </Button>
@@ -502,13 +504,13 @@ export default function ClassroomDetailPage() {
                   disabled={isJoining}
                 >
                   <Lock className="size-4" />
-                  Enter Join Code
+                  {t("classrooms.enterJoinCode")}
                 </Button>
               )}
               {classroom.join_policy === "approval" && (
                 <Button disabled>
-                  Request to Join
-                  <span className="text-xs ml-2">(Coming Soon)</span>
+                  {t("classrooms.requestJoin")}
+                  <span className="text-xs ml-2">({t("classrooms.comingSoon")})</span>
                 </Button>
               )}
             </CardContent>
@@ -520,10 +522,8 @@ export default function ClassroomDetailPage() {
           <Card className="border-dashed bg-muted/50">
             <CardContent className="pt-4 pb-4">
               <p className="text-sm text-muted-foreground">
-                {isLocked &&
-                  "This classroom is locked. You cannot join or post new content."}
-                {isArchived &&
-                  "This classroom has been archived and is no longer active."}
+                {isLocked && t("classrooms.lockedNotice")}
+                {isArchived && t("classrooms.archivedNotice")}
               </p>
             </CardContent>
           </Card>
@@ -532,7 +532,7 @@ export default function ClassroomDetailPage() {
         {/* Members list */}
         {isMember && (
           <div className="space-y-3">
-            <h2 className="text-lg font-semibold">Members</h2>
+            <h2 className="text-lg font-semibold">{t("classrooms.members")}</h2>
             <MemberList
               classroomId={classroom.id}
               currentUserRole={currentUserMember?.role}
@@ -546,7 +546,7 @@ export default function ClassroomDetailPage() {
             <ReportButton
               reportableType="Classroom"
               reportableId={classroom.id}
-              label="Report Classroom"
+              label={t("classrooms.reportClassroom")}
             />
           </div>
         )}
@@ -554,18 +554,17 @@ export default function ClassroomDetailPage() {
         {/* Delete confirmation dialog */}
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
           <AlertDialogContent>
-            <AlertDialogTitle>Delete Classroom</AlertDialogTitle>
+            <AlertDialogTitle>{t("classrooms.deleteClassroom")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this classroom? All members will
-              lose access and this action cannot be undone.
+              {t("classrooms.deleteConfirm")}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
                 className="bg-destructive hover:bg-destructive/90"
               >
-                Delete
+                {t("common.delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -574,15 +573,14 @@ export default function ClassroomDetailPage() {
         {/* Leave confirmation dialog */}
         <AlertDialog open={showLeaveDialog} onOpenChange={setShowLeaveDialog}>
           <AlertDialogContent>
-            <AlertDialogTitle>Leave Classroom</AlertDialogTitle>
+            <AlertDialogTitle>{t("classrooms.leave")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to leave this classroom? You will lose
-              access to all classroom content.
+              {t("classrooms.leaveConfirm")}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction onClick={handleLeave}>
-                Leave
+                {t("classrooms.leave")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -592,18 +590,18 @@ export default function ClassroomDetailPage() {
         <Dialog open={showJoinCodeDialog} onOpenChange={setShowJoinCodeDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Enter Join Code</DialogTitle>
+              <DialogTitle>{t("classrooms.enterJoinCode")}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="join-code" className="text-sm font-medium">
-                  Join Code
+                  {t("classrooms.fields.joinCode")}
                 </label>
                 <Input
                   id="join-code"
                   value={joinCodeInput}
                   onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
-                  placeholder="Enter 6-character code"
+                  placeholder={t("classrooms.joinCodePlaceholder")}
                   className="uppercase"
                   maxLength={20}
                 />
@@ -619,10 +617,10 @@ export default function ClassroomDetailPage() {
                 {isJoining ? (
                   <>
                     <Loader2 className="size-4 animate-spin mr-2" />
-                    Joining...
+                    {t("classrooms.joining")}
                   </>
                 ) : (
-                  "Join Classroom"
+                  t("classrooms.join")
                 )}
               </Button>
             </div>

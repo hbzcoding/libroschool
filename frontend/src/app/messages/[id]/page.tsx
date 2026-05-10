@@ -9,6 +9,7 @@ import { MessageBubble, MessageInput } from "@/features/messages";
 import { conversationsService } from "@/services/conversations";
 import { Conversation, Message } from "@/types/conversation";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, RefreshCw, Loader2, BookOpen, BookMarked } from "lucide-react";
 
@@ -17,6 +18,7 @@ export default function ConversationDetailPage() {
   const conversationId = Number(params.id);
   const router = useRouter();
   const { isLoading: authLoading, isAuthenticated, user } = useAuth();
+  const { t } = useTranslation();
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingConversation, setIsLoadingConversation] = useState(true);
@@ -48,7 +50,7 @@ export default function ConversationDetailPage() {
         const data = await conversationsService.getConversation(conversationId);
         setConversation(data);
       } catch {
-        setError("Failed to load conversation.");
+        setError(t("messages.loadError"));
       } finally {
         setIsLoadingConversation(false);
       }
@@ -86,7 +88,7 @@ export default function ConversationDetailPage() {
         setTotalPages(response.meta.last_page);
         setCurrentPage(response.meta.current_page);
       } catch {
-        setError("Failed to load messages.");
+        setError(t("messages.loadError"));
       } finally {
         setIsLoadingMessages(false);
         setIsLoadingMore(false);
@@ -119,7 +121,7 @@ export default function ConversationDetailPage() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 50);
     } catch {
-      setError("Failed to send message.");
+      setError(t("messages.sendError"));
       throw new Error("Failed to send message");
     }
   };
@@ -164,7 +166,7 @@ export default function ConversationDetailPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <LoadingState message="Loading conversation..." />
+          <LoadingState message={t("messages.loadingConversation")} />
         </div>
       </AppLayout>
     );
@@ -178,7 +180,7 @@ export default function ConversationDetailPage() {
           <Link href="/messages">
             <Button variant="outline" size="sm" className="mt-3">
               <ArrowLeft className="size-4" />
-              Back to Messages
+              {t("messages.backToMessages")}
             </Button>
           </Link>
         </div>
@@ -251,17 +253,17 @@ export default function ConversationDetailPage() {
                 {isLoadingMore ? (
                   <>
                     <Loader2 className="size-3 animate-spin mr-1" />
-                    Loading...
+                    {t("common.loading")}
                   </>
                 ) : (
-                  "Load older messages"
+                  t("messages.loadOlder")
                 )}
               </Button>
             </div>
           )}
 
           {isLoadingMessages && messages.length === 0 && (
-            <LoadingState message="Loading messages..." />
+            <LoadingState message={t("messages.loadingMessages")} />
           )}
 
           {messages.map((message) => (

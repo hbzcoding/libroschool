@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { bookRequestsService } from "@/services/bookRequests";
 import { BookRequest, REQUEST_STATUS_LABELS } from "@/types/bookRequest";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ReportButton } from "@/components/ReportButton";
 import {
   ArrowLeft,
@@ -40,6 +41,7 @@ export default function RequestDetailPage() {
   const params = useParams();
   const requestId = parseInt(params.id as string, 10);
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [request, setRequest] = useState<BookRequest | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +70,7 @@ export default function RequestDetailPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load request. Please try again.");
+          setError(t("requests.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -82,7 +84,7 @@ export default function RequestDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [isAuthenticated, requestId]);
+  }, [isAuthenticated, requestId, t]);
 
   const isOwner = request && user && request.buyer.id === user.id;
 
@@ -116,7 +118,7 @@ export default function RequestDetailPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <LoadingState message="Loading request..." />
+          <LoadingState message={t("requests.loadingRequests")} />
         </div>
       </AppLayout>
     );
@@ -131,11 +133,11 @@ export default function RequestDetailPage() {
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
           <EmptyState
-            title="Request not found"
-            description={error || "This request may have been removed."}
+            title={t("requests.notFound")}
+            description={error || t("requests.notFoundDesc")}
             action={
               <Link href="/requests">
-                <Button size="sm">Browse Requests</Button>
+                <Button size="sm">{t("requests.browseRequests")}</Button>
               </Link>
             }
           />
@@ -153,7 +155,7 @@ export default function RequestDetailPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Requests
+          {t("common.backToRequests")}
         </Link>
 
         {/* Title and status */}
@@ -182,9 +184,9 @@ export default function RequestDetailPage() {
         {request.max_price !== null && request.max_price > 0 && (
           <Card>
             <CardContent className="pt-4">
-              <p className="text-sm text-muted-foreground">Budget</p>
+              <p className="text-sm text-muted-foreground">{t("requests.maxBudget")}</p>
               <p className="text-lg font-semibold">
-                Up to &euro;{request.max_price.toFixed(2)}
+                {t("requests.upTo", { price: request.max_price.toFixed(2) })}
               </p>
             </CardContent>
           </Card>
@@ -195,7 +197,7 @@ export default function RequestDetailPage() {
           <Card className="border-dashed">
             <CardContent className="pt-4 pb-4 space-y-3">
               <p className="text-sm font-medium text-muted-foreground">
-                Buyer Actions
+                {t("requests.requesterActions")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {request.status === "open" && (
@@ -210,14 +212,14 @@ export default function RequestDetailPage() {
                     ) : (
                       <>
                         <CheckCircle2 className="size-4" />
-                        Mark Closed
+                        {t("requests.markClosed")}
                       </>
                     )}
                   </Button>
                 )}
                 <Link href={`/requests/${request.id}/edit`}>
                   <Button variant="outline" size="sm">
-                    Edit
+                    {t("common.edit")}
                   </Button>
                 </Link>
                 <Button
@@ -226,7 +228,7 @@ export default function RequestDetailPage() {
                   onClick={() => setShowDeleteDialog(true)}
                   disabled={isUpdating}
                 >
-                  Delete
+                  {t("common.delete")}
                 </Button>
               </div>
             </CardContent>
@@ -242,7 +244,7 @@ export default function RequestDetailPage() {
                 <div className="flex items-start gap-2">
                   <Hash className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">ISBN</p>
+                    <p className="text-xs text-muted-foreground">{t("requests.fields.isbn")}</p>
                     <p className="text-sm font-medium">{request.isbn}</p>
                   </div>
                 </div>
@@ -253,7 +255,7 @@ export default function RequestDetailPage() {
                 <div className="flex items-start gap-2">
                   <Tag className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Subject</p>
+                    <p className="text-xs text-muted-foreground">{t("requests.fields.subject")}</p>
                     <p className="text-sm font-medium">{request.subject}</p>
                   </div>
                 </div>
@@ -264,7 +266,7 @@ export default function RequestDetailPage() {
                 <div className="flex items-start gap-2">
                   <GraduationCap className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Grade</p>
+                    <p className="text-xs text-muted-foreground">{t("requests.fields.grade")}</p>
                     <p className="text-sm font-medium">{request.grade}</p>
                   </div>
                 </div>
@@ -275,7 +277,7 @@ export default function RequestDetailPage() {
                 <div className="flex items-start gap-2">
                   <BookOpen className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Track</p>
+                    <p className="text-xs text-muted-foreground">{t("requests.fields.track")}</p>
                     <p className="text-sm font-medium capitalize">{request.track}</p>
                   </div>
                 </div>
@@ -285,7 +287,7 @@ export default function RequestDetailPage() {
             {/* Description */}
             {request.description && (
               <div className="pt-2 border-t">
-                <p className="text-xs text-muted-foreground mb-1">Description</p>
+                <p className="text-xs text-muted-foreground mb-1">{t("requests.fields.description")}</p>
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">
                   {request.description}
                 </p>
@@ -300,7 +302,7 @@ export default function RequestDetailPage() {
             <div className="flex items-center gap-2">
               <MapPin className="size-4 text-muted-foreground" />
               <div>
-                <p className="text-xs text-muted-foreground">School</p>
+                <p className="text-xs text-muted-foreground">{t("requests.fields.school")}</p>
                 <p className="text-sm font-medium">
                   {request.school?.name}
                   {request.school?.city && ` - ${request.school.city}`}
@@ -317,7 +319,7 @@ export default function RequestDetailPage() {
               <div className="flex items-center gap-2">
                 <User className="size-4 text-muted-foreground" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Buyer</p>
+                  <p className="text-xs text-muted-foreground">{t("requests.requester")}</p>
                   <p className="text-sm font-medium">{request.buyer?.name}</p>
                 </div>
               </div>
@@ -325,7 +327,7 @@ export default function RequestDetailPage() {
                 <Link href={`/messages?new=true&book_request_id=${request.id}`}>
                   <Button size="sm" variant="outline">
                     <MessageCircle className="size-4" />
-                    Contact
+                    {t("requests.contact")}
                   </Button>
                 </Link>
               )}
@@ -336,7 +338,7 @@ export default function RequestDetailPage() {
         {/* Metadata */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Calendar className="size-3" />
-          <span>Posted {new Date(request.created_at).toLocaleDateString()}</span>
+          <span>{t("requests.requestedOn", { date: new Date(request.created_at).toLocaleDateString() })}</span>
         </div>
 
         {/* Report button */}
@@ -345,7 +347,7 @@ export default function RequestDetailPage() {
             <ReportButton
               reportableType="BookRequest"
               reportableId={request.id}
-              label="Report Request"
+              label={t("requests.reportRequest")}
             />
           </div>
         )}
@@ -353,14 +355,14 @@ export default function RequestDetailPage() {
         {/* Close confirmation dialog */}
         <AlertDialog open={showCloseDialog} onOpenChange={setShowCloseDialog}>
           <AlertDialogContent>
-            <AlertDialogTitle>Mark Request as Closed</AlertDialogTitle>
+            <AlertDialogTitle>{t("requests.closeRequestTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to close this book request? This marks the request as fulfilled and it will no longer appear in open requests.
+              {t("requests.closeConfirm")}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction onClick={handleClose}>
-                Mark Closed
+                {t("requests.markClosed")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -369,15 +371,14 @@ export default function RequestDetailPage() {
         {/* Delete confirmation dialog */}
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
           <AlertDialogContent>
-            <AlertDialogTitle>Delete Request</AlertDialogTitle>
+            <AlertDialogTitle>{t("requests.deleteRequestTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this book request? This action
-              cannot be undone.
+              {t("requests.deleteConfirm")}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">
-                Delete
+                {t("common.delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

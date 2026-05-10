@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AppLayout } from "@/components/Layouts";
 import { CreateClassroomForm } from "@/features/classrooms/CreateClassroomForm";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { LoadingState } from "@/components/States";
@@ -11,6 +12,7 @@ import { LoadingState } from "@/components/States";
 export default function NewClassroomPage() {
   const router = useRouter();
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -40,15 +42,15 @@ export default function NewClassroomPage() {
           href="/classes"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          &larr; Back to Classrooms
+          &larr; {t("classrooms.backToClassrooms")}
         </Link>
 
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Create Classroom
+            {t("classrooms.createClassTitle")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Set up a new classroom for your class.
+            {t("classrooms.createClassDesc")}
           </p>
         </div>
 

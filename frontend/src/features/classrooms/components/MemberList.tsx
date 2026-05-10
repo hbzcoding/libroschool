@@ -28,6 +28,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { Loader2, User as UserIcon, Crown, Shield, MoreVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface MemberListProps {
   classroomId: number;
@@ -35,6 +36,7 @@ interface MemberListProps {
 }
 
 export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [members, setMembers] = useState<ClassroomMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -71,7 +73,7 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
         setTotalPages(response.meta.last_page);
         setCurrentPage(response.meta.current_page);
       } catch {
-        setError("Failed to load members.");
+        setError(t("classrooms.members.loadFailed"));
       } finally {
         setIsLoading(false);
         setIsLoadingMore(false);
@@ -98,7 +100,7 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load members.");
+          setError(t("classrooms.members.loadFailed"));
         }
       } finally {
         if (!cancelled) {
@@ -130,7 +132,7 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
         )
       );
     } catch {
-      alert("Failed to update role.");
+      alert(t("classrooms.members.roleUpdateFailed"));
     } finally {
       setUpdatingRoleId(null);
     }
@@ -142,7 +144,7 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
       await classroomsService.removeMember(classroomId, removingMemberId);
       setMembers((prev) => prev.filter((m) => m.id !== removingMemberId));
     } catch {
-      alert("Failed to remove member.");
+      alert(t("classrooms.members.removeFailed"));
     } finally {
       setShowRemoveDialog(false);
       setRemovingMemberId(null);
@@ -184,7 +186,7 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
             onClick={() => loadMembers(1)}
             className="mt-3"
           >
-            Try Again
+            {t("common.tryAgain")}
           </Button>
         </CardContent>
       </Card>
@@ -196,9 +198,9 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
       <Card>
         <CardContent className="text-center py-8">
           <UserIcon className="size-8 text-muted-foreground/50 mx-auto mb-2" />
-          <p className="text-sm font-medium">No members</p>
+          <p className="text-sm font-medium">{t("classrooms.members.noMembers")}</p>
           <p className="text-xs text-muted-foreground mt-1">
-            This classroom has no members yet.
+            {t("classrooms.members.noMembersDesc")}
           </p>
         </CardContent>
       </Card>
@@ -267,8 +269,8 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="member">Member</SelectItem>
-                        <SelectItem value="moderator">Moderator</SelectItem>
+                        <SelectItem value="member">{t("classrooms.member")}</SelectItem>
+                        <SelectItem value="moderator">{t("classrooms.moderator")}</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -301,10 +303,10 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
               {isLoadingMore ? (
                 <>
                   <Loader2 className="size-4 animate-spin mr-2" />
-                  Loading...
+                  {t("common.loading")}
                 </>
               ) : (
-                "Load More"
+                t("classrooms.members.loadMore")
               )}
             </Button>
           </div>
@@ -314,18 +316,17 @@ export function MemberList({ classroomId, currentUserRole }: MemberListProps) {
       {/* Remove confirmation dialog */}
       <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
         <AlertDialogContent>
-          <AlertDialogTitle>Remove Member</AlertDialogTitle>
+          <AlertDialogTitle>{t("classrooms.members.removeTitle")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to remove this member from the classroom?
-            They will lose access to all classroom content.
+            {t("classrooms.members.removeDesc")}
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleRemoveMember}
               className="bg-destructive hover:bg-destructive/90"
             >
-              Remove
+              {t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

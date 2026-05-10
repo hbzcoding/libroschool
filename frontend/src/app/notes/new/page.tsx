@@ -8,11 +8,13 @@ import { LoadingState } from "@/components/States";
 import { Card, CardContent } from "@/components/ui/card";
 import { CreateNoteForm } from "@/features/notes";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowLeft } from "lucide-react";
 
 export default function NewNotePage() {
   const router = useRouter();
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -43,14 +45,14 @@ export default function NewNotePage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Notes
+          {t("notes.backToNotes")}
         </Link>
 
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">New Note</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("notes.createNoteTitle")}</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Share your study notes with classmates.
+            {t("notes.createNoteDesc")}
           </p>
         </div>
 

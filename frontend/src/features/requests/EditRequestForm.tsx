@@ -15,6 +15,7 @@ import { bookRequestsService } from "@/services/bookRequests";
 import { BookRequest } from "@/types/bookRequest";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const requestSchema = z.object({
   school_id: z.number().optional(), // Handled separately via state
@@ -40,6 +41,7 @@ interface EditRequestFormProps {
 }
 
 export function EditRequestForm({ request, className }: EditRequestFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -66,7 +68,7 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
 
   const onSubmit = async (data: RequestFormData) => {
     if (!schoolId) {
-      setFieldErrors({ school_id: "School is required" });
+      setFieldErrors({ school_id: t("requests.fields.schoolRequired") });
       return;
     }
 
@@ -109,12 +111,12 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
       {/* Title */}
       <div className="space-y-2">
         <label htmlFor="title" className="text-sm font-medium">
-          Book Title <span className="text-destructive">*</span>
+          {t("requests.fields.bookTitle")} <span className="text-destructive">*</span>
         </label>
         <Input
           id="title"
           {...register("title")}
-          placeholder="What book are you looking for?"
+          placeholder={t("requests.fields.titlePlaceholder")}
           disabled={isSubmitting}
           aria-invalid={!!formErrors.title}
         />
@@ -126,7 +128,7 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
       {/* School */}
       <div className="space-y-2">
         <label className="text-sm font-medium">
-          School <span className="text-destructive">*</span>
+          {t("requests.fields.school")} <span className="text-destructive">*</span>
         </label>
         <SchoolSelector
           value={schoolId}
@@ -140,7 +142,7 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
       {/* Max Price */}
       <div className="space-y-2">
         <label htmlFor="max_price" className="text-sm font-medium">
-          Budget (&euro;)
+          {t("requests.maxBudget")} (&euro;)
         </label>
         <Input
           id="max_price"
@@ -148,7 +150,7 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
           step="0.5"
           min="0"
           {...register("max_price", { valueAsNumber: true })}
-          placeholder="Maximum you&apos;re willing to pay"
+          placeholder={t("requests.maxBudgetPlaceholder")}
           disabled={isSubmitting}
           aria-invalid={!!formErrors.max_price}
         />
@@ -159,11 +161,11 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
 
       {/* ISBN */}
       <div className="space-y-2">
-        <label htmlFor="isbn" className="text-sm font-medium">ISBN</label>
+        <label htmlFor="isbn" className="text-sm font-medium">{t("requests.fields.isbn")}</label>
         <Input
           id="isbn"
           {...register("isbn")}
-          placeholder="ISBN-10 or ISBN-13 (optional)"
+          placeholder={t("requests.fields.isbnPlaceholder")}
           disabled={isSubmitting}
         />
         {(formErrors.isbn || fieldErrors.isbn) && (
@@ -173,11 +175,11 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
 
       {/* Subject */}
       <div className="space-y-2">
-        <label htmlFor="subject" className="text-sm font-medium">Subject</label>
+        <label htmlFor="subject" className="text-sm font-medium">{t("requests.fields.subject")}</label>
         <Input
           id="subject"
           {...register("subject")}
-          placeholder="e.g., Mathematics, History..."
+          placeholder={t("requests.fields.subjectPlaceholder")}
           disabled={isSubmitting}
         />
         {(formErrors.subject || fieldErrors.subject) && (
@@ -188,7 +190,7 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
       {/* Grade & Track */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Grade</label>
+          <label className="text-sm font-medium">{t("requests.fields.grade")}</label>
           <GradeSelector
             value={watch("grade") || null}
             onChange={(value) => setValue("grade", value)}
@@ -198,7 +200,7 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
           )}
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium">Track</label>
+          <label className="text-sm font-medium">{t("requests.fields.track")}</label>
           <TrackSelector
             value={watch("track") || null}
             onChange={(value) => setValue("track", value)}
@@ -211,11 +213,11 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
 
       {/* Description */}
       <div className="space-y-2">
-        <label htmlFor="description" className="text-sm font-medium">Description</label>
+        <label htmlFor="description" className="text-sm font-medium">{t("requests.fields.description")}</label>
         <textarea
           id="description"
           {...register("description")}
-          placeholder="Additional details about what you&apos;re looking for..."
+          placeholder={t("requests.fields.descriptionPlaceholder")}
           disabled={isSubmitting}
           rows={4}
           className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -230,10 +232,10 @@ export function EditRequestForm({ request, className }: EditRequestFormProps) {
         {isSubmitting ? (
           <>
             <Loader2 className="size-4 animate-spin mr-2" />
-            Saving...
+            {t("common.saving")}
           </>
         ) : (
-          "Save Changes"
+          t("common.save")
         )}
       </Button>
     </form>

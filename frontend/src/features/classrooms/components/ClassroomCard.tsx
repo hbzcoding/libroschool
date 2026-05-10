@@ -5,12 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Classroom, JOIN_POLICY_LABELS, CLASSROOM_STATUS_LABELS } from "@/types/classroom";
 import { cn } from "@/lib/utils";
 import { Users, GraduationCap } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ClassroomCardProps {
   classroom: Classroom;
 }
 
 export function ClassroomCard({ classroom }: ClassroomCardProps) {
+  const { t } = useTranslation();
   const isLocked = classroom.status === "locked";
   const isArchived = classroom.status === "archived";
 
@@ -53,8 +55,8 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <GraduationCap className="size-3" />
             <span>
-              Grade {classroom.grade}
-              {classroom.section && ` - Section ${classroom.section}`}
+              {t("classrooms.gradeLabel", { grade: classroom.grade })}
+              {classroom.section && ` - ${t("classrooms.sectionLabel", { section: classroom.section })}`}
               {classroom.track && ` · ${classroom.track}`}
             </span>
           </div>

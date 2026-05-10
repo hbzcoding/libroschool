@@ -22,6 +22,7 @@ import {
 } from "@/types/note";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface NoteFiltersProps {
   filters: NotesFilters;
@@ -46,6 +47,7 @@ export function NoteFilters({
   onFiltersChange,
   className,
 }: NoteFiltersProps) {
+  const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const updateFilter = useCallback(
@@ -75,7 +77,7 @@ export function NoteFilters({
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search notes by title..."
+            placeholder={t("notes.searchPlaceholder")}
             value={filters.search || ""}
             onChange={(e) => updateFilter("search", e.target.value || undefined)}
             className="pl-8"
@@ -97,7 +99,7 @@ export function NoteFilters({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 rounded-lg bg-muted/50">
           {/* School */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">School</label>
+            <label className="text-xs font-medium">{t("notes.fields.school")}</label>
             <SchoolSelector
               value={filters.school_id || null}
               onChange={(value) => updateFilter("school_id", value || undefined)}
@@ -106,7 +108,7 @@ export function NoteFilters({
 
           {/* Grade */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Grade</label>
+            <label className="text-xs font-medium">{t("notes.fields.grade")}</label>
             <GradeSelector
               value={filters.grade || null}
               onChange={(value) => updateFilter("grade", value || undefined)}
@@ -115,10 +117,10 @@ export function NoteFilters({
 
           {/* Subject */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Subject</label>
+            <label className="text-xs font-medium">{t("notes.fields.subject")}</label>
             <Input
               type="text"
-              placeholder="e.g., Math, History..."
+              placeholder={t("notes.fields.subjectFilterPlaceholder")}
               value={filters.subject || ""}
               onChange={(e) => updateFilter("subject", e.target.value || undefined)}
             />
@@ -126,7 +128,7 @@ export function NoteFilters({
 
           {/* Visibility */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Visibility</label>
+            <label className="text-xs font-medium">{t("notes.fields.visibility")}</label>
             <Select
               value={filters.visibility || "all"}
               onValueChange={(value) =>
@@ -137,11 +139,11 @@ export function NoteFilters({
               }
             >
               <SelectTrigger>
-                <SelectValue placeholder="All visibilities" />
+                <SelectValue placeholder={t("notes.filters.allVisibilities")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="all">All visibilities</SelectItem>
+                  <SelectItem value="all">{t("notes.filters.allVisibilities")}</SelectItem>
                   {VISIBILITIES.map((vis) => (
                     <SelectItem key={vis.value} value={vis.value}>
                       {vis.label}
@@ -154,7 +156,7 @@ export function NoteFilters({
 
           {/* Mode */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Type</label>
+            <label className="text-xs font-medium">{t("notes.fields.type")}</label>
             <Select
               value={filters.mode || "all"}
               onValueChange={(value) =>
@@ -162,11 +164,11 @@ export function NoteFilters({
               }
             >
               <SelectTrigger>
-                <SelectValue placeholder="All types" />
+                <SelectValue placeholder={t("notes.filters.allTypes")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="all">All types</SelectItem>
+                  <SelectItem value="all">{t("notes.filters.allTypes")}</SelectItem>
                   {MODES.map((mode) => (
                     <SelectItem key={mode.value} value={mode.value}>
                       {mode.label}
@@ -188,7 +190,7 @@ export function NoteFilters({
                 className="text-muted-foreground"
               >
                 <X className="size-3.5 mr-1" />
-                Clear filters
+                {t("notes.filters.clear")}
               </Button>
             </div>
           )}

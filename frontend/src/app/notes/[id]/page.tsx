@@ -15,6 +15,7 @@ import {
   NoteVisibility,
 } from "@/types/note";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ReportButton } from "@/components/ReportButton";
 import {
   ArrowLeft,
@@ -51,6 +52,7 @@ export default function NoteDetailPage() {
   const params = useParams();
   const noteId = parseInt(params.id as string, 10);
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [note, setNote] = useState<Note | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +80,7 @@ export default function NoteDetailPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load note. Please try again.");
+          setError(t("notes.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -103,7 +105,7 @@ export default function NoteDetailPage() {
       await notesService.deleteNote(note.id);
       router.push("/notes");
     } catch {
-      alert("Failed to delete note.");
+      alert(t("common.error"));
       setIsUpdating(false);
     }
   };
@@ -112,7 +114,7 @@ export default function NoteDetailPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <LoadingState message="Loading note..." />
+          <LoadingState message={t("notes.loadingNotes")} />
         </div>
       </AppLayout>
     );
@@ -127,11 +129,11 @@ export default function NoteDetailPage() {
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
           <EmptyState
-            title="Note not found"
-            description={error || "This note may have been removed or you don't have access."}
+            title={t("notes.noteNotFound")}
+            description={error || t("notes.noteNotFoundDesc")}
             action={
               <Link href="/notes">
-                <Button size="sm">Browse Notes</Button>
+                <Button size="sm">{t("notes.browseTitle")}</Button>
               </Link>
             }
           />
@@ -149,7 +151,7 @@ export default function NoteDetailPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Notes
+          {t("notes.backToNotes")}
         </Link>
 
         {/* Title and badges */}
@@ -175,13 +177,13 @@ export default function NoteDetailPage() {
           <Card className="border-dashed">
             <CardContent className="pt-4 pb-4 space-y-3">
               <p className="text-sm font-medium text-muted-foreground">
-                Author Actions
+                {t("notes.authorActions")}
               </p>
               <div className="flex flex-wrap gap-2">
                 <Link href={`/notes/${note.id}/edit`}>
                   <Button variant="outline" size="sm">
                     <Pencil className="size-3.5 mr-1.5" />
-                    Edit
+                    {t("common.save")}
                   </Button>
                 </Link>
                 <Button
@@ -191,7 +193,7 @@ export default function NoteDetailPage() {
                   disabled={isUpdating}
                 >
                   <Trash2 className="size-3.5 mr-1.5" />
-                  Delete
+                  {t("common.delete")}
                 </Button>
               </div>
             </CardContent>
@@ -203,7 +205,7 @@ export default function NoteDetailPage() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-1.5 mb-3 text-xs text-muted-foreground">
               <FileText className="size-3.5" />
-              <span>Content</span>
+              <span>{t("notes.fields.content")}</span>
             </div>
             <div className="prose prose-sm dark:prose-invert max-w-none">
               <div className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -222,7 +224,7 @@ export default function NoteDetailPage() {
                 <div className="flex items-start gap-2">
                   <Tag className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Subject</p>
+                    <p className="text-xs text-muted-foreground">{t("notes.fields.subject")}</p>
                     <p className="text-sm font-medium">{note.subject}</p>
                   </div>
                 </div>
@@ -233,7 +235,7 @@ export default function NoteDetailPage() {
                 <div className="flex items-start gap-2">
                   <GraduationCap className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Grade</p>
+                    <p className="text-xs text-muted-foreground">{t("notes.fields.grade")}</p>
                     <p className="text-sm font-medium">{note.grade}</p>
                   </div>
                 </div>
@@ -244,7 +246,7 @@ export default function NoteDetailPage() {
                 <div className="flex items-start gap-2">
                   <School className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">School</p>
+                    <p className="text-xs text-muted-foreground">{t("notes.fields.school")}</p>
                     <p className="text-sm font-medium">{note.school.name}</p>
                   </div>
                 </div>
@@ -255,7 +257,7 @@ export default function NoteDetailPage() {
                 <div className="flex items-start gap-2">
                   <Layers className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Classroom</p>
+                    <p className="text-xs text-muted-foreground">{t("notes.fields.classroom")}</p>
                     <p className="text-sm font-medium">{note.classroom.name}</p>
                   </div>
                 </div>
@@ -270,7 +272,7 @@ export default function NoteDetailPage() {
             <div className="flex items-center gap-2">
               <User className="size-4 text-muted-foreground" />
               <div>
-                <p className="text-xs text-muted-foreground">Author</p>
+                <p className="text-xs text-muted-foreground">{t("notes.author")}</p>
                 <p className="text-sm font-medium">{note.author.name}</p>
               </div>
             </div>
@@ -280,9 +282,9 @@ export default function NoteDetailPage() {
         {/* Metadata */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Calendar className="size-3" />
-          <span>Created {new Date(note.created_at).toLocaleDateString()}</span>
+          <span>{t("notes.createdOn")} {new Date(note.created_at).toLocaleDateString()}</span>
           <span className="mx-1">&middot;</span>
-          <span>Updated {new Date(note.updated_at).toLocaleDateString()}</span>
+          <span>{t("notes.updatedOn")} {new Date(note.updated_at).toLocaleDateString()}</span>
         </div>
 
         {/* Specific users permissions */}
@@ -290,7 +292,7 @@ export default function NoteDetailPage() {
           <Card>
             <CardContent className="pt-4 space-y-2">
               <p className="text-xs text-muted-foreground font-medium">
-                Shared with {note.permissions.length} user(s)
+                {t("notes.sharedWith", { count: note.permissions.length })}
               </p>
               <div className="flex flex-wrap gap-2">
                 {note.permissions.map((perm) => (
@@ -313,14 +315,14 @@ export default function NoteDetailPage() {
             <CardContent className="pt-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Flashcards</p>
+                  <p className="text-sm font-medium">{t("notes.flashcards")}</p>
                   <p className="text-xs text-muted-foreground">
-                    Study flashcards from this note
+                    {t("notes.studyFlashcards")}
                   </p>
                 </div>
                 <Link href={`/notes/${note.id}/flashcards`}>
                   <Button size="sm" variant="outline">
-                    Study
+                    {t("notes.study")}
                   </Button>
                 </Link>
               </div>
@@ -334,7 +336,7 @@ export default function NoteDetailPage() {
             <ReportButton
               reportableType="Note"
               reportableId={note.id}
-              label="Report Note"
+              label={t("notes.reportNote")}
             />
           </div>
         )}
@@ -342,18 +344,17 @@ export default function NoteDetailPage() {
         {/* Delete confirmation dialog */}
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
           <AlertDialogContent>
-            <AlertDialogTitle>Delete Note</AlertDialogTitle>
+            <AlertDialogTitle>{t("notes.deleteConfirm")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this note? This action cannot be
-              undone.
+              {t("notes.deleteWarning")}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
                 className="bg-destructive hover:bg-destructive/90"
               >
-                Delete
+                {t("common.delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

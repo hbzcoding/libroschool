@@ -11,12 +11,14 @@ import { booksService } from "@/services/books";
 import { Book } from "@/types/book";
 import { EditBookForm } from "@/features/books/EditBookForm";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowLeft } from "lucide-react";
 
 export default function EditBookPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const bookId = Number(params.id);
 
   const [book, setBook] = useState<Book | null>(null);
@@ -47,13 +49,13 @@ export default function EditBookPage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <PageHeader title="Edit Book" />
+          <PageHeader title={t("books.editBookTitle")} />
           <EmptyState
-            title="Access Denied"
-            description="You can only edit your own book listings."
+            title={t("common.accessDenied")}
+            description={t("books.editOwnOnly")}
             action={
               <Link href={`/books/${bookId}`}>
-                <Button variant="outline">View Book</Button>
+                <Button variant="outline">{t("books.viewBook")}</Button>
               </Link>
             }
           />
@@ -66,7 +68,7 @@ export default function EditBookPage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <LoadingState message="Loading book..." />
+          <LoadingState message={t("books.loadingBooks")} />
         </div>
       </AppLayout>
     );
@@ -76,13 +78,13 @@ export default function EditBookPage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <PageHeader title="Edit Book" />
+          <PageHeader title={t("books.editBookTitle")} />
           <EmptyState
-            title="Book Not Found"
-            description={error || "This book does not exist or has been deleted."}
+            title={t("books.notFound")}
+            description={error || t("books.notFoundDesc")}
             action={
               <Link href="/books">
-                <Button variant="outline">Back to Books</Button>
+                <Button variant="outline">{t("common.backToBooks")}</Button>
               </Link>
             }
           />
@@ -98,7 +100,7 @@ export default function EditBookPage() {
           <Link href={`/books/${bookId}`}>
             <Button variant="ghost" size="sm" className="gap-2">
               <ArrowLeft className="size-4" />
-              Back to Book
+              {t("common.backToBook")}
             </Button>
           </Link>
         </div>

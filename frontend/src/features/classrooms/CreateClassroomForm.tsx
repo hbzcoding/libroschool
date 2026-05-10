@@ -23,6 +23,7 @@ import { classroomsService } from "@/services/classrooms";
 import { ClassroomJoinPolicy, ClassroomVisibility, JOIN_POLICY_LABELS, VISIBILITY_LABELS } from "@/types/classroom";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const JOIN_POLICIES: { value: ClassroomJoinPolicy; label: string }[] = [
   { value: "open", label: JOIN_POLICY_LABELS.open },
@@ -58,6 +59,7 @@ interface CreateClassroomFormProps {
 }
 
 export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -83,11 +85,11 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
 
   const onSubmit = async (data: ClassroomFormData) => {
     if (!schoolId) {
-      setFieldErrors({ school_id: "School is required" });
+      setFieldErrors({ school_id: t("classrooms.fields.schoolRequired") });
       return;
     }
     if (!grade) {
-      setFieldErrors({ grade: "Grade is required" });
+      setFieldErrors({ grade: t("classrooms.fields.gradeRequired") });
       return;
     }
 
@@ -144,7 +146,7 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
       {/* School */}
       <div className="space-y-2">
         <label className="text-sm font-medium">
-          School <span className="text-destructive">*</span>
+          {t("classrooms.fields.school")} <span className="text-destructive">*</span>
         </label>
         <SchoolSelector
           value={schoolId}
@@ -165,12 +167,12 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
       {/* Academic Year */}
       <div className="space-y-2">
         <label htmlFor="academic_year" className="text-sm font-medium">
-          Academic Year <span className="text-destructive">*</span>
+          {t("classrooms.fields.academicYear")} <span className="text-destructive">*</span>
         </label>
         <Input
           id="academic_year"
           {...register("academic_year")}
-          placeholder="e.g., 2025/2026"
+          placeholder={t("classrooms.fields.academicYearPlaceholder")}
           disabled={isSubmitting}
           aria-invalid={!!formErrors.academic_year}
         />
@@ -186,7 +188,7 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
           <label className="text-sm font-medium">
-            Grade <span className="text-destructive">*</span>
+            {t("classrooms.fields.grade")} <span className="text-destructive">*</span>
           </label>
           <GradeSelector
             value={grade}
@@ -205,12 +207,12 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
         </div>
         <div className="space-y-2">
           <label htmlFor="section" className="text-sm font-medium">
-            Section <span className="text-destructive">*</span>
+            {t("classrooms.fields.section")} <span className="text-destructive">*</span>
           </label>
           <Input
             id="section"
             {...register("section")}
-            placeholder="e.g., A"
+            placeholder={t("classrooms.fields.sectionPlaceholder")}
             disabled={isSubmitting}
             maxLength={5}
             aria-invalid={!!formErrors.section}
@@ -226,7 +228,7 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
 
       {/* Track */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Track</label>
+        <label className="text-sm font-medium">{t("classrooms.fields.track")}</label>
         <TrackSelector
           value={watch("track") || null}
           onChange={(value) => setValue("track", value)}
@@ -241,12 +243,12 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
       {/* Name (optional) */}
       <div className="space-y-2">
         <label htmlFor="name" className="text-sm font-medium">
-          Classroom Name
+          {t("classrooms.fields.name")}
         </label>
         <Input
           id="name"
           {...register("name")}
-          placeholder="Optional custom name"
+          placeholder={t("classrooms.fields.namePlaceholder")}
           disabled={isSubmitting}
           aria-invalid={!!formErrors.name}
         />
@@ -256,19 +258,19 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
           </FormMessage>
         )}
         <p className="text-xs text-muted-foreground">
-          If left empty, a name will be auto-generated.
+          {t("classrooms.fields.nameHint")}
         </p>
       </div>
 
       {/* Description */}
       <div className="space-y-2">
         <label htmlFor="description" className="text-sm font-medium">
-          Description
+          {t("classrooms.fields.description")}
         </label>
         <textarea
           id="description"
           {...register("description")}
-          placeholder="Optional description of this classroom..."
+          placeholder={t("classrooms.fields.descriptionPlaceholder")}
           disabled={isSubmitting}
           rows={4}
           className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -283,7 +285,7 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
 
       {/* Join Policy */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Join Policy</label>
+        <label className="text-sm font-medium">{t("classrooms.fields.joinPolicy")}</label>
         <Select
           value={selectedJoinPolicy}
           onValueChange={(value) =>
@@ -291,7 +293,7 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select join policy" />
+            <SelectValue placeholder={t("classrooms.fields.selectJoinPolicy")} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -313,7 +315,7 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
 
       {/* Visibility */}
       <div className="space-y-2">
-        <label className="text-sm font-medium">Visibility</label>
+        <label className="text-sm font-medium">{t("classrooms.fields.visibility")}</label>
         <Select
           value={selectedVisibility}
           onValueChange={(value) =>
@@ -321,7 +323,7 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select visibility" />
+            <SelectValue placeholder={t("classrooms.fields.selectVisibility")} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -346,10 +348,10 @@ export function CreateClassroomForm({ className }: CreateClassroomFormProps) {
         {isSubmitting ? (
           <>
             <Loader2 className="size-4 animate-spin mr-2" />
-            Creating...
+            {t("common.creating")}
           </>
         ) : (
-          "Create Classroom"
+          t("classrooms.actions.create")
         )}
       </Button>
     </form>

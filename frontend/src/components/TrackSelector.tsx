@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface TrackSelectorProps {
   value?: string | null;
@@ -30,8 +31,11 @@ export function TrackSelector({
   value,
   onChange,
   className,
-  placeholder = "Select track",
+  placeholder,
 }: TrackSelectorProps) {
+  const { t } = useTranslation();
+  const defaultPlaceholder = t("selectors.selectTrack");
+  const resolvedPlaceholder = placeholder ?? defaultPlaceholder;
   const handleSelect = (trackValue: string | null) => {
     if (trackValue === "none" || trackValue === null) {
       onChange(null);
@@ -43,11 +47,11 @@ export function TrackSelector({
   return (
     <Select value={value || ""} onValueChange={handleSelect}>
       <SelectTrigger className={cn("w-full", className)}>
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={resolvedPlaceholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="none">None</SelectItem>
+          <SelectItem value="none">{t("common.none")}</SelectItem>
           {TRACKS.map((track) => (
             <SelectItem key={track.value} value={track.value}>
               {track.label}

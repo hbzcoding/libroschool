@@ -10,11 +10,13 @@ import { NoteFilters, NoteCard } from "@/features/notes";
 import { notesService } from "@/services/notes";
 import { NotesFilters, Note } from "@/types/note";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Plus, Loader2 } from "lucide-react";
 
 export default function NotesPage() {
   const router = useRouter();
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export default function NotesPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load notes. Please try again.");
+          setError(t("notes.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -107,13 +109,13 @@ export default function NotesPage() {
     <AppLayout>
       <div className="p-4 max-w-2xl mx-auto space-y-6 pb-20 md:pb-4">
         <PageHeader
-          title="Notes"
-          description="Browse and share study notes"
+          title={t("notes.browseTitle")}
+          description={t("notes.browseDescription")}
           actions={
             <Link href="/notes/new">
               <Button size="sm">
                 <Plus className="size-4" />
-                New Note
+                {t("notes.createNote")}
               </Button>
             </Link>
           }
@@ -121,7 +123,7 @@ export default function NotesPage() {
 
         <NoteFilters filters={filters} onFiltersChange={handleFiltersChange} />
 
-        {isLoading && <LoadingState message="Loading notes..." />}
+        {isLoading && <LoadingState message={t("notes.loadingNotes")} />}
 
         {error && (
           <div className="text-center py-8">
@@ -135,18 +137,18 @@ export default function NotesPage() {
               }}
               className="mt-3"
             >
-              Try Again
+              {t("common.tryAgain")}
             </Button>
           </div>
         )}
 
         {!isLoading && !error && notes.length === 0 && (
           <EmptyState
-            title="No notes found"
-            description="Try adjusting your filters or create your first note."
+            title={t("notes.noNotes")}
+            description={t("notes.noNotesDesc")}
             action={
               <Link href="/notes/new">
-                <Button size="sm">Create a Note</Button>
+                <Button size="sm">{t("notes.createNote")}</Button>
               </Link>
             }
           />
@@ -170,10 +172,10 @@ export default function NotesPage() {
                   {isLoadingMore ? (
                     <>
                       <Loader2 className="size-4 animate-spin mr-2" />
-                      Loading...
+                      {t("common.loading")}
                     </>
                   ) : (
-                    "Load More"
+                    t("common.loadMore")
                   )}
                 </Button>
               </div>

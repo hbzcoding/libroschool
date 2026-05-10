@@ -10,11 +10,13 @@ import { RequestFilters, RequestCard } from "@/features/requests";
 import { bookRequestsService } from "@/services/bookRequests";
 import { BookRequestsFilters, BookRequest } from "@/types/bookRequest";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Plus, Loader2 } from "lucide-react";
 
 export default function RequestsPage() {
   const router = useRouter();
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [requests, setRequests] = useState<BookRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,12 +53,12 @@ export default function RequestsPage() {
       setTotalPages(response.meta.last_page);
       setCurrentPage(response.meta.current_page);
     } catch {
-      setError("Failed to load book requests. Please try again.");
+      setError(t("requests.loadError"));
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, [filters]);
+  }, [filters, t]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -78,7 +80,7 @@ export default function RequestsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load book requests. Please try again.");
+          setError(t("requests.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -92,7 +94,7 @@ export default function RequestsPage() {
     return () => {
       cancelled = true;
     };
-  }, [filters, isAuthenticated]);
+  }, [filters, isAuthenticated, t]);
 
   const handleFiltersChange = useCallback(
     (newFilters: BookRequestsFilters) => {
@@ -126,13 +128,13 @@ export default function RequestsPage() {
     <AppLayout>
       <div className="p-4 max-w-2xl mx-auto space-y-6 pb-20 md:pb-4">
         <PageHeader
-          title="Book Requests"
-          description="Browse book requests from other students"
+          title={t("requests.title")}
+          description={t("requests.description")}
           actions={
             <Link href="/requests/new">
               <Button size="sm">
                 <Plus className="size-4" />
-                Request Book
+                {t("requests.createRequest")}
               </Button>
             </Link>
           }
@@ -140,24 +142,24 @@ export default function RequestsPage() {
 
         <RequestFilters filters={filters} onFiltersChange={handleFiltersChange} />
 
-        {isLoading && <LoadingState message="Loading requests..." />}
+        {isLoading && <LoadingState message={t("requests.loadingRequests")} />}
 
         {error && (
           <div className="text-center py-8">
             <p className="text-destructive">{error}</p>
             <Button variant="outline" size="sm" onClick={() => loadRequests(1)} className="mt-3">
-              Try Again
+              {t("common.tryAgain")}
             </Button>
           </div>
         )}
 
         {!isLoading && !error && requests.length === 0 && (
           <EmptyState
-            title="No book requests found"
-            description="Try adjusting your filters or check back later."
+            title={t("requests.noRequests")}
+            description={t("requests.noRequestsDesc")}
             action={
               <Link href="/requests/new">
-                <Button size="sm">Request a Book</Button>
+                <Button size="sm">{t("requests.createRequest")}</Button>
               </Link>
             }
           />
@@ -181,10 +183,10 @@ export default function RequestsPage() {
                   {isLoadingMore ? (
                     <>
                       <Loader2 className="size-4 animate-spin mr-2" />
-                      Loading...
+                      {t("common.loading")}
                     </>
                   ) : (
-                    "Load More"
+                    t("common.loadMore")
                   )}
                 </Button>
               </div>

@@ -9,6 +9,7 @@ import { FormMessage } from "@/components/ui/form";
 import { Flashcard, CreateFlashcardData, UpdateFlashcardData } from "@/types/flashcard";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const flashcardSchema = z.object({
   front_text: z.string().min(1, "Front text is required").max(1000),
@@ -30,6 +31,7 @@ export function FlashcardEditor({
   onCancel,
   className,
 }: FlashcardEditorProps) {
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -86,12 +88,12 @@ export function FlashcardEditor({
       {/* Front text */}
       <div className="space-y-2">
         <label htmlFor="front_text" className="text-sm font-medium">
-          Front Text <span className="text-destructive">*</span>
+          {t("flashcards.fields.frontText")} <span className="text-destructive">*</span>
         </label>
         <textarea
           id="front_text"
           {...register("front_text")}
-          placeholder="Question or prompt..."
+          placeholder={t("flashcards.fields.frontPlaceholder")}
           disabled={isSubmitting}
           rows={3}
           className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -107,12 +109,12 @@ export function FlashcardEditor({
       {/* Back text */}
       <div className="space-y-2">
         <label htmlFor="back_text" className="text-sm font-medium">
-          Back Text <span className="text-destructive">*</span>
+          {t("flashcards.fields.backText")} <span className="text-destructive">*</span>
         </label>
         <textarea
           id="back_text"
           {...register("back_text")}
-          placeholder="Answer or explanation..."
+          placeholder={t("flashcards.fields.backPlaceholder")}
           disabled={isSubmitting}
           rows={3}
           className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -131,15 +133,15 @@ export function FlashcardEditor({
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin mr-2" />
-              {isEditing ? "Updating..." : "Saving..."}
+              {isEditing ? t("flashcards.actions.updating") : t("flashcards.actions.saving")}
             </>
           ) : (
-            isEditing ? "Update Card" : "Save Card"
+            isEditing ? t("flashcards.actions.update") : t("flashcards.actions.save")
           )}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
-            Cancel
+            {t("common.cancel")}
           </Button>
         )}
       </div>

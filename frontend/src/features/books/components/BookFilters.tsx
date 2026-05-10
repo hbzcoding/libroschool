@@ -17,6 +17,7 @@ import {
 import { BooksFilters, BookCondition, BookStatus, CONDITION_LABELS, STATUS_LABELS } from "@/types/book";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface BookFiltersProps {
   filters: BooksFilters;
@@ -42,6 +43,7 @@ export function BookFilters({
   onFiltersChange,
   className,
 }: BookFiltersProps) {
+  const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const updateFilter = useCallback(
@@ -75,7 +77,7 @@ export function BookFilters({
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search by title, ISBN, author..."
+            placeholder={t("books.searchPlaceholder")}
             value={filters.search || ""}
             onChange={(e) => updateFilter("search", e.target.value || undefined)}
             className="pl-8"
@@ -97,7 +99,7 @@ export function BookFilters({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 rounded-lg bg-muted/50">
           {/* School */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">School</label>
+            <label className="text-xs font-medium">{t("books.fields.school")}</label>
             <SchoolSelector
               value={filters.school_id || null}
               onChange={(value) => updateFilter("school_id", value || undefined)}
@@ -106,7 +108,7 @@ export function BookFilters({
 
           {/* Grade */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Grade</label>
+            <label className="text-xs font-medium">{t("books.fields.grade")}</label>
             <GradeSelector
               value={filters.grade || null}
               onChange={(value) => updateFilter("grade", value || undefined)}
@@ -115,7 +117,7 @@ export function BookFilters({
 
           {/* Track */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Track</label>
+            <label className="text-xs font-medium">{t("books.fields.track")}</label>
             <TrackSelector
               value={filters.track || null}
               onChange={(value) => updateFilter("track", value || undefined)}
@@ -124,10 +126,10 @@ export function BookFilters({
 
           {/* Subject */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Subject</label>
+            <label className="text-xs font-medium">{t("books.fields.subject")}</label>
             <Input
               type="text"
-              placeholder="e.g., Math, History..."
+              placeholder={t("books.fields.subjectFilterPlaceholder")}
               value={filters.subject || ""}
               onChange={(e) => updateFilter("subject", e.target.value || undefined)}
             />
@@ -135,7 +137,7 @@ export function BookFilters({
 
           {/* Condition */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Condition</label>
+            <label className="text-xs font-medium">{t("books.fields.condition")}</label>
             <Select
               value={filters.condition || "all"}
               onValueChange={(value) =>
@@ -143,11 +145,11 @@ export function BookFilters({
               }
             >
               <SelectTrigger>
-                <SelectValue placeholder="All conditions" />
+                <SelectValue placeholder={t("books.filters.allConditions")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="all">All conditions</SelectItem>
+                  <SelectItem value="all">{t("books.filters.allConditions")}</SelectItem>
                   {CONDITIONS.map((condition) => (
                     <SelectItem key={condition.value} value={condition.value}>
                       {condition.label}
@@ -160,7 +162,7 @@ export function BookFilters({
 
           {/* Status */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Status</label>
+            <label className="text-xs font-medium">{t("books.fields.status")}</label>
             <Select
               value={filters.status || "available"}
               onValueChange={(value) => {
@@ -169,11 +171,11 @@ export function BookFilters({
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="All statuses" />
+                <SelectValue placeholder={t("books.filters.allStatuses")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="all">All statuses</SelectItem>
+                  <SelectItem value="all">{t("books.filters.allStatuses")}</SelectItem>
                   {STATUSES.map((status) => (
                     <SelectItem key={status.value} value={status.value}>
                       {status.label}
@@ -186,11 +188,11 @@ export function BookFilters({
 
           {/* Price range */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Price Range</label>
+            <label className="text-xs font-medium">{t("books.filters.priceRange")}</label>
             <div className="flex items-center gap-2">
               <Input
                 type="number"
-                placeholder="Min"
+                placeholder={t("books.filters.min")}
                 min={0}
                 step={0.5}
                 value={filters.min_price ?? ""}
@@ -202,10 +204,10 @@ export function BookFilters({
                 }
                 className="w-20"
               />
-              <span className="text-muted-foreground text-sm">to</span>
+              <span className="text-muted-foreground text-sm">{t("books.filters.to")}</span>
               <Input
                 type="number"
-                placeholder="Max"
+                placeholder={t("books.filters.max")}
                 min={0}
                 step={0.5}
                 value={filters.max_price ?? ""}
@@ -222,10 +224,10 @@ export function BookFilters({
 
           {/* ISBN */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">ISBN</label>
+            <label className="text-xs font-medium">{t("books.fields.isbn")}</label>
             <Input
               type="text"
-              placeholder="ISBN-10 or ISBN-13"
+              placeholder={t("books.fields.isbnPlaceholder")}
               value={filters.isbn || ""}
               onChange={(e) => updateFilter("isbn", e.target.value || undefined)}
             />
@@ -242,7 +244,7 @@ export function BookFilters({
                 className="text-muted-foreground"
               >
                 <X className="size-3.5 mr-1" />
-                Clear filters
+                {t("books.filters.clear")}
               </Button>
             </div>
           )}

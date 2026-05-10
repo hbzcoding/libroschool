@@ -15,8 +15,10 @@ import {
 } from "@/features/admin/components/DataTable";
 import { ConfirmDialog } from "@/features/admin/components/ConfirmDialog";
 import { Column } from "@/features/admin/components/DataTable";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminRequestsPage() {
+  const { t } = useTranslation();
   const [requests, setRequests] = useState<AdminBookRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export default function AdminRequestsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load book requests");
+          setError(t("admin.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -63,7 +65,7 @@ export default function AdminRequestsPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, statusFilter, page]);
+  }, [search, statusFilter, page, t]);
 
   const fetchRequests = useCallback(async () => {
     try {
@@ -81,7 +83,7 @@ export default function AdminRequestsPage() {
       setTotal(response.meta.total);
       setError(null);
     } catch {
-      setError("Failed to load book requests");
+      setError(t("admin.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -153,19 +155,19 @@ export default function AdminRequestsPage() {
   const columns: Column<AdminBookRequest>[] = [
     {
       key: "title",
-      label: "Title",
+      label: t("admin.tables.title"),
       render: (request) => (
         <div>
           <p className="text-sm font-medium text-[#f7f8f8] max-w-xs truncate">{request.title}</p>
           <p className="text-xs text-[#8a8f98]">
-            by {request.buyer.name} • {request.school?.name || "No school"}
+            by {request.buyer.name} • {request.school?.name || t("admin.noSchool")}
           </p>
         </div>
       ),
     },
     {
       key: "max_price",
-      label: "Max Price",
+      label: t("admin.tables.price"),
       render: (request) => (
         <span className="text-sm text-[#d0d6e0]">
           {formatPrice(request.max_price)}
@@ -174,7 +176,7 @@ export default function AdminRequestsPage() {
     },
     {
       key: "status",
-      label: "Status",
+      label: t("admin.tables.status"),
       render: (request) => (
         <StatusBadge
           status={REQUEST_STATUS_LABELS[request.status]}
@@ -184,36 +186,36 @@ export default function AdminRequestsPage() {
     },
     {
       key: "created_at",
-      label: "Created",
+      label: t("admin.tables.createdAt"),
       render: (request) => (
         <span className="text-xs text-[#62666d]">{formatDate(request.created_at)}</span>
       ),
     },
     {
       key: "actions",
-      label: "Actions",
+      label: t("admin.tables.actions"),
       render: (request) => (
         <div className="flex items-center gap-1">
           {request.status === "hidden" ? (
             <ConfirmDialog
-              title="Unhide Request"
-              description="Make this request visible again?"
-              confirmLabel="Unhide"
+              title={t("admin.actions.unhideRequest")}
+              description={t("admin.confirmUnhide")}
+              confirmLabel={t("admin.actions.unhideRequest")}
               onConfirm={() => handleUnhide(request.id)}
               trigger={
                 <button
                   disabled={actionLoading === request.id}
                   className="rounded-md border border-[#23252a] bg-[#0f1011] px-2.5 py-1 text-xs text-[#d0d6e0] hover:bg-[#141516] transition-colors disabled:opacity-50"
                 >
-                  Unhide
+                  {t("admin.actions.unhideRequest")}
                 </button>
               }
             />
           ) : (
             <ConfirmDialog
-              title="Hide Request"
-              description="Hide this request from public view?"
-              confirmLabel="Hide"
+              title={t("admin.actions.hideRequest")}
+              description={t("admin.confirmHide")}
+              confirmLabel={t("admin.actions.hideRequest")}
               variant="destructive"
               onConfirm={() => handleHide(request.id)}
               trigger={
@@ -221,15 +223,15 @@ export default function AdminRequestsPage() {
                   disabled={actionLoading === request.id}
                   className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
                 >
-                  Hide
+                  {t("admin.actions.hideRequest")}
                 </button>
               }
             />
           )}
           <ConfirmDialog
-            title="Delete Request"
-            description="Permanently delete this request? This cannot be undone."
-            confirmLabel="Delete"
+            title={t("admin.actions.deleteRequest")}
+            description={t("admin.confirmDelete")}
+            confirmLabel={t("admin.actions.deleteRequest")}
             variant="destructive"
             onConfirm={() => handleDelete(request.id)}
             trigger={
@@ -237,7 +239,7 @@ export default function AdminRequestsPage() {
                 disabled={actionLoading === request.id}
                 className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
               >
-                Delete
+                {t("admin.actions.deleteRequest")}
               </button>
             }
           />
@@ -257,8 +259,8 @@ export default function AdminRequestsPage() {
   return (
     <div>
       <PageHeader
-        title="Book Requests"
-        description={`${total} total requests`}
+        title={t("admin.requests")}
+        description={`${total} ${t("admin.totalRequests")}`}
       />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -266,18 +268,18 @@ export default function AdminRequestsPage() {
           <SearchInput
             value={search}
             onChange={(v) => { setSearch(v); setPage(1); }}
-            placeholder="Search by title..."
+            placeholder={t("admin.searchTitle")}
           />
         </div>
         <FilterSelect
           value={statusFilter}
           onChange={(v) => { setStatusFilter(v); setPage(1); }}
-          placeholder="All Status"
+          placeholder={t("admin.filters.all")}
           options={[
-            { value: "open", label: "Open" },
-            { value: "matched", label: "Matched" },
-            { value: "closed", label: "Closed" },
-            { value: "hidden", label: "Hidden" },
+            { value: "open", label: t("admin.filters.pending") },
+            { value: "matched", label: t("admin.status.matched") },
+            { value: "closed", label: t("admin.status.closed") },
+            { value: "hidden", label: t("admin.filters.hidden") },
           ]}
         />
       </div>
@@ -293,7 +295,7 @@ export default function AdminRequestsPage() {
         }}
         onPageChange={setPage}
         isLoading={isLoading}
-        emptyMessage="No book requests found"
+        emptyMessage={t("admin.empty.requests")}
       />
     </div>
   );

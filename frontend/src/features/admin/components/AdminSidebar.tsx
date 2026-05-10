@@ -3,25 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-
-interface NavItem {
-  name: string;
-  href: string;
-}
-
-const navItems: NavItem[] = [
-  { name: "Dashboard", href: "/admin" },
-  { name: "Users", href: "/admin/users" },
-  { name: "Books", href: "/admin/books" },
-  { name: "Requests", href: "/admin/requests" },
-  { name: "Notes", href: "/admin/notes" },
-  { name: "Classrooms", href: "/admin/classrooms" },
-  { name: "Reports", href: "/admin/reports" },
-  { name: "Schools", href: "/admin/schools" },
-];
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { name: t("admin.dashboard"), href: "/admin" },
+    { name: t("admin.users"), href: "/admin/users" },
+    { name: t("admin.books"), href: "/admin/books" },
+    { name: t("admin.requests"), href: "/admin/requests" },
+    { name: t("admin.notes"), href: "/admin/notes" },
+    { name: t("admin.classrooms"), href: "/admin/classrooms" },
+    { name: t("admin.reports"), href: "/admin/reports" },
+    { name: t("admin.schools"), href: "/admin/schools" },
+  ];
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-[#23252a] bg-[#010102] hidden md:block">
@@ -58,7 +55,7 @@ export function AdminSidebar() {
             href="/"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#8a8f98] hover:bg-[#0f1011] hover:text-[#d0d6e0] transition-colors"
           >
-            Back to App
+            {t("admin.backToApp")}
           </Link>
         </div>
       </div>
@@ -68,6 +65,18 @@ export function AdminSidebar() {
 
 export function AdminMobileNav() {
   const pathname = usePathname();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { name: t("admin.dashboard"), href: "/admin" },
+    { name: t("admin.users"), href: "/admin/users" },
+    { name: t("admin.books"), href: "/admin/books" },
+    { name: t("admin.requests"), href: "/admin/requests" },
+    { name: t("admin.notes"), href: "/admin/notes" },
+    { name: t("admin.classrooms"), href: "/admin/classrooms" },
+    { name: t("admin.reports"), href: "/admin/reports" },
+    { name: t("admin.schools"), href: "/admin/schools" },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#23252a] bg-[#010102] md:hidden">

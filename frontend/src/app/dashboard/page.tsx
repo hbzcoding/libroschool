@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { AppLayout } from "@/components/Layouts";
 import { PageHeader } from "@/components/States";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,61 +17,62 @@ import {
   Plus,
 } from "lucide-react";
 
-const QUICK_ACTIONS = [
-  {
-    href: "/books/new",
-    label: "Sell a Book",
-    description: "List your used books for sale",
-    icon: Plus,
-    color: "bg-primary/10 text-primary",
-  },
-  {
-    href: "/books",
-    label: "Browse Books",
-    description: "Find books from other students",
-    icon: BookOpen,
-    color: "bg-blue-500/10 text-blue-600",
-  },
-  {
-    href: "/requests/new",
-    label: "Request a Book",
-    description: "Ask for a book you need",
-    icon: BookMarked,
-    color: "bg-green-500/10 text-green-600",
-  },
-  {
-    href: "/requests",
-    label: "Browse Requests",
-    description: "See what others are looking for",
-    icon: BookMarked,
-    color: "bg-orange-500/10 text-orange-600",
-  },
-  {
-    href: "/classes",
-    label: "My Classes",
-    description: "Join or create a classroom",
-    icon: Users,
-    color: "bg-purple-500/10 text-purple-600",
-  },
-  {
-    href: "/notes",
-    label: "Notes",
-    description: "Share and browse study notes",
-    icon: StickyNote,
-    color: "bg-yellow-500/10 text-yellow-600",
-  },
-  {
-    href: "/messages",
-    label: "Messages",
-    description: "Chat with other students",
-    icon: MessageCircle,
-    color: "bg-pink-500/10 text-pink-600",
-  },
-];
-
 export default function DashboardPage() {
   const { user, isLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const router = useRouter();
+
+  const QUICK_ACTIONS = [
+    {
+      href: "/books/new",
+      label: t("dashboard.sellBook"),
+      description: t("dashboard.sellBookDesc"),
+      icon: Plus,
+      color: "bg-primary/10 text-primary",
+    },
+    {
+      href: "/books",
+      label: t("dashboard.browseBooks"),
+      description: t("dashboard.browseBooksDesc"),
+      icon: BookOpen,
+      color: "bg-blue-500/10 text-blue-600",
+    },
+    {
+      href: "/requests/new",
+      label: t("dashboard.requestBook"),
+      description: t("dashboard.requestBookDesc"),
+      icon: BookMarked,
+      color: "bg-green-500/10 text-green-600",
+    },
+    {
+      href: "/requests",
+      label: t("dashboard.browseRequests"),
+      description: t("dashboard.browseRequestsDesc"),
+      icon: BookMarked,
+      color: "bg-orange-500/10 text-orange-600",
+    },
+    {
+      href: "/classes",
+      label: t("dashboard.myClasses"),
+      description: t("dashboard.myClassesDesc"),
+      icon: Users,
+      color: "bg-purple-500/10 text-purple-600",
+    },
+    {
+      href: "/notes",
+      label: t("dashboard.notesTitle"),
+      description: t("dashboard.notesDesc"),
+      icon: StickyNote,
+      color: "bg-yellow-500/10 text-yellow-600",
+    },
+    {
+      href: "/messages",
+      label: t("dashboard.messagesTitle"),
+      description: t("dashboard.messagesDesc"),
+      icon: MessageCircle,
+      color: "bg-pink-500/10 text-pink-600",
+    },
+  ];
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -82,7 +84,7 @@ export default function DashboardPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">{t("common.loading")}</p>
         </div>
       </AppLayout>
     );
@@ -95,7 +97,7 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       <div className="p-4 max-w-2xl mx-auto space-y-6">
-        <PageHeader title={`Welcome, ${user.name}`} />
+        <PageHeader title={t("dashboard.welcome", { name: user.name })} />
 
         {/* Profile summary */}
         <Card>
@@ -107,7 +109,7 @@ export default function DashboardPage() {
               </div>
               <Link href="/profile">
                 <button className="text-sm text-primary hover:underline">
-                  Edit Profile
+                  {t("dashboard.editProfile")}
                 </button>
               </Link>
             </div>
@@ -125,7 +127,7 @@ export default function DashboardPage() {
 
         {/* Quick actions */}
         <div>
-          <h2 className="text-lg font-medium mb-3">Quick Actions</h2>
+          <h2 className="text-lg font-medium mb-3">{t("dashboard.quickActions")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {QUICK_ACTIONS.map((action) => {
               const Icon = action.icon;

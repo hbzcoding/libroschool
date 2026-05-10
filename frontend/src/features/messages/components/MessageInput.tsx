@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Send, Loader2 } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface MessageInputProps {
   onSend: (message: string) => Promise<void>;
@@ -10,6 +11,7 @@ interface MessageInputProps {
 }
 
 export function MessageInput({ onSend, disabled = false }: MessageInputProps) {
+  const { t } = useTranslation();
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
@@ -40,7 +42,7 @@ export function MessageInput({ onSend, disabled = false }: MessageInputProps) {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Type a message..."
+        placeholder={t("messages.messagePlaceholder")}
         disabled={disabled || isSending}
         rows={1}
         className="flex-1 resize-none bg-muted/50 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50"

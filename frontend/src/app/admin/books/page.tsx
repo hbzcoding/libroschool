@@ -15,8 +15,10 @@ import {
 } from "@/features/admin/components/DataTable";
 import { ConfirmDialog } from "@/features/admin/components/ConfirmDialog";
 import { Column } from "@/features/admin/components/DataTable";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminBooksPage() {
+  const { t } = useTranslation();
   const [books, setBooks] = useState<AdminBook[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export default function AdminBooksPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load books");
+          setError(t("admin.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -63,7 +65,7 @@ export default function AdminBooksPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, statusFilter, page]);
+  }, [search, statusFilter, page, t]);
 
   const fetchBooks = useCallback(async () => {
     try {
@@ -81,7 +83,7 @@ export default function AdminBooksPage() {
       setTotal(response.meta.total);
       setError(null);
     } catch {
-      setError("Failed to load books");
+      setError(t("admin.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -153,19 +155,19 @@ export default function AdminBooksPage() {
   const columns: Column<AdminBook>[] = [
     {
       key: "title",
-      label: "Title",
+      label: t("admin.tables.title"),
       render: (book) => (
         <div>
           <p className="text-sm font-medium text-[#f7f8f8] max-w-xs truncate">{book.title}</p>
           <p className="text-xs text-[#8a8f98]">
-            by {book.seller.name} • {book.school?.name || "No school"}
+            by {book.seller.name} • {book.school?.name || t("admin.noSchool")}
           </p>
         </div>
       ),
     },
     {
       key: "condition",
-      label: "Condition",
+      label: t("admin.tables.condition"),
       render: (book) => (
         <span className="text-xs text-[#d0d6e0]">
           {CONDITION_LABELS[book.condition]}
@@ -174,7 +176,7 @@ export default function AdminBooksPage() {
     },
     {
       key: "price",
-      label: "Price",
+      label: t("admin.tables.price"),
       render: (book) => (
         <span className="text-sm font-medium text-[#f7f8f8]">
           {formatPrice(book.price)}
@@ -183,7 +185,7 @@ export default function AdminBooksPage() {
     },
     {
       key: "status",
-      label: "Status",
+      label: t("admin.tables.status"),
       render: (book) => (
         <StatusBadge
           status={STATUS_LABELS[book.status]}
@@ -193,36 +195,36 @@ export default function AdminBooksPage() {
     },
     {
       key: "created_at",
-      label: "Listed",
+      label: t("admin.tables.createdAt"),
       render: (book) => (
         <span className="text-xs text-[#62666d]">{formatDate(book.created_at)}</span>
       ),
     },
     {
       key: "actions",
-      label: "Actions",
+      label: t("admin.tables.actions"),
       render: (book) => (
         <div className="flex items-center gap-1">
           {book.status === "hidden" ? (
             <ConfirmDialog
-              title="Unhide Book"
-              description="Make this book visible again?"
-              confirmLabel="Unhide"
+              title={t("admin.actions.unhideBook")}
+              description={t("admin.confirmUnhide")}
+              confirmLabel={t("admin.actions.unhideBook")}
               onConfirm={() => handleUnhide(book.id)}
               trigger={
                 <button
                   disabled={actionLoading === book.id}
                   className="rounded-md border border-[#23252a] bg-[#0f1011] px-2.5 py-1 text-xs text-[#d0d6e0] hover:bg-[#141516] transition-colors disabled:opacity-50"
                 >
-                  Unhide
+                  {t("admin.actions.unhideBook")}
                 </button>
               }
             />
           ) : (
             <ConfirmDialog
-              title="Hide Book"
-              description="Hide this book from public view?"
-              confirmLabel="Hide"
+              title={t("admin.actions.hideBook")}
+              description={t("admin.confirmHide")}
+              confirmLabel={t("admin.actions.hideBook")}
               variant="destructive"
               onConfirm={() => handleHide(book.id)}
               trigger={
@@ -230,15 +232,15 @@ export default function AdminBooksPage() {
                   disabled={actionLoading === book.id}
                   className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
                 >
-                  Hide
+                  {t("admin.actions.hideBook")}
                 </button>
               }
             />
           )}
           <ConfirmDialog
-            title="Delete Book"
-            description="Permanently delete this book? This cannot be undone."
-            confirmLabel="Delete"
+            title={t("admin.actions.deleteBook")}
+            description={t("admin.confirmDelete")}
+            confirmLabel={t("admin.actions.deleteBook")}
             variant="destructive"
             onConfirm={() => handleDelete(book.id)}
             trigger={
@@ -246,7 +248,7 @@ export default function AdminBooksPage() {
                 disabled={actionLoading === book.id}
                 className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
               >
-                Delete
+                {t("admin.actions.deleteBook")}
               </button>
             }
           />
@@ -266,8 +268,8 @@ export default function AdminBooksPage() {
   return (
     <div>
       <PageHeader
-        title="Books"
-        description={`${total} total books listed`}
+        title={t("admin.books")}
+        description={`${total} ${t("admin.totalBooks")}`}
       />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -275,18 +277,18 @@ export default function AdminBooksPage() {
           <SearchInput
             value={search}
             onChange={(v) => { setSearch(v); setPage(1); }}
-            placeholder="Search by title..."
+            placeholder={t("admin.searchTitle")}
           />
         </div>
         <FilterSelect
           value={statusFilter}
           onChange={(v) => { setStatusFilter(v); setPage(1); }}
-          placeholder="All Status"
+          placeholder={t("admin.filters.all")}
           options={[
-            { value: "available", label: "Available" },
-            { value: "reserved", label: "Reserved" },
-            { value: "sold", label: "Sold" },
-            { value: "hidden", label: "Hidden" },
+            { value: "available", label: t("admin.status.available") },
+            { value: "reserved", label: t("admin.status.reserved") },
+            { value: "sold", label: t("admin.status.sold") },
+            { value: "hidden", label: t("admin.filters.hidden") },
           ]}
         />
       </div>
@@ -302,7 +304,7 @@ export default function AdminBooksPage() {
         }}
         onPageChange={setPage}
         isLoading={isLoading}
-        emptyMessage="No books found"
+        emptyMessage={t("admin.empty.books")}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import { Conversation } from "@/types/conversation";
 import { Card } from "@/components/ui/card";
 import { BookOpen, BookMarked } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -26,16 +27,17 @@ function formatTime(dateStr: string): string {
 }
 
 export function ConversationList({ conversations }: ConversationListProps) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-1">
       {conversations.map((conversation) => (
-        <ConversationItem key={conversation.id} conversation={conversation} />
+        <ConversationItem key={conversation.id} conversation={conversation} t={t} />
       ))}
     </div>
   );
 }
 
-function ConversationItem({ conversation }: { conversation: Conversation }) {
+function ConversationItem({ conversation, t }: { conversation: Conversation; t: (key: string) => string }) {
   const contextLabel = conversation.book
     ? conversation.book.title
     : conversation.book_request
@@ -52,7 +54,7 @@ function ConversationItem({ conversation }: { conversation: Conversation }) {
     ? conversation.latest_message.body.length > 50
       ? conversation.latest_message.body.slice(0, 50) + "..."
       : conversation.latest_message.body
-    : "No messages yet";
+    : t("messages.noMessagesYet");
 
   const Icon = contextIcon;
 

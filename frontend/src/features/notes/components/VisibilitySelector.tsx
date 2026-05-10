@@ -7,6 +7,7 @@ import {
   VISIBILITY_DESCRIPTIONS,
 } from "@/types/note";
 import { Lock, Users, Globe, UserCheck } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface VisibilitySelectorProps {
   value: NoteVisibility;
@@ -53,10 +54,11 @@ export function VisibilitySelector({
   classroomName,
   disabled = false,
 }: VisibilitySelectorProps) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium">
-        Visibility <span className="text-destructive">*</span>
+        {t("notes.fields.visibility")} <span className="text-destructive">*</span>
       </label>
       <div className="grid grid-cols-2 gap-2">
         {VISIBILITY_OPTIONS.map((option) => {

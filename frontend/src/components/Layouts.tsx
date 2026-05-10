@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { LocaleSelector } from "@/components/LocaleSelector";
 import {
   BookOpen,
   BookMarked,
@@ -19,19 +21,20 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const NAV_ITEMS = [
-  { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/books", label: "Books", icon: BookOpen },
-  { href: "/requests", label: "Requests", icon: BookMarked },
-  { href: "/classes", label: "Classes", icon: Users },
-  { href: "/notes", label: "Notes", icon: StickyNote },
-  { href: "/messages", label: "Messages", icon: MessageCircle },
-];
-
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const NAV_ITEMS = [
+    { href: "/dashboard", label: t("nav.home"), icon: Home },
+    { href: "/books", label: t("nav.books"), icon: BookOpen },
+    { href: "/requests", label: t("nav.requests"), icon: BookMarked },
+    { href: "/classes", label: t("nav.classes"), icon: Users },
+    { href: "/notes", label: t("nav.notes"), icon: StickyNote },
+    { href: "/messages", label: t("nav.messages"), icon: MessageCircle },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -59,6 +62,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
         <div className="flex items-center gap-2">
+          <LocaleSelector />
           <Link href="/profile">
             <Button variant="ghost" size="sm" className="gap-2">
               <User className="size-4" />
@@ -76,17 +80,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <Link href="/dashboard" className="font-semibold text-lg">
           LibroSchool
         </Link>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? (
-            <X className="size-5" />
-          ) : (
-            <Menu className="size-5" />
-          )}
-        </Button>
+        <div className="flex items-center gap-1">
+          <LocaleSelector />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className="size-5" />
+            )}
+          </Button>
+        </div>
       </header>
 
       {/* Mobile nav overlay */}
@@ -127,7 +134,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               onClick={logout}
             >
               <LogOut className="size-4" />
-              Logout
+              {t("auth.logout")}
             </Button>
           </div>
         </nav>
@@ -166,6 +173,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 }
 
 export function AuthLayout({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
       <div className="w-full max-w-sm">
@@ -174,7 +183,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
             LibroSchool
           </Link>
           <p className="text-sm text-muted-foreground mt-1">
-            Student book marketplace
+            {t("dashboard.browseBooksDesc")}
           </p>
         </div>
         {children}

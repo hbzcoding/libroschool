@@ -15,8 +15,10 @@ import {
 } from "@/features/admin/components/DataTable";
 import { ConfirmDialog } from "@/features/admin/components/ConfirmDialog";
 import { Column } from "@/features/admin/components/DataTable";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminNotesPage() {
+  const { t } = useTranslation();
   const [notes, setNotes] = useState<AdminNote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export default function AdminNotesPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load notes");
+          setError(t("admin.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -63,7 +65,7 @@ export default function AdminNotesPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, visibilityFilter, page]);
+  }, [search, visibilityFilter, page, t]);
 
   const fetchNotes = useCallback(async () => {
     try {
@@ -81,7 +83,7 @@ export default function AdminNotesPage() {
       setTotal(response.meta.total);
       setError(null);
     } catch {
-      setError("Failed to load notes");
+      setError(t("admin.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -149,7 +151,7 @@ export default function AdminNotesPage() {
   const columns: Column<AdminNote>[] = [
     {
       key: "title",
-      label: "Title",
+      label: t("admin.tables.title"),
       render: (note) => (
         <div>
           <p className="text-sm font-medium text-[#f7f8f8] max-w-xs truncate">{note.title}</p>
@@ -161,14 +163,14 @@ export default function AdminNotesPage() {
     },
     {
       key: "mode",
-      label: "Type",
+      label: t("admin.tables.type"),
       render: (note) => (
         <StatusBadge status={MODE_LABELS[note.mode]} variant="default" />
       ),
     },
     {
       key: "visibility",
-      label: "Visibility",
+      label: t("admin.tables.visibility"),
       render: (note) => (
         <StatusBadge
           status={VISIBILITY_LABELS[note.visibility]}
@@ -178,43 +180,43 @@ export default function AdminNotesPage() {
     },
     {
       key: "subject",
-      label: "Subject",
+      label: t("admin.tables.subject"),
       render: (note) => (
         <span className="text-xs text-[#d0d6e0]">{note.subject || "—"}</span>
       ),
     },
     {
       key: "created_at",
-      label: "Created",
+      label: t("admin.tables.createdAt"),
       render: (note) => (
         <span className="text-xs text-[#62666d]">{formatDate(note.created_at)}</span>
       ),
     },
     {
       key: "actions",
-      label: "Actions",
+      label: t("admin.tables.actions"),
       render: (note) => (
         <div className="flex items-center gap-1">
           {note.is_hidden ? (
             <ConfirmDialog
-              title="Unhide Note"
-              description="Make this note visible again?"
-              confirmLabel="Unhide"
+              title={t("admin.actions.unhideNote")}
+              description={t("admin.confirmUnhide")}
+              confirmLabel={t("admin.actions.unhideNote")}
               onConfirm={() => handleUnhide(note.id)}
               trigger={
                 <button
                   disabled={actionLoading === note.id}
                   className="rounded-md border border-[#23252a] bg-[#0f1011] px-2.5 py-1 text-xs text-[#d0d6e0] hover:bg-[#141516] transition-colors disabled:opacity-50"
                 >
-                  Unhide
+                  {t("admin.actions.unhideNote")}
                 </button>
               }
             />
           ) : (
             <ConfirmDialog
-              title="Hide Note"
-              description="Hide this note from public view?"
-              confirmLabel="Hide"
+              title={t("admin.actions.hideNote")}
+              description={t("admin.confirmHide")}
+              confirmLabel={t("admin.actions.hideNote")}
               variant="destructive"
               onConfirm={() => handleHide(note.id)}
               trigger={
@@ -222,15 +224,15 @@ export default function AdminNotesPage() {
                   disabled={actionLoading === note.id}
                   className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
                 >
-                  Hide
+                  {t("admin.actions.hideNote")}
                 </button>
               }
             />
           )}
           <ConfirmDialog
-            title="Delete Note"
-            description="Permanently delete this note? This cannot be undone."
-            confirmLabel="Delete"
+            title={t("admin.actions.deleteNote")}
+            description={t("admin.confirmDelete")}
+            confirmLabel={t("admin.actions.deleteNote")}
             variant="destructive"
             onConfirm={() => handleDelete(note.id)}
             trigger={
@@ -238,7 +240,7 @@ export default function AdminNotesPage() {
                 disabled={actionLoading === note.id}
                 className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
               >
-                Delete
+                {t("admin.actions.deleteNote")}
               </button>
             }
           />
@@ -258,8 +260,8 @@ export default function AdminNotesPage() {
   return (
     <div>
       <PageHeader
-        title="Notes"
-        description={`${total} total notes`}
+        title={t("admin.notes")}
+        description={`${total} ${t("admin.totalNotes")}`}
       />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -267,18 +269,18 @@ export default function AdminNotesPage() {
           <SearchInput
             value={search}
             onChange={(v) => { setSearch(v); setPage(1); }}
-            placeholder="Search by title..."
+            placeholder={t("admin.searchTitle")}
           />
         </div>
         <FilterSelect
           value={visibilityFilter}
           onChange={(v) => { setVisibilityFilter(v); setPage(1); }}
-          placeholder="All Visibility"
+          placeholder={t("admin.filters.all")}
           options={[
-            { value: "public", label: "Public" },
-            { value: "classroom", label: "Classroom" },
-            { value: "specific_users", label: "Specific Users" },
-            { value: "private", label: "Private" },
+            { value: "public", label: t("admin.visibility.public") },
+            { value: "classroom", label: t("admin.visibility.classroom") },
+            { value: "specific_users", label: t("admin.visibility.specificUsers") },
+            { value: "private", label: t("admin.visibility.private") },
           ]}
         />
       </div>
@@ -294,7 +296,7 @@ export default function AdminNotesPage() {
         }}
         onPageChange={setPage}
         isLoading={isLoading}
-        emptyMessage="No notes found"
+        emptyMessage={t("admin.empty.notes")}
       />
     </div>
   );

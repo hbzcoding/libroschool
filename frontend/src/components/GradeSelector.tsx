@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface GradeSelectorProps {
   value?: number | null;
@@ -29,8 +30,11 @@ export function GradeSelector({
   value,
   onChange,
   className,
-  placeholder = "Select grade",
+  placeholder,
 }: GradeSelectorProps) {
+  const { t } = useTranslation();
+  const defaultPlaceholder = t("selectors.selectGrade");
+  const resolvedPlaceholder = placeholder ?? defaultPlaceholder;
   const handleSelect = (gradeValue: string | null) => {
     if (gradeValue === "none" || gradeValue === null) {
       onChange(null);
@@ -45,11 +49,11 @@ export function GradeSelector({
       onValueChange={handleSelect}
     >
       <SelectTrigger className={cn("w-full", className)}>
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={resolvedPlaceholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="none">None</SelectItem>
+          <SelectItem value="none">{t("common.none")}</SelectItem>
           {GRADES.map((grade) => (
             <SelectItem key={grade.value} value={grade.value.toString()}>
               {grade.label}

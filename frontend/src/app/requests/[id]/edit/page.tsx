@@ -11,12 +11,14 @@ import { bookRequestsService } from "@/services/bookRequests";
 import { BookRequest } from "@/types/bookRequest";
 import { EditRequestForm } from "@/features/requests/EditRequestForm";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowLeft } from "lucide-react";
 
 export default function EditRequestPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const requestId = Number(params.id);
 
   const [request, setRequest] = useState<BookRequest | null>(null);
@@ -47,13 +49,13 @@ export default function EditRequestPage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <PageHeader title="Edit Request" />
+          <PageHeader title={t("requests.editRequestTitle")} />
           <EmptyState
-            title="Access Denied"
-            description="You can only edit your own book requests."
+            title={t("common.accessDenied")}
+            description={t("requests.editOwnOnly")}
             action={
               <Link href={`/requests/${requestId}`}>
-                <Button variant="outline">View Request</Button>
+                <Button variant="outline">{t("requests.viewRequest")}</Button>
               </Link>
             }
           />
@@ -66,7 +68,7 @@ export default function EditRequestPage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <LoadingState message="Loading request..." />
+          <LoadingState message={t("requests.loadingRequests")} />
         </div>
       </AppLayout>
     );
@@ -76,13 +78,13 @@ export default function EditRequestPage() {
     return (
       <AppLayout>
         <div className="p-4 md:p-6 max-w-2xl mx-auto">
-          <PageHeader title="Edit Request" />
+          <PageHeader title={t("requests.editRequestTitle")} />
           <EmptyState
-            title="Request Not Found"
-            description={error || "This request does not exist or has been deleted."}
+            title={t("requests.notFound")}
+            description={error || t("requests.notFoundDesc")}
             action={
               <Link href="/requests">
-                <Button variant="outline">Back to Requests</Button>
+                <Button variant="outline">{t("common.backToRequests")}</Button>
               </Link>
             }
           />
@@ -98,12 +100,12 @@ export default function EditRequestPage() {
           <Link href={`/requests/${requestId}`}>
             <Button variant="ghost" size="sm" className="gap-2">
               <ArrowLeft className="size-4" />
-              Back to Request
+              {t("common.backToRequest")}
             </Button>
           </Link>
         </div>
 
-        <PageHeader title="Edit Request" description={request.title} />
+        <PageHeader title={t("requests.editRequestTitle")} description={request.title} />
 
         <Card>
           <CardContent className="p-6">

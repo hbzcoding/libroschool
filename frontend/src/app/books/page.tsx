@@ -10,11 +10,13 @@ import { BookFilters, BookCard } from "@/features/books";
 import { booksService } from "@/services/books";
 import { BooksFilters, Book } from "@/types/book";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Plus, Loader2 } from "lucide-react";
 
 export default function BooksPage() {
   const router = useRouter();
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,16 +53,16 @@ export default function BooksPage() {
       setTotalPages(response.meta.last_page);
       setCurrentPage(response.meta.current_page);
     } catch {
-      setError("Failed to load books. Please try again.");
+      setError(t("books.loadError"));
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, [filters]);
+  }, [filters, t]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    
+
     let cancelled = false;
     const fetchBooks = async () => {
       setIsLoading(true);
@@ -78,7 +80,7 @@ export default function BooksPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load books. Please try again.");
+          setError(t("books.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -92,7 +94,7 @@ export default function BooksPage() {
     return () => {
       cancelled = true;
     };
-  }, [filters, isAuthenticated]);
+  }, [filters, isAuthenticated, t]);
 
   const handleFiltersChange = useCallback(
     (newFilters: BooksFilters) => {
@@ -126,13 +128,13 @@ export default function BooksPage() {
     <AppLayout>
       <div className="p-4 max-w-2xl mx-auto space-y-6 pb-20 md:pb-4">
         <PageHeader
-          title="Books"
-          description="Browse books from other students"
+          title={t("books.title")}
+          description={t("books.description")}
           actions={
             <Link href="/books/new">
               <Button size="sm">
                 <Plus className="size-4" />
-                Sell Book
+                {t("books.sellBook")}
               </Button>
             </Link>
           }
@@ -140,24 +142,24 @@ export default function BooksPage() {
 
         <BookFilters filters={filters} onFiltersChange={handleFiltersChange} />
 
-        {isLoading && <LoadingState message="Loading books..." />}
+        {isLoading && <LoadingState message={t("books.loadingBooks")} />}
 
         {error && (
           <div className="text-center py-8">
             <p className="text-destructive">{error}</p>
             <Button variant="outline" size="sm" onClick={() => loadBooks(1)} className="mt-3">
-              Try Again
+              {t("common.tryAgain")}
             </Button>
           </div>
         )}
 
         {!isLoading && !error && books.length === 0 && (
           <EmptyState
-            title="No books found"
-            description="Try adjusting your filters or check back later."
+            title={t("books.noBooks")}
+            description={t("books.noBooksDesc")}
             action={
               <Link href="/books/new">
-                <Button size="sm">Sell a Book</Button>
+                <Button size="sm">{t("books.sellBook")}</Button>
               </Link>
             }
           />
@@ -181,10 +183,10 @@ export default function BooksPage() {
                   {isLoadingMore ? (
                     <>
                       <Loader2 className="size-4 animate-spin mr-2" />
-                      Loading...
+                      {t("common.loading")}
                     </>
                   ) : (
-                    "Load More"
+                    t("common.loadMore")
                   )}
                 </Button>
               </div>

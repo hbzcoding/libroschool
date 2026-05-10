@@ -11,6 +11,7 @@ import { FormMessage } from "@/components/ui/form";
 import { classroomsService } from "@/services/classrooms";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const joinSchema = z.object({
   join_code: z
@@ -27,6 +28,7 @@ interface JoinClassroomFormProps {
 }
 
 export function JoinClassroomForm({ className, onSuccess }: JoinClassroomFormProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +56,7 @@ export function JoinClassroomForm({ className, onSuccess }: JoinClassroomFormPro
       if (err && typeof err === "object" && "message" in err) {
         setError((err as { message: string }).message);
       } else {
-        setError("Invalid join code or classroom not found.");
+        setError(t("classrooms.join.invalidCode"));
       }
     } finally {
       setIsSubmitting(false);
@@ -68,12 +70,12 @@ export function JoinClassroomForm({ className, onSuccess }: JoinClassroomFormPro
     >
       <div className="space-y-2">
         <label htmlFor="join_code" className="text-sm font-medium">
-          Join Code <span className="text-destructive">*</span>
+          {t("classrooms.join.code")} <span className="text-destructive">*</span>
         </label>
         <Input
           id="join_code"
           {...register("join_code")}
-          placeholder="Enter the 6-character code"
+          placeholder={t("classrooms.join.codePlaceholder")}
           disabled={isSubmitting}
           className="uppercase"
           aria-invalid={!!errors.join_code}
@@ -94,10 +96,10 @@ export function JoinClassroomForm({ className, onSuccess }: JoinClassroomFormPro
         {isSubmitting ? (
           <>
             <Loader2 className="size-4 animate-spin mr-2" />
-            Joining...
+            {t("classrooms.join.joining")}
           </>
         ) : (
-          "Join Classroom"
+          t("classrooms.join.button")
         )}
       </Button>
     </form>

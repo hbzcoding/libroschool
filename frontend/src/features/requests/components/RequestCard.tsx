@@ -5,12 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BookRequest, REQUEST_STATUS_LABELS } from "@/types/bookRequest";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface RequestCardProps {
   request: BookRequest;
 }
 
 export function RequestCard({ request }: RequestCardProps) {
+  const { t } = useTranslation();
   return (
     <Link href={`/requests/${request.id}`}>
       <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer overflow-hidden">
@@ -40,14 +42,14 @@ export function RequestCard({ request }: RequestCardProps) {
           {/* Max price */}
           {request.max_price !== null && request.max_price > 0 && (
             <p className="text-sm font-semibold">
-              Up to &euro;{request.max_price.toFixed(2)}
+              {t("requests.upTo")} &euro;{request.max_price.toFixed(2)}
             </p>
           )}
 
           {/* Grade & subject */}
           {(request.grade || request.subject) && (
             <p className="text-xs text-muted-foreground truncate">
-              {[request.grade ? `Grade ${request.grade}` : null, request.subject]
+              {[request.grade ? `${t("requests.fields.grade")} ${request.grade}` : null, request.subject]
                 .filter(Boolean)
                 .join(" · ")}
             </p>

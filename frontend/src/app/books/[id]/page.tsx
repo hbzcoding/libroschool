@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { booksService } from "@/services/books";
 import { Book, CONDITION_LABELS, STATUS_LABELS } from "@/types/book";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ReportButton } from "@/components/ReportButton";
 import {
   ArrowLeft,
@@ -43,6 +44,7 @@ export default function BookDetailPage() {
   const params = useParams();
   const bookId = parseInt(params.id as string, 10);
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [book, setBook] = useState<Book | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +73,7 @@ export default function BookDetailPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load book. Please try again.");
+          setError(t("books.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -85,7 +87,7 @@ export default function BookDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [isAuthenticated, bookId]);
+  }, [isAuthenticated, bookId, t]);
 
   const isOwner = book && user && book.seller.id === user.id;
 
@@ -147,7 +149,7 @@ export default function BookDetailPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <LoadingState message="Loading book..." />
+          <LoadingState message={t("books.loadingBooks")} />
         </div>
       </AppLayout>
     );
@@ -162,11 +164,11 @@ export default function BookDetailPage() {
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
           <EmptyState
-            title="Book not found"
-            description={error || "This book may have been removed."}
+            title={t("books.notFound")}
+            description={error || t("books.notFoundDesc")}
             action={
               <Link href="/books">
-                <Button size="sm">Browse Books</Button>
+                <Button size="sm">{t("books.browseBooks")}</Button>
               </Link>
             }
           />
@@ -184,7 +186,7 @@ export default function BookDetailPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Books
+          {t("common.backToBooks")}
         </Link>
 
         {/* Image gallery */}
@@ -271,7 +273,7 @@ export default function BookDetailPage() {
           <Card className="border-dashed">
             <CardContent className="pt-4 pb-4 space-y-3">
               <p className="text-sm font-medium text-muted-foreground">
-                Seller Actions
+                {t("books.sellerActions")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {book.status === "available" && (
@@ -284,7 +286,7 @@ export default function BookDetailPage() {
                     {isUpdating ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
-                      "Mark Reserved"
+                      t("books.markReserved")
                     )}
                   </Button>
                 )}
@@ -298,13 +300,13 @@ export default function BookDetailPage() {
                     {isUpdating ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
-                      "Mark Sold"
+                      t("books.markSold")
                     )}
                   </Button>
                 )}
                 <Link href={`/books/${book.id}/edit`}>
                   <Button variant="outline" size="sm">
-                    Edit
+                    {t("common.edit")}
                   </Button>
                 </Link>
                 <Button
@@ -313,7 +315,7 @@ export default function BookDetailPage() {
                   onClick={() => setShowDeleteDialog(true)}
                   disabled={isUpdating}
                 >
-                  Delete
+                  {t("common.delete")}
                 </Button>
               </div>
             </CardContent>
@@ -329,7 +331,7 @@ export default function BookDetailPage() {
                 <div className="flex items-start gap-2">
                   <Hash className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">ISBN</p>
+                    <p className="text-xs text-muted-foreground">{t("books.fields.isbn")}</p>
                     <p className="text-sm font-medium">{book.isbn}</p>
                   </div>
                 </div>
@@ -340,7 +342,7 @@ export default function BookDetailPage() {
                 <div className="flex items-start gap-2">
                   <Tag className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Subject</p>
+                    <p className="text-xs text-muted-foreground">{t("books.fields.subject")}</p>
                     <p className="text-sm font-medium">{book.subject}</p>
                   </div>
                 </div>
@@ -351,7 +353,7 @@ export default function BookDetailPage() {
                 <div className="flex items-start gap-2">
                   <GraduationCap className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Grade</p>
+                    <p className="text-xs text-muted-foreground">{t("books.fields.grade")}</p>
                     <p className="text-sm font-medium">{book.grade}</p>
                   </div>
                 </div>
@@ -362,7 +364,7 @@ export default function BookDetailPage() {
                 <div className="flex items-start gap-2">
                   <BookOpen className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Track</p>
+                    <p className="text-xs text-muted-foreground">{t("books.fields.track")}</p>
                     <p className="text-sm font-medium capitalize">{book.track}</p>
                   </div>
                 </div>
@@ -373,7 +375,7 @@ export default function BookDetailPage() {
                 <div className="flex items-start gap-2">
                   <Building2 className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Publisher</p>
+                    <p className="text-xs text-muted-foreground">{t("books.fields.publisher")}</p>
                     <p className="text-sm font-medium">{book.publisher}</p>
                   </div>
                 </div>
@@ -384,7 +386,7 @@ export default function BookDetailPage() {
                 <div className="flex items-start gap-2">
                   <User className="size-4 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Author</p>
+                    <p className="text-xs text-muted-foreground">{t("books.fields.author")}</p>
                     <p className="text-sm font-medium">{book.author}</p>
                   </div>
                 </div>
@@ -394,7 +396,7 @@ export default function BookDetailPage() {
             {/* Description */}
             {book.description && (
               <div className="pt-2 border-t">
-                <p className="text-xs text-muted-foreground mb-1">Description</p>
+                <p className="text-xs text-muted-foreground mb-1">{t("books.fields.description")}</p>
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">
                   {book.description}
                 </p>
@@ -409,7 +411,7 @@ export default function BookDetailPage() {
             <div className="flex items-center gap-2">
               <MapPin className="size-4 text-muted-foreground" />
               <div>
-                <p className="text-xs text-muted-foreground">School</p>
+                <p className="text-xs text-muted-foreground">{t("books.fields.school")}</p>
                 <p className="text-sm font-medium">
                   {book.school?.name}
                   {book.school?.city && ` - ${book.school.city}`}
@@ -426,7 +428,7 @@ export default function BookDetailPage() {
               <div className="flex items-center gap-2">
                 <User className="size-4 text-muted-foreground" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Seller</p>
+                  <p className="text-xs text-muted-foreground">{t("books.seller")}</p>
                   <p className="text-sm font-medium">{book.seller?.name}</p>
                 </div>
               </div>
@@ -434,7 +436,7 @@ export default function BookDetailPage() {
                 <Link href={`/messages?new=true&book_id=${book.id}`}>
                   <Button size="sm" variant="outline">
                     <MessageCircle className="size-4" />
-                    Contact
+                    {t("books.contact")}
                   </Button>
                 </Link>
               )}
@@ -445,7 +447,7 @@ export default function BookDetailPage() {
         {/* Metadata */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Calendar className="size-3" />
-          <span>Listed {new Date(book.created_at).toLocaleDateString()}</span>
+          <span>{t("books.listedOn", { date: new Date(book.created_at).toLocaleDateString() })}</span>
         </div>
 
         {/* Report button */}
@@ -454,7 +456,7 @@ export default function BookDetailPage() {
             <ReportButton
               reportableType="Book"
               reportableId={book.id}
-              label="Report Book"
+              label={t("books.reportBook")}
             />
           </div>
         )}
@@ -462,15 +464,14 @@ export default function BookDetailPage() {
         {/* Delete confirmation dialog */}
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
           <AlertDialogContent>
-            <AlertDialogTitle>Delete Book</AlertDialogTitle>
+            <AlertDialogTitle>{t("books.deleteBook")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this book listing? This action
-              cannot be undone.
+              {t("books.deleteConfirm")}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">
-                Delete
+                {t("common.delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

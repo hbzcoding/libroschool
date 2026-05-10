@@ -24,6 +24,7 @@ import { notesService } from "@/services/notes";
 import { Flashcard, CreateFlashcardData, UpdateFlashcardData } from "@/types/flashcard";
 import { Note } from "@/types/note";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   ArrowLeft,
   Plus,
@@ -40,6 +41,7 @@ export default function FlashcardsPage() {
   const params = useParams();
   const noteId = parseInt(params.id as string, 10);
   const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   const [note, setNote] = useState<Note | null>(null);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -77,7 +79,7 @@ export default function FlashcardsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load flashcards. Please try again.");
+          setError(t("flashcards.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -113,7 +115,7 @@ export default function FlashcardsPage() {
       );
       setEditingCard(null);
     } catch {
-      alert("Failed to update flashcard.");
+      alert(t("common.error"));
     } finally {
       setIsUpdating(false);
     }
@@ -127,7 +129,7 @@ export default function FlashcardsPage() {
       setFlashcards((prev) => prev.filter((c) => c.id !== deletingCard.id));
       setDeletingCard(null);
     } catch {
-      alert("Failed to delete flashcard.");
+      alert(t("common.error"));
     } finally {
       setIsUpdating(false);
     }
@@ -137,7 +139,7 @@ export default function FlashcardsPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <LoadingState message="Loading flashcards..." />
+          <LoadingState message={t("flashcards.loadingFlashcards")} />
         </div>
       </AppLayout>
     );
@@ -152,11 +154,11 @@ export default function FlashcardsPage() {
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
           <EmptyState
-            title="Flashcards not found"
-            description={error || "This note may have been removed or you don't have access."}
+            title={t("flashcards.notFound")}
+            description={error || t("flashcards.notFoundDesc")}
             action={
               <Link href="/notes">
-                <Button size="sm">Browse Notes</Button>
+                <Button size="sm">{t("notes.browseTitle")}</Button>
               </Link>
             }
           />
@@ -174,14 +176,14 @@ export default function FlashcardsPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Note
+          {t("notes.backToNote")}
         </Link>
 
         {/* Header */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Layers className="size-5 text-primary" />
-            <h1 className="text-xl font-semibold">Flashcards</h1>
+            <h1 className="text-xl font-semibold">{t("notes.flashcards")}</h1>
           </div>
           <p className="text-sm text-muted-foreground">{note.title}</p>
         </div>
@@ -194,7 +196,7 @@ export default function FlashcardsPage() {
             onClick={() => setViewMode("study")}
           >
             <BookOpen className="size-3.5 mr-1.5" />
-            Study
+            {t("flashcards.study")}
           </Button>
           <Button
             variant={viewMode === "list" ? "default" : "outline"}
@@ -202,13 +204,13 @@ export default function FlashcardsPage() {
             onClick={() => setViewMode("list")}
           >
             <Grid className="size-3.5 mr-1.5" />
-            List
+            {t("flashcards.list")}
           </Button>
           {isAuthor && (
             <Link href={`/notes/${noteId}/flashcards/new`} className="ml-auto">
               <Button size="sm">
                 <Plus className="size-3.5 mr-1.5" />
-                Add Cards
+                {t("notes.addFlashcards")}
               </Button>
             </Link>
           )}
@@ -219,17 +221,17 @@ export default function FlashcardsPage() {
           <Card>
             <CardContent className="pt-6 pb-6 text-center">
               <Layers className="size-10 mx-auto text-muted-foreground mb-3" />
-              <p className="text-sm font-medium mb-1">No flashcards yet</p>
+              <p className="text-sm font-medium mb-1">{t("flashcards.noFlashcards")}</p>
               <p className="text-xs text-muted-foreground mb-4">
                 {isAuthor
-                  ? "Create flashcards to start studying."
-                  : "The author hasn't added any flashcards yet."}
+                  ? t("flashcards.noFlashcardsDescAuthor")
+                  : t("flashcards.noFlashcardsDesc")}
               </p>
               {isAuthor && (
                 <Link href={`/notes/${noteId}/flashcards/new`}>
                   <Button size="sm">
                     <Plus className="size-3.5 mr-1.5" />
-                    Create Flashcards
+                    {t("flashcards.createTitle")}
                   </Button>
                 </Link>
               )}
@@ -266,7 +268,7 @@ export default function FlashcardsPage() {
             <CardContent className="pt-4">
               <div className="flex items-center gap-2 mb-4">
                 <Pencil className="size-4 text-muted-foreground" />
-                <h2 className="text-sm font-medium">Edit Flashcard #{editingCard.position}</h2>
+                <h2 className="text-sm font-medium">{t("flashcards.editTitle")} #{editingCard.position}</h2>
               </div>
               <FlashcardEditor
                 flashcard={editingCard}
@@ -283,18 +285,18 @@ export default function FlashcardsPage() {
           onOpenChange={(open) => !open && setDeletingCard(null)}
         >
           <AlertDialogContent>
-            <AlertDialogTitle>Delete Flashcard</AlertDialogTitle>
+            <AlertDialogTitle>{t("flashcards.deleteConfirm")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this flashcard? This action cannot be undone.
+              {t("flashcards.deleteWarning")}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isUpdating}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isUpdating}>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleConfirmDelete}
                 disabled={isUpdating}
                 className="bg-destructive hover:bg-destructive/90"
               >
-                {isUpdating ? "Deleting..." : "Delete"}
+                {isUpdating ? t("common.loading") : t("common.delete")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

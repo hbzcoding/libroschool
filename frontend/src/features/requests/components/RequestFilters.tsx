@@ -15,6 +15,7 @@ import {
 import { BookRequestsFilters, BookRequestStatus, REQUEST_STATUS_LABELS } from "@/types/bookRequest";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface RequestFiltersProps {
   filters: BookRequestsFilters;
@@ -33,6 +34,7 @@ export function RequestFilters({
   onFiltersChange,
   className,
 }: RequestFiltersProps) {
+  const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const updateFilter = useCallback(
@@ -64,7 +66,7 @@ export function RequestFilters({
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search by title, ISBN, subject..."
+            placeholder={t("requests.searchPlaceholder")}
             value={filters.search || ""}
             onChange={(e) => updateFilter("search", e.target.value || undefined)}
             className="pl-8"
@@ -86,7 +88,7 @@ export function RequestFilters({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 rounded-lg bg-muted/50">
           {/* School */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">School</label>
+            <label className="text-xs font-medium">{t("requests.fields.school")}</label>
             <SchoolSelector
               value={filters.school_id || null}
               onChange={(value) => updateFilter("school_id", value || undefined)}
@@ -95,10 +97,10 @@ export function RequestFilters({
 
           {/* Max Price */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Max Budget (&euro;)</label>
+            <label className="text-xs font-medium">{t("requests.filters.maxBudget")} (&euro;)</label>
             <Input
               type="number"
-              placeholder="e.g., 20"
+              placeholder={t("requests.filters.maxBudgetPlaceholder")}
               min={0}
               step={0.5}
               value={filters.max_price ?? ""}
@@ -113,7 +115,7 @@ export function RequestFilters({
 
           {/* Status */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Status</label>
+            <label className="text-xs font-medium">{t("requests.fields.status")}</label>
             <Select
               value={filters.status || "open"}
               onValueChange={(value) => {
@@ -122,11 +124,11 @@ export function RequestFilters({
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="All statuses" />
+                <SelectValue placeholder={t("requests.filters.allStatuses")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="all">All statuses</SelectItem>
+                  <SelectItem value="all">{t("requests.filters.allStatuses")}</SelectItem>
                   {STATUSES.map((status) => (
                     <SelectItem key={status.value} value={status.value}>
                       {status.label}
@@ -139,10 +141,10 @@ export function RequestFilters({
 
           {/* Subject */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">Subject</label>
+            <label className="text-xs font-medium">{t("requests.fields.subject")}</label>
             <Input
               type="text"
-              placeholder="e.g., Math, History..."
+              placeholder={t("requests.fields.subjectFilterPlaceholder")}
               value={filters.subject || ""}
               onChange={(e) => updateFilter("subject", e.target.value || undefined)}
             />
@@ -150,10 +152,10 @@ export function RequestFilters({
 
           {/* ISBN */}
           <div className="space-y-1.5">
-            <label className="text-xs font-medium">ISBN</label>
+            <label className="text-xs font-medium">{t("requests.fields.isbn")}</label>
             <Input
               type="text"
-              placeholder="ISBN-10 or ISBN-13"
+              placeholder={t("requests.fields.isbnPlaceholder")}
               value={filters.isbn || ""}
               onChange={(e) => updateFilter("isbn", e.target.value || undefined)}
             />
@@ -170,7 +172,7 @@ export function RequestFilters({
                 className="text-muted-foreground"
               >
                 <X className="size-3.5 mr-1" />
-                Clear filters
+                {t("requests.filters.clear")}
               </Button>
             </div>
           )}

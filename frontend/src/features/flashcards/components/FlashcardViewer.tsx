@@ -12,6 +12,7 @@ import {
   RotateCcw,
   Layers,
 } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FlashcardViewerProps {
   flashcards: Flashcard[];
@@ -35,6 +36,7 @@ export function FlashcardViewer({
   onDelete,
   isAuthor = false,
 }: FlashcardViewerProps) {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isShuffled, setIsShuffled] = useState(false);
@@ -105,7 +107,7 @@ export function FlashcardViewer({
         <div className="flex items-center gap-2 text-muted-foreground">
           <Layers className="size-4" />
           <span>
-            Card {currentIndex + 1} of {flashcards.length}
+            {t("flashcards.study.cardOf", { current: currentIndex + 1, total: flashcards.length })}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -144,7 +146,7 @@ export function FlashcardViewer({
         }}
         role="button"
         tabIndex={0}
-        aria-label={isFlipped ? "Show front side" : "Show back side"}
+        aria-label={isFlipped ? t("flashcards.study.showBack") : t("flashcards.study.showFront")}
       >
         <Card
           className={cn(
@@ -159,11 +161,11 @@ export function FlashcardViewer({
               isFlipped && "invisible"
             )}
           >
-            <p className="text-xs text-muted-foreground mb-2">Front</p>
+            <p className="text-xs text-muted-foreground mb-2">{t("flashcards.fields.front")}</p>
             <p className="text-lg md:text-xl font-medium text-center leading-relaxed">
               {currentCard.front_text}
             </p>
-            <p className="text-xs text-muted-foreground mt-4">Tap to flip</p>
+            <p className="text-xs text-muted-foreground mt-4">{t("flashcards.study.tapFlip")}</p>
           </CardContent>
 
           {/* Back side */}
@@ -173,11 +175,11 @@ export function FlashcardViewer({
               !isFlipped && "invisible"
             )}
           >
-            <p className="text-xs text-muted-foreground mb-2">Back</p>
+            <p className="text-xs text-muted-foreground mb-2">{t("flashcards.fields.back")}</p>
             <p className="text-base md:text-lg text-center leading-relaxed text-muted-foreground">
               {currentCard.back_text}
             </p>
-            <p className="text-xs text-muted-foreground mt-4">Tap to flip back</p>
+            <p className="text-xs text-muted-foreground mt-4">{t("flashcards.study.tapFlipBack")}</p>
           </CardContent>
         </Card>
       </div>
@@ -186,10 +188,10 @@ export function FlashcardViewer({
       <div className="flex items-center justify-center gap-4">
         <Button variant="outline" size="lg" onClick={handlePrevious}>
           <ChevronLeft className="size-5" />
-          Previous
+          {t("flashcards.study.previous")}
         </Button>
         <Button variant="outline" size="lg" onClick={handleNext}>
-          Next
+          {t("flashcards.study.next")}
           <ChevronRight className="size-5" />
         </Button>
       </div>
@@ -202,14 +204,14 @@ export function FlashcardViewer({
             size="sm"
             onClick={() => onEdit?.(currentCard)}
           >
-            Edit Card
+            {t("flashcards.actions.edit")}
           </Button>
           <Button
             variant="destructive"
             size="sm"
             onClick={() => onDelete?.(currentCard)}
           >
-            Delete Card
+            {t("flashcards.actions.delete")}
           </Button>
         </div>
       )}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CreateFlashcardData } from "@/types/flashcard";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const flashcardItemSchema = z.object({
   front_text: z.string().min(1, "Front text is required").max(1000),
@@ -29,6 +30,7 @@ export function CreateFlashcardsBatchForm({
   onCancel,
   className,
 }: CreateFlashcardsBatchFormProps) {
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [flashcardItems, setFlashcardItems] = useState<FlashcardItem[]>([
@@ -67,7 +69,7 @@ export function CreateFlashcardsBatchForm({
       if (!result.success) {
         result.error.issues.forEach((issue) => {
           const field = issue.path[0] as string;
-          errors[`${item.id}-${field}`] = `Card ${index + 1}: ${issue.message}`;
+          errors[`${item.id}-${field}`] = `${t("flashcards.title")} ${index + 1}: ${issue.message}`;
         });
       }
     });
@@ -122,7 +124,7 @@ export function CreateFlashcardsBatchForm({
             {/* Card number */}
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-muted-foreground">
-                Card {index + 1}
+                {t("flashcards.title")} {index + 1}
               </span>
               {flashcardItems.length > 1 && (
                 <Button
@@ -140,13 +142,13 @@ export function CreateFlashcardsBatchForm({
             {/* Front text */}
             <div className="space-y-2">
               <label htmlFor={`front-${item.id}`} className="text-xs font-medium">
-                Front Text <span className="text-destructive">*</span>
+                {t("flashcards.fields.frontText")} <span className="text-destructive">*</span>
               </label>
               <textarea
                 id={`front-${item.id}`}
                 value={item.front_text}
                 onChange={(e) => updateItem(item.id, "front_text", e.target.value)}
-                placeholder="Question or prompt..."
+                placeholder={t("flashcards.fields.frontPlaceholder")}
                 disabled={isSubmitting}
                 rows={2}
                 className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -161,13 +163,13 @@ export function CreateFlashcardsBatchForm({
             {/* Back text */}
             <div className="space-y-2">
               <label htmlFor={`back-${item.id}`} className="text-xs font-medium">
-                Back Text <span className="text-destructive">*</span>
+                {t("flashcards.fields.backText")} <span className="text-destructive">*</span>
               </label>
               <textarea
                 id={`back-${item.id}`}
                 value={item.back_text}
                 onChange={(e) => updateItem(item.id, "back_text", e.target.value)}
-                placeholder="Answer or explanation..."
+                placeholder={t("flashcards.fields.backPlaceholder")}
                 disabled={isSubmitting}
                 rows={2}
                 className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
@@ -191,7 +193,7 @@ export function CreateFlashcardsBatchForm({
         className="w-full"
       >
         <Plus className="size-4 mr-2" />
-        Add Another Card
+        {t("flashcards.actions.addAnother")}
       </Button>
 
       {/* Submit buttons */}
@@ -200,10 +202,10 @@ export function CreateFlashcardsBatchForm({
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin mr-2" />
-              Creating {flashcardItems.length} cards...
+              {t("flashcards.actions.creatingMultiple", { count: flashcardItems.length })}
             </>
           ) : (
-            `Create ${flashcardItems.length} Flashcards`
+            t("flashcards.actions.createMultiple", { count: flashcardItems.length })
           )}
         </Button>
         {onCancel && (
@@ -213,7 +215,7 @@ export function CreateFlashcardsBatchForm({
             onClick={onCancel}
             disabled={isSubmitting}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
         )}
       </div>

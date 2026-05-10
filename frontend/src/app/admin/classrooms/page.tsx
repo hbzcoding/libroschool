@@ -15,8 +15,10 @@ import {
 } from "@/features/admin/components/DataTable";
 import { ConfirmDialog } from "@/features/admin/components/ConfirmDialog";
 import { Column } from "@/features/admin/components/DataTable";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminClassroomsPage() {
+  const { t } = useTranslation();
   const [classrooms, setClassrooms] = useState<AdminClassroom[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export default function AdminClassroomsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load classrooms");
+          setError(t("admin.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -63,7 +65,7 @@ export default function AdminClassroomsPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, statusFilter, page]);
+  }, [search, statusFilter, page, t]);
 
   const fetchClassrooms = useCallback(async () => {
     try {
@@ -81,7 +83,7 @@ export default function AdminClassroomsPage() {
       setTotal(response.meta.total);
       setError(null);
     } catch {
-      setError("Failed to load classrooms");
+      setError(t("admin.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -147,7 +149,7 @@ export default function AdminClassroomsPage() {
   const columns: Column<AdminClassroom>[] = [
     {
       key: "name",
-      label: "Classroom",
+      label: t("admin.tables.classroom"),
       render: (classroom) => (
         <div>
           <p className="text-sm font-medium text-[#f7f8f8] max-w-xs truncate">{classroom.name}</p>
@@ -159,21 +161,21 @@ export default function AdminClassroomsPage() {
     },
     {
       key: "academic_year",
-      label: "Year",
+      label: t("admin.tables.year"),
       render: (classroom) => (
         <span className="text-xs text-[#d0d6e0]">{classroom.academic_year}</span>
       ),
     },
     {
       key: "members_count",
-      label: "Members",
+      label: t("admin.tables.members"),
       render: (classroom) => (
         <span className="text-sm text-[#f7f8f8]">{classroom.members_count}</span>
       ),
     },
     {
       key: "status",
-      label: "Status",
+      label: t("admin.tables.status"),
       render: (classroom) => (
         <StatusBadge
           status={CLASSROOM_STATUS_LABELS[classroom.status]}
@@ -183,36 +185,36 @@ export default function AdminClassroomsPage() {
     },
     {
       key: "created_at",
-      label: "Created",
+      label: t("admin.tables.createdAt"),
       render: (classroom) => (
         <span className="text-xs text-[#62666d]">{formatDate(classroom.created_at)}</span>
       ),
     },
     {
       key: "actions",
-      label: "Actions",
+      label: t("admin.tables.actions"),
       render: (classroom) => (
         <div className="flex items-center gap-1">
           {classroom.status === "locked" ? (
             <ConfirmDialog
-              title="Unlock Classroom"
-              description="Unlock this classroom? Members will be able to interact again."
-              confirmLabel="Unlock"
+              title={t("admin.actions.unlockClassroom")}
+              description={t("admin.confirmUnlock")}
+              confirmLabel={t("admin.actions.unlockClassroom")}
               onConfirm={() => handleUnlock(classroom.id)}
               trigger={
                 <button
                   disabled={actionLoading === classroom.id}
                   className="rounded-md border border-[#23252a] bg-[#0f1011] px-2.5 py-1 text-xs text-[#d0d6e0] hover:bg-[#141516] transition-colors disabled:opacity-50"
                 >
-                  Unlock
+                  {t("admin.actions.unlockClassroom")}
                 </button>
               }
             />
           ) : (
             <ConfirmDialog
-              title="Lock Classroom"
-              description="Lock this classroom? Members will not be able to interact."
-              confirmLabel="Lock"
+              title={t("admin.actions.lockClassroom")}
+              description={t("admin.confirmLock")}
+              confirmLabel={t("admin.actions.lockClassroom")}
               variant="destructive"
               onConfirm={() => handleLock(classroom.id)}
               trigger={
@@ -220,15 +222,15 @@ export default function AdminClassroomsPage() {
                   disabled={actionLoading === classroom.id}
                   className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
                 >
-                  Lock
+                  {t("admin.actions.lockClassroom")}
                 </button>
               }
             />
           )}
           <ConfirmDialog
-            title="Delete Classroom"
-            description="Permanently delete this classroom? This cannot be undone."
-            confirmLabel="Delete"
+            title={t("admin.actions.deleteClassroom")}
+            description={t("admin.confirmDelete")}
+            confirmLabel={t("admin.actions.deleteClassroom")}
             variant="destructive"
             onConfirm={() => handleDelete(classroom.id)}
             trigger={
@@ -236,7 +238,7 @@ export default function AdminClassroomsPage() {
                 disabled={actionLoading === classroom.id}
                 className="rounded-md border border-red-800/50 bg-red-900/20 px-2.5 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors disabled:opacity-50"
               >
-                Delete
+                {t("admin.actions.deleteClassroom")}
               </button>
             }
           />
@@ -256,8 +258,8 @@ export default function AdminClassroomsPage() {
   return (
     <div>
       <PageHeader
-        title="Classrooms"
-        description={`${total} total classrooms`}
+        title={t("admin.classrooms")}
+        description={`${total} ${t("admin.totalClassrooms")}`}
       />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -265,17 +267,17 @@ export default function AdminClassroomsPage() {
           <SearchInput
             value={search}
             onChange={(v) => { setSearch(v); setPage(1); }}
-            placeholder="Search by name..."
+            placeholder={t("admin.searchName")}
           />
         </div>
         <FilterSelect
           value={statusFilter}
           onChange={(v) => { setStatusFilter(v); setPage(1); }}
-          placeholder="All Status"
+          placeholder={t("admin.filters.all")}
           options={[
-            { value: "active", label: "Active" },
-            { value: "locked", label: "Locked" },
-            { value: "archived", label: "Archived" },
+            { value: "active", label: t("admin.filters.active") },
+            { value: "locked", label: t("admin.status.locked") },
+            { value: "archived", label: t("admin.status.archived") },
           ]}
         />
       </div>
@@ -291,7 +293,7 @@ export default function AdminClassroomsPage() {
         }}
         onPageChange={setPage}
         isLoading={isLoading}
-        emptyMessage="No classrooms found"
+        emptyMessage={t("admin.empty.classrooms")}
       />
     </div>
   );

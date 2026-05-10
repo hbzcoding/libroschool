@@ -8,6 +8,7 @@ import { ConversationList } from "@/features/messages";
 import { conversationsService } from "@/services/conversations";
 import { Conversation } from "@/types/conversation";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
@@ -15,6 +16,7 @@ function MessagesPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +61,7 @@ function MessagesPageContent() {
       const conversation = await conversationsService.createConversation(data);
       router.replace(`/messages/${conversation.id}`);
     } catch {
-      setError("Failed to start conversation. Please try again.");
+      setError(t("messages.sendError"));
       setIsCreating(false);
       creatingAttempted.current = false;
     }
@@ -104,7 +106,7 @@ function MessagesPageContent() {
       setTotalPages(response.meta.last_page);
       setCurrentPage(response.meta.current_page);
     } catch {
-      setError("Failed to load conversations.");
+      setError(t("messages.loadError"));
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);
@@ -136,7 +138,7 @@ function MessagesPageContent() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load conversations.");
+          setError(t("messages.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -166,7 +168,7 @@ function MessagesPageContent() {
           <div className="flex items-center justify-center py-12">
             <Loader2 className="size-6 animate-spin text-primary" />
             <span className="ml-2 text-sm text-muted-foreground">
-              Starting conversation...
+              {t("messages.sending")}
             </span>
           </div>
         </div>
@@ -177,9 +179,9 @@ function MessagesPageContent() {
   return (
     <AppLayout>
       <div className="p-4 max-w-2xl mx-auto space-y-4 pb-20 md:pb-4">
-        <PageHeader title="Messages" description="Your conversations" />
+        <PageHeader title={t("messages.title")} description={t("messages.conversations")} />
 
-        {isLoading && <LoadingState message="Loading conversations..." />}
+        {isLoading && <LoadingState message={t("messages.loadingConversations")} />}
 
         {error && (
           <div className="text-center py-8">
@@ -190,15 +192,15 @@ function MessagesPageContent() {
               onClick={() => loadConversations(1)}
               className="mt-3"
             >
-              Try Again
+              {t("common.tryAgain")}
             </Button>
           </div>
         )}
 
         {!isLoading && !error && conversations.length === 0 && (
           <EmptyState
-            title="No messages yet"
-            description="Start a conversation by contacting a seller or buyer from a book or request page."
+            title={t("messages.noConversations")}
+            description={t("messages.noConversationsDesc")}
           />
         )}
 
@@ -217,10 +219,10 @@ function MessagesPageContent() {
                   {isLoadingMore ? (
                     <>
                       <Loader2 className="size-4 animate-spin mr-2" />
-                      Loading...
+                      {t("common.loading")}
                     </>
                   ) : (
-                    "Load More"
+                    t("messages.loadMore")
                   )}
                 </Button>
               </div>

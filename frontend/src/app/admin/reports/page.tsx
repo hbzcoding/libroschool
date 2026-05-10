@@ -14,8 +14,10 @@ import {
 } from "@/features/admin/components/DataTable";
 import { ConfirmDialog } from "@/features/admin/components/ConfirmDialog";
 import { Column } from "@/features/admin/components/DataTable";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminReportsPage() {
+  const { t } = useTranslation();
   const [reports, setReports] = useState<AdminReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +52,7 @@ export default function AdminReportsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load reports");
+          setError(t("admin.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -64,7 +66,7 @@ export default function AdminReportsPage() {
     return () => {
       cancelled = true;
     };
-  }, [search, statusFilter, typeFilter, page]);
+  }, [search, statusFilter, typeFilter, page, t]);
 
   const fetchReports = useCallback(async () => {
     try {
@@ -83,7 +85,7 @@ export default function AdminReportsPage() {
       setTotal(response.meta.total);
       setError(null);
     } catch {
-      setError("Failed to load reports");
+      setError(t("admin.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -139,7 +141,7 @@ export default function AdminReportsPage() {
   const columns: Column<AdminReport>[] = [
     {
       key: "reporter",
-      label: "Reporter",
+      label: t("admin.tables.reporter"),
       render: (report) => (
         <div>
           <p className="text-sm font-medium text-[#f7f8f8]">{report.reporter.name}</p>
@@ -149,7 +151,7 @@ export default function AdminReportsPage() {
     },
     {
       key: "target_type",
-      label: "Target",
+      label: t("admin.tables.target"),
       render: (report) => (
         <div>
           <p className="text-sm text-[#d0d6e0]">{report.target_type}</p>
@@ -159,53 +161,53 @@ export default function AdminReportsPage() {
     },
     {
       key: "reason",
-      label: "Reason",
+      label: t("admin.tables.reason"),
       render: (report) => (
         <p className="text-xs text-[#d0d6e0] max-w-xs truncate">{report.reason}</p>
       ),
     },
     {
       key: "status",
-      label: "Status",
+      label: t("admin.tables.status"),
       render: (report) => (
         <StatusBadge
-          status={report.status.charAt(0).toUpperCase() + report.status.slice(1)}
+          status={t(`admin.reportStatus.${report.status}`)}
           variant={getStatusVariant(report.status)}
         />
       ),
     },
     {
       key: "created_at",
-      label: "Created",
+      label: t("admin.tables.createdAt"),
       render: (report) => (
         <span className="text-xs text-[#62666d]">{formatDate(report.created_at)}</span>
       ),
     },
     {
       key: "actions",
-      label: "Actions",
+      label: t("admin.tables.actions"),
       render: (report) => (
         <div className="flex items-center gap-1">
           {report.status === "open" && (
             <>
               <ConfirmDialog
-                title="Resolve Report"
-                description="Mark this report as resolved?"
-                confirmLabel="Resolve"
+                title={t("admin.actions.resolveReport")}
+                description={t("admin.confirmResolve")}
+                confirmLabel={t("admin.actions.resolveReport")}
                 onConfirm={() => handleResolve(report.id)}
                 trigger={
                   <button
                     disabled={actionLoading === report.id}
                     className="rounded-md border border-[#23252a] bg-[#0f1011] px-2.5 py-1 text-xs text-emerald-400 hover:bg-[#141516] transition-colors disabled:opacity-50"
                   >
-                    Resolve
+                    {t("admin.actions.resolveReport")}
                   </button>
                 }
               />
               <ConfirmDialog
-                title="Dismiss Report"
-                description="Dismiss this report as invalid?"
-                confirmLabel="Dismiss"
+                title={t("admin.actions.dismissReport")}
+                description={t("admin.confirmDismiss")}
+                confirmLabel={t("admin.actions.dismissReport")}
                 variant="destructive"
                 onConfirm={() => handleDismiss(report.id)}
                 trigger={
@@ -213,7 +215,7 @@ export default function AdminReportsPage() {
                     disabled={actionLoading === report.id}
                     className="rounded-md border border-[#23252a] bg-[#0f1011] px-2.5 py-1 text-xs text-[#d0d6e0] hover:bg-[#141516] transition-colors disabled:opacity-50"
                   >
-                    Dismiss
+                    {t("admin.actions.dismissReport")}
                   </button>
                 }
               />
@@ -235,8 +237,8 @@ export default function AdminReportsPage() {
   return (
     <div>
       <PageHeader
-        title="Reports"
-        description={`${total} total reports`}
+        title={t("admin.reports")}
+        description={`${total} ${t("admin.totalReports")}`}
       />
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -244,29 +246,29 @@ export default function AdminReportsPage() {
           <SearchInput
             value={search}
             onChange={(v) => { setSearch(v); setPage(1); }}
-            placeholder="Search..."
+            placeholder={t("admin.search")}
           />
         </div>
         <FilterSelect
           value={statusFilter}
           onChange={(v) => { setStatusFilter(v); setPage(1); }}
-          placeholder="All Status"
+          placeholder={t("admin.filters.all")}
           options={[
-            { value: "open", label: "Open" },
-            { value: "reviewed", label: "Reviewed" },
-            { value: "dismissed", label: "Dismissed" },
+            { value: "open", label: t("admin.filters.pending") },
+            { value: "reviewed", label: t("admin.filters.reviewed") },
+            { value: "dismissed", label: t("admin.filters.dismissed") },
           ]}
         />
         <FilterSelect
           value={typeFilter}
           onChange={(v) => { setTypeFilter(v); setPage(1); }}
-          placeholder="All Types"
+          placeholder={t("admin.filters.allTypes")}
           options={[
-            { value: "Book", label: "Book" },
-            { value: "BookRequest", label: "Book Request" },
-            { value: "Note", label: "Note" },
-            { value: "Classroom", label: "Classroom" },
-            { value: "User", label: "User" },
+            { value: "Book", label: t("admin.types.book") },
+            { value: "BookRequest", label: t("admin.types.bookRequest") },
+            { value: "Note", label: t("admin.types.note") },
+            { value: "Classroom", label: t("admin.types.classroom") },
+            { value: "User", label: t("admin.types.user") },
           ]}
         />
       </div>
@@ -282,7 +284,7 @@ export default function AdminReportsPage() {
         }}
         onPageChange={setPage}
         isLoading={isLoading}
-        emptyMessage="No reports found"
+        emptyMessage={t("admin.empty.reports")}
       />
     </div>
   );

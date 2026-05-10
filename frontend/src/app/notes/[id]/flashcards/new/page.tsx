@@ -12,6 +12,7 @@ import { notesService } from "@/services/notes";
 import { CreateFlashcardData } from "@/types/flashcard";
 import { Note } from "@/types/note";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowLeft, Layers } from "lucide-react";
 
 export default function NewFlashcardsPage() {
@@ -19,6 +20,7 @@ export default function NewFlashcardsPage() {
   const params = useParams();
   const noteId = parseInt(params.id as string, 10);
   const { isLoading: authLoading, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   const [note, setNote] = useState<Note | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -45,7 +47,7 @@ export default function NewFlashcardsPage() {
         }
       } catch {
         if (!cancelled) {
-          setError("Failed to load note. Please try again.");
+          setError(t("notes.loadError"));
         }
       } finally {
         if (!cancelled) {
@@ -74,7 +76,7 @@ export default function NewFlashcardsPage() {
     return (
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
-          <LoadingState message="Loading..." />
+          <LoadingState message={t("common.loading")} />
         </div>
       </AppLayout>
     );
@@ -89,12 +91,12 @@ export default function NewFlashcardsPage() {
       <AppLayout>
         <div className="p-4 max-w-2xl mx-auto">
           <EmptyState
-            title="Note not found"
-            description={error || "This note may have been removed or you don't have access."}
+            title={t("notes.noteNotFound")}
+            description={error || t("notes.noteNotFoundDesc")}
             action={
               <Link href="/notes">
                 <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium">
-                  Browse Notes
+                  {t("notes.browseTitle")}
                 </button>
               </Link>
             }
@@ -116,14 +118,14 @@ export default function NewFlashcardsPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Flashcards
+          {t("flashcards.backToFlashcards")}
         </Link>
 
         {/* Header */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Layers className="size-5 text-primary" />
-            <h1 className="text-xl font-semibold">Create Flashcards</h1>
+            <h1 className="text-xl font-semibold">{t("flashcards.createTitle")}</h1>
           </div>
           <p className="text-sm text-muted-foreground">{note.title}</p>
         </div>
