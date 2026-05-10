@@ -58,9 +58,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 9A | Conversations Backend | backend-agent | backend-task | done | ConversationController, ConversationPolicy, ConversationResource, MessageResource, 20 tests |
 | 9A-test | Validate Conversations Backend | test-agent | test-task | done | 110 tests passed (693 assertions) |
 | 9A-review | Review Conversations Backend | reviewer-agent | review-task | done | passed - no must-fix issues |
-| 9B | Conversations Frontend | frontend-agent | frontend-task | pending | messages pages |
-| 9B-test | Validate Conversations Frontend | test-agent | test-task | pending | lint and build |
-| 9B-review | Review Conversations Frontend | reviewer-agent | review-task | pending | UI and API service review |
+| 9B | Conversations Frontend | frontend-agent | frontend-task | done | /messages, /messages/[id], ConversationList, MessageBubble, MessageInput |
+| 9B-test | Validate Conversations Frontend | test-agent | test-task | done | lint passed (0 errors, 9 warnings), build passed |
+| 9B-review | Review Conversations Frontend | reviewer-agent | review-task | done | passed - follows same patterns as Books and Requests frontend |
 | 10A | Classrooms Backend | backend-agent | backend-task | pending | classrooms API |
 | 10A-test | Validate Classrooms Backend | test-agent | test-task | pending | backend tests |
 | 10A-review | Review Classrooms Backend | reviewer-agent | review-task | pending | classroom authorization review |
