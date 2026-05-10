@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\BookRequestController;
 use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\ConversationController;
+use App\Http\Controllers\Api\FlashcardController;
 use App\Http\Controllers\Api\NoteController;
 use App\Http\Controllers\Api\SchoolController;
 use Illuminate\Support\Facades\Route;
@@ -114,4 +115,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/notes/{note}', [NoteController::class, 'destroy']);
     Route::post('/notes/{note}/permissions', [NoteController::class, 'grantPermission']);
     Route::delete('/notes/{note}/permissions/{user}', [NoteController::class, 'revokePermission']);
+
+    // Flashcards routes (protected)
+    Route::get('/notes/{note}/flashcards', [FlashcardController::class, 'index']);
+    Route::post('/notes/{note}/flashcards', [FlashcardController::class, 'store']);
+    Route::put('/flashcards/{flashcard}', [FlashcardController::class, 'update']);
+    Route::delete('/flashcards/{flashcard}', [FlashcardController::class, 'destroy']);
 });
