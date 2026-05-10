@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { bookRequestsService } from "@/services/bookRequests";
 import { BookRequest, REQUEST_STATUS_LABELS } from "@/types/bookRequest";
 import { useAuth } from "@/hooks/useAuth";
+import { ReportButton } from "@/components/ReportButton";
 import {
   ArrowLeft,
   BookOpen,
@@ -19,7 +20,6 @@ import {
   Tag,
   Hash,
   GraduationCap,
-  Flag,
   MessageCircle,
   Loader2,
   CheckCircle2,
@@ -342,18 +342,11 @@ export default function RequestDetailPage() {
         {/* Report button */}
         {!isOwner && (
           <div className="pt-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground"
-              onClick={() => {
-                // Placeholder - actual report functionality will be implemented later
-                alert("Report functionality coming soon!");
-              }}
-            >
-              <Flag className="size-3.5" />
-              Report Request
-            </Button>
+            <ReportButton
+              reportableType="BookRequest"
+              reportableId={request.id}
+              label="Report Request"
+            />
           </div>
         )}
 

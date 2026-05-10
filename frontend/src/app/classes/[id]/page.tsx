@@ -17,6 +17,7 @@ import {
 } from "@/types/classroom";
 import { useAuth } from "@/hooks/useAuth";
 import { MemberList } from "@/features/classrooms";
+import { ReportButton } from "@/components/ReportButton";
 import {
   ArrowLeft,
   GraduationCap,
@@ -26,7 +27,6 @@ import {
   Copy,
   RefreshCw,
   LogOut,
-  Flag,
   Loader2,
   Settings,
   Shield,
@@ -543,17 +543,11 @@ export default function ClassroomDetailPage() {
         {/* Report button */}
         {!isOwner && (
           <div className="pt-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground"
-              onClick={() => {
-                alert("Report functionality coming soon!");
-              }}
-            >
-              <Flag className="size-3.5" />
-              Report Classroom
-            </Button>
+            <ReportButton
+              reportableType="Classroom"
+              reportableId={classroom.id}
+              label="Report Classroom"
+            />
           </div>
         )}
 

@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { booksService } from "@/services/books";
 import { Book, CONDITION_LABELS, STATUS_LABELS } from "@/types/book";
 import { useAuth } from "@/hooks/useAuth";
+import { ReportButton } from "@/components/ReportButton";
 import {
   ArrowLeft,
   BookOpen,
@@ -23,7 +24,6 @@ import {
   Image as ImageIcon,
   ChevronLeft,
   ChevronRight,
-  Flag,
   MessageCircle,
   Loader2,
 } from "lucide-react";
@@ -451,18 +451,11 @@ export default function BookDetailPage() {
         {/* Report button */}
         {!isOwner && (
           <div className="pt-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground"
-              onClick={() => {
-                // Placeholder - actual report functionality will be implemented later
-                alert("Report functionality coming soon!");
-              }}
-            >
-              <Flag className="size-3.5" />
-              Report Book
-            </Button>
+            <ReportButton
+              reportableType="Book"
+              reportableId={book.id}
+              label="Report Book"
+            />
           </div>
         )}
 

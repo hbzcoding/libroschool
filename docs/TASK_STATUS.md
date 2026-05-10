@@ -82,9 +82,9 @@ Rows ending in `-test` and `-review` are companion rows for the implementation t
 | 13A | Reports Backend | backend-agent | backend-task | done | report API - ReportController, AdminReportController, ReportPolicy, ReportResource, FormRequests, 28 tests |
 | 13A-test | Validate Reports Backend | test-agent | test-task | done | 268 tests passed (1366 assertions) |
 | 13A-review | Review Reports Backend | reviewer-agent | review-task | done | passed - authorization correct, tests comprehensive |
-| 13B | Reports Frontend | frontend-agent | frontend-task | pending | ReportButton and modal |
-| 13B-test | Validate Reports Frontend | test-agent | test-task | pending | lint and build |
-| 13B-review | Review Reports Frontend | reviewer-agent | review-task | pending | UI and API service review |
+| 13B | Reports Frontend | frontend-agent | frontend-task | done | ReportButton component with dialog modal, updated 4 detail pages |
+| 13B-test | Validate Reports Frontend | test-agent | test-task | done | lint 0 errors, build passed |
+| 13B-review | Review Reports Frontend | reviewer-agent | review-task | done | passed - follows patterns, API aligned, no must-fix issues |
 | 14A | Admin Backend | backend-agent | backend-task | pending | admin APIs |
 | 14A-test | Validate Admin Backend | test-agent | test-task | pending | backend tests |
 | 14A-review | Review Admin Backend | reviewer-agent | review-task | pending | admin authorization review |

@@ -15,6 +15,7 @@ import {
   NoteVisibility,
 } from "@/types/note";
 import { useAuth } from "@/hooks/useAuth";
+import { ReportButton } from "@/components/ReportButton";
 import {
   ArrowLeft,
   User,
@@ -22,7 +23,6 @@ import {
   Tag,
   GraduationCap,
   Layers,
-  Flag,
   Pencil,
   Trash2,
   FileText,
@@ -331,18 +331,11 @@ export default function NoteDetailPage() {
         {/* Report button */}
         {!isAuthor && (
           <div className="pt-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground"
-              onClick={() => {
-                // Placeholder - actual report functionality will be implemented later
-                alert("Report functionality coming soon!");
-              }}
-            >
-              <Flag className="size-3.5" />
-              Report Note
-            </Button>
+            <ReportButton
+              reportableType="Note"
+              reportableId={note.id}
+              label="Report Note"
+            />
           </div>
         )}
 
