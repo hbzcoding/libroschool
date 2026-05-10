@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminReportController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\BookRequestController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\FlashcardController;
 use App\Http\Controllers\Api\NoteController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SchoolController;
 use Illuminate\Support\Facades\Route;
 
@@ -121,4 +123,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notes/{note}/flashcards', [FlashcardController::class, 'store']);
     Route::put('/flashcards/{flashcard}', [FlashcardController::class, 'update']);
     Route::delete('/flashcards/{flashcard}', [FlashcardController::class, 'destroy']);
+
+    // Reports routes (protected)
+    Route::post('/reports', [ReportController::class, 'store']);
+});
+
+// Admin routes (authenticated, admin only)
+Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+    Route::get('/reports', [AdminReportController::class, 'index']);
+    Route::get('/reports/{report}', [AdminReportController::class, 'show']);
+    Route::post('/reports/{report}/resolve', [AdminReportController::class, 'resolve']);
 });
