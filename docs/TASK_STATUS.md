@@ -31,9 +31,9 @@ Status values:
 | 2 | Auth and Schools Backend | backend-agent | backend-task | done | auth API and schools API |
 | 2-test | Validate Auth and Schools Backend | test-agent | test-task | done | backend tests passed |
 | 2-review | Review Auth and Schools Backend | reviewer-agent | review-task | done | added rate limiting to login/register |
-| 3 | Auth and Schools Frontend | frontend-agent | frontend-task | pending | login, register, dashboard, profile |
-| 3-test | Validate Auth and Schools Frontend | test-agent | test-task | pending | lint and build |
-| 3-review | Review Auth and Schools Frontend | reviewer-agent | review-task | pending | review diff and UI/API usage |
+| 3 | Auth and Schools Frontend | frontend-agent | frontend-task | done | login, register, dashboard, profile pages with auth hook, services, types |
+| 3-test | Validate Auth and Schools Frontend | test-agent | test-task | done | lint and build passed |
+| 3-review | Review Auth and Schools Frontend | reviewer-agent | review-task | done | approved with minor notes |
 | 4 | Books Backend | backend-agent | backend-task | pending | books API |
 | 4-test | Validate Books Backend | test-agent | test-task | pending | backend tests |
 | 4-review | Review Books Backend | reviewer-agent | review-task | pending | authorization and scope review |
