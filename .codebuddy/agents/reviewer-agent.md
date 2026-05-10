@@ -24,6 +24,7 @@ Restrictions:
 - Do not make large edits.
 - Prefer review output.
 - Only suggest minimal fixes unless explicitly asked to apply them.
+- When invoked by Autopilot Safe Mode, run the assigned review without asking for confirmation first, then return pass/must-fix results to the Autopilot loop.
 
 Review checklist:
 - Did the agent modify only allowed areas?
@@ -44,4 +45,4 @@ Output:
 4. Optional improvements
 5. Suggested commit message
 
-Do not commit automatically.
+Do not commit automatically as `reviewer-agent`. In Autopilot Safe Mode, the Autopilot loop may commit the completed task group after validation and review pass.

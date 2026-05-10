@@ -2,15 +2,33 @@
 
 This file defines which agent should execute each phase.
 
+## Execution Modes
+
+Normal manual mode:
+- agents execute only the assigned task
+- agents stop after review
+- human reviews and commits
+- the next task begins only after human instruction
+
+Autopilot Safe Mode:
+- starts only when the user explicitly requests it
+- is controlled by `.codebuddy/rules/09-autopilot-safe-mode.md`
+- executes one implementation task group at a time
+- runs matching `*-test` and `*-review` companion tasks automatically
+- commits completed task groups automatically when validation and review pass
+- continues to the next pending implementation task group without asking between steps
+
+All `Stop Rule` sections below apply to normal manual mode. In Autopilot Safe Mode, use `.codebuddy/rules/09-autopilot-safe-mode.md` instead.
+
 ## Core Rule For All Agents
 
 The full project plan is context only.
 
-Agents must execute only the assigned task.
+Agents must execute only the assigned task or active Autopilot task group.
 
-Agents must stop after completing the assigned task.
+Agents must stop after completing the assigned task in normal manual mode.
 
-Agents must not start the next task automatically.
+Agents must not start the next task automatically in normal manual mode.
 
 Every task must follow this workflow:
 
@@ -20,6 +38,8 @@ Every task must follow this workflow:
 4. Human reviews the output.
 5. Human commits the changes.
 6. Only then can the next task begin.
+
+In Autopilot Safe Mode, steps 4-6 are replaced by the automated validation, review, commit, and continuation rules in `.codebuddy/rules/09-autopilot-safe-mode.md`.
 
 ## Permission Scope Rules
 
@@ -33,7 +53,9 @@ Agents must not ask for approval file-by-file when editing files inside the allo
 
 Agents must not edit files outside the allowed scope.
 
-Agents must not commit automatically.
+Agents must not commit automatically in normal manual mode.
+
+Autopilot Safe Mode may commit completed task groups automatically when `.codebuddy/rules/09-autopilot-safe-mode.md` allows it.
 
 ### Required Task Header
 
@@ -69,13 +91,14 @@ Task: Update API documentation
 
 - Autopilot Safe Mode is defined in `.codebuddy/rules/09-autopilot-safe-mode.md`.
 - Autopilot uses `docs/TASK_STATUS.md` as the source of truth.
-- Autopilot reads task status and executes the first pending task.
-- Autopilot marks tasks in_progress before editing implementation files.
+- Autopilot reads task status and executes the first pending implementation task group.
+- Autopilot treats `*-test` and `*-review` rows as companion tasks for the implementation task.
+- Autopilot marks implementation, validation, and review rows in_progress/done as it runs them.
 - Autopilot follows `.codebuddy/rules/08-permission-scope.md`.
 - Autopilot stops if a task is blocked.
 - Autopilot does not modify forbidden files.
-- Autopilot may commit automatically when validation and review pass.
-- Each task must have its own commit.
+- Autopilot may commit a task group automatically when validation and review pass.
+- Each implementation task group must have its own commit.
 
 ## Available Agents
 
@@ -304,7 +327,7 @@ Check:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -387,7 +410,7 @@ Check:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -463,7 +486,7 @@ Check:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -534,7 +557,7 @@ Check:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -591,7 +614,7 @@ Check:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -664,7 +687,7 @@ Check:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -723,7 +746,7 @@ php artisan test
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -785,7 +808,7 @@ npm run build
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -830,7 +853,7 @@ Rules:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -871,7 +894,7 @@ Do not implement realtime yet.
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -903,7 +926,7 @@ Requirements:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -942,7 +965,7 @@ Create:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -972,7 +995,7 @@ Requirements:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -1010,7 +1033,7 @@ Create:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -1034,7 +1057,7 @@ Implement flashcards backend API.
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -1069,7 +1092,7 @@ Create:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -1097,7 +1120,7 @@ Endpoints:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -1133,7 +1156,7 @@ Do not build full admin UI yet.
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -1171,7 +1194,7 @@ Requirements:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.
 
 ---
 
@@ -1218,4 +1241,4 @@ Requirements:
 
 ## Stop Rule
 
-After review, stop and wait for human commit.
+Normal manual mode: after review, stop and wait for human commit.

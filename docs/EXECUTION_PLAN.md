@@ -4,9 +4,11 @@
 
 The full plan is context.
 
-The agent must only execute the currently assigned phase.
+The agent must only execute the currently assigned phase or active Autopilot task group.
 
-After each phase, the agent must stop and wait for human review.
+After each phase, the agent must stop and wait for human review in normal manual mode.
+
+When the user explicitly starts Autopilot Safe Mode, `.codebuddy/rules/09-autopilot-safe-mode.md` overrides normal manual-mode stop rules.
 
 ## Permission Scope Rules
 
@@ -20,7 +22,9 @@ Agents must not ask for approval file-by-file when editing files inside the allo
 
 Agents must not edit files outside the allowed scope.
 
-Agents must not commit automatically.
+Agents must not commit automatically in normal manual mode.
+
+Autopilot Safe Mode may commit completed task groups automatically when validation and review pass.
 
 ### Required Task Header
 
@@ -54,7 +58,7 @@ Task: Update API documentation
 
 ## Agent Workflow
 
-For every phase:
+For every phase in normal manual mode:
 
 1. `planner-agent` can be used to produce a short plan if the phase is complex.
 2. Implementation is done by the specified agent:
@@ -67,9 +71,11 @@ For every phase:
 5. Human reviews and commits.
 6. No agent may start the next phase automatically.
 
+In Autopilot Safe Mode, validation and review are companion tasks inside the active task group, and Autopilot may continue to the next pending implementation task group without asking between steps.
+
 ## Execution Workflow
 
-For every phase:
+For every phase in normal manual mode:
 
 1. Read AGENTS.md
 2. Read CODEBUDDY.md
@@ -83,6 +89,8 @@ For every phase:
 10. Stop
 
 ## Human Review Workflow
+
+This workflow applies to normal manual mode. In Autopilot Safe Mode, validation, review, status updates, commit, and continuation are handled by `.codebuddy/rules/09-autopilot-safe-mode.md`.
 
 After every phase, the human should run:
 
@@ -315,7 +323,7 @@ Autopilot Safe Mode is defined in `.codebuddy/rules/09-autopilot-safe-mode.md`.
 
 Autopilot uses `docs/TASK_STATUS.md` as the source of truth.
 
-Autopilot can execute the first pending task, validate it, review it, mark it done, commit it, and continue.
+Autopilot can execute the first pending implementation task group, validate it, review it, mark the implementation/test/review rows done, commit the task group, and continue.
 
 Autopilot must follow `.codebuddy/rules/08-permission-scope.md`.
 
@@ -327,4 +335,4 @@ Autopilot must not perform destructive operations.
 
 Autopilot may commit automatically only when validation and review pass.
 
-Each task must have its own commit.
+Each implementation task group must have its own commit.

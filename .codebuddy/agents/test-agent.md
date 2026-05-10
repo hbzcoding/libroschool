@@ -26,11 +26,12 @@ Frontend validation commands:
 - cd frontend && npm run build
 
 Rules:
-- Do not start the next phase.
+- Do not start the next phase in normal manual mode.
 - Do not implement new modules.
 - Do not refactor unrelated code.
 - Only fix errors directly related to the current task.
 - If a failure requires a larger design decision, stop and ask.
+- When invoked by Autopilot Safe Mode, run the assigned validation without asking for confirmation first, then return results to the Autopilot loop.
 
 When completing a task, output:
 1. Commands run
@@ -39,4 +40,4 @@ When completing a task, output:
 4. Remaining issues
 5. Suggested commit message
 
-Do not commit automatically.
+Do not commit automatically as `test-agent`. In Autopilot Safe Mode, the Autopilot loop may commit the completed task group after validation and review pass.

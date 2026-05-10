@@ -10,13 +10,16 @@ Autopilot Safe Mode allows agents to continue executing project tasks from `docs
 
 The goal is to reduce human intervention while keeping the project safe.
 
+When the user explicitly starts Autopilot Safe Mode, this file overrides the normal manual-mode stop rules in `docs/AGENT_TASKS.md`, `docs/EXECUTION_PLAN.md`, and `.codebuddy/rules/08-permission-scope.md`.
+
 Autopilot may:
-- execute the next pending task
+- execute the next pending implementation task group
 - update task status
 - run relevant tests
 - fix small task-related errors
 - commit completed tasks
-- continue to the next pending task
+- continue to the next pending implementation task group
+- run the matching validation and review steps without asking for human approval between steps
 
 Autopilot must not:
 - bypass permission scopes
@@ -26,6 +29,7 @@ Autopilot must not:
 - hide failures
 - continue after repeated failures
 - continue when product decisions are required
+- ask for confirmation between implementation, validation, review, status update, commit, and the next task unless a blocking condition is reached
 
 ---
 
@@ -67,15 +71,15 @@ or
 Autopilot must:
 
 1. Read `docs/TASK_STATUS.md`.
-2. Find the first task with status `pending`.
-3. Execute only that task.
-4. Mark the task as `in_progress` before changing implementation files.
-5. Complete the task.
-6. Run the correct validation.
-7. Run review if required.
-8. If successful, mark the task as `done`.
-9. Commit the completed task.
-10. Continue to the next pending task.
+2. Find the first pending implementation task group.
+3. Execute only that task group.
+4. Mark the implementation task as `in_progress` before changing implementation files.
+5. Complete the implementation task and mark the implementation row `done`.
+6. Mark the matching validation task as `in_progress`, run the correct validation, and mark the validation row `done` if it passes.
+7. Mark the matching review task as `in_progress`, run review if the review task exists, and mark the review row `done` if it passes.
+8. If successful, the implementation, validation, and review rows for the task group must all be `done`.
+9. Commit the completed task group.
+10. Continue to the next pending implementation task group.
 
 ---
 
@@ -91,10 +95,43 @@ blocked
 ```
 
 Rules:
-- Only one task may be `in_progress` at a time.
+- Only one task row may be `in_progress` at a time.
 - A task marked `done` must not be executed again.
 - A task marked `blocked` must not be skipped silently.
 - If a task is blocked, Autopilot must stop.
+
+---
+
+# Task Group Rule
+
+Autopilot executes task groups, not isolated validation or review rows.
+
+A task group is:
+
+```text
+<task-id>         implementation task
+<task-id>-test    validation companion task, when present
+<task-id>-review  review companion task, when present
+```
+
+Example:
+
+```text
+4         Books Backend
+4-test    Validate Books Backend
+4-review  Review Books Backend
+```
+
+Autopilot must:
+- treat `*-test` and `*-review` rows as companion bookkeeping rows for the implementation task
+- run companion validation and review automatically after implementation
+- keep only the currently executing row as `in_progress`
+- mark companion rows `in_progress` and `done` as part of the same task group
+- not ask the user whether to start `*-test` or `*-review`
+- not commit separately for `*-test` or `*-review`
+- continue to the next pending implementation task group after the current group passes
+
+If Autopilot starts and the first pending row is a companion row because the implementation row is already done, it may complete that companion row and any remaining companion rows for the same task group, then continue.
 
 ---
 
@@ -220,6 +257,8 @@ It must not:
 
 After each implementation task, Autopilot must run the relevant validation.
 
+Autopilot must not ask the user for confirmation before running the validation companion task. The user's Autopilot command is permission to run validation commands that are allowed by this file and `.codebuddy/rules/08-permission-scope.md`.
+
 Backend validation:
 
 ```bash
@@ -260,6 +299,8 @@ Autopilot must not perform broad refactors to fix a local failure.
 
 If the task has a corresponding review task, Autopilot should run it after validation.
 
+Autopilot must not ask the user for confirmation before running the review companion task. The review task is part of the active task group.
+
 Reviewer must check:
 - scope compliance
 - security risks
@@ -280,14 +321,14 @@ If reviewer reports `must-fix` issues:
 
 # Commit Rule
 
-Autopilot may commit automatically only when:
+Autopilot may commit a task group automatically only when:
 
-1. The task is complete.
-2. Validation passed, or the task is docs-only and does not require code validation.
-3. Review passed, if a review task exists.
+1. The implementation task is complete.
+2. Validation passed, or the task group is docs-only and does not require code validation.
+3. Review passed, if a review companion task exists.
 4. No forbidden files were modified.
 5. No secrets are present.
-6. The task status has been updated to `done`.
+6. The implementation, validation, and review rows for the task group have been updated to `done`.
 
 Commit format:
 
@@ -299,13 +340,14 @@ Examples:
 
 ```text
 Task 1: Database Foundation
-Task 1-test: Validate Database Foundation
-Task 1-review: Review Database Foundation
+Task 4: Books Backend
 ```
 
-Each task must have its own commit.
+Each implementation task group must have its own commit.
 
-Do not combine multiple unrelated tasks into one commit.
+Do not create separate commits for validation and review companion rows.
+
+Do not combine multiple implementation task groups into one commit.
 
 ---
 
@@ -335,14 +377,14 @@ When blocked, Autopilot must write the reason in `docs/TASK_STATUS.md`.
 Autopilot loop:
 
 1. Read task status.
-2. Find first pending task.
-3. Mark it in_progress.
+2. Find the first pending implementation task group.
+3. Mark the implementation task in_progress.
 4. Execute it with declared agent and scope.
-5. Validate.
-6. Review if applicable.
-7. Mark done.
-8. Commit.
-9. Move to next pending task.
+5. Mark the implementation row done, then mark the validation companion task in_progress and validate.
+6. Mark the validation row done, then mark the review companion task in_progress and review if applicable.
+7. Mark the review row done when review passes.
+8. Commit the task group.
+9. Move to the next pending implementation task group.
 10. Continue until:
    - no pending tasks remain
    - a task becomes blocked
@@ -351,12 +393,12 @@ Autopilot loop:
 
 ---
 
-# Output After Each Task
+# Output After Each Task Group
 
-After each task, Autopilot must output:
+After each task group, Autopilot must output:
 
 ```text
-Completed Task:
+Completed Task Group:
 Status:
 Changed files:
 Validation:

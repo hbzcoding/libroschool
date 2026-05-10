@@ -11,12 +11,12 @@ Status values:
 
 ## Core Rules
 
-1. Only one task may be `in_progress` at a time.
-2. Agents must execute only the first `pending` task unless the user explicitly specifies another task.
+1. Only one task row may be `in_progress` at a time.
+2. In normal manual mode, agents must execute only the first `pending` task unless the user explicitly specifies another task.
 3. After implementation, validation must run.
 4. After validation, review must run when a review task exists.
-5. A task can be marked `done` only after implementation, validation, and review are complete.
-6. Agents may automatically commit completed tasks only when validation and review pass.
+5. A task group is complete only after implementation, validation, and review companion rows are all `done`.
+6. Autopilot may automatically commit completed task groups only when validation and review pass.
 7. Agents must stop if a task becomes `blocked`.
 8. Agents must not edit forbidden files listed in `.codebuddy/rules/08-permission-scope.md`.
 9. Agents must follow `.codebuddy/rules/09-autopilot-safe-mode.md`.
@@ -26,6 +26,8 @@ Status values:
 Task IDs in this table are the execution source of truth for Autopilot.
 
 `docs/EXECUTION_PLAN.md` uses high-level phase numbers. Those phase numbers are contextual and do not replace the task IDs below.
+
+Rows ending in `-test` and `-review` are companion rows for the implementation task with the same base ID. In Autopilot Safe Mode, they must run automatically as part of the same task group and must not require separate user confirmation.
 
 | Task | Name | Implementation Agent | Scope | Status | Notes |
 |---|---|---|---|---|---|
@@ -107,14 +109,14 @@ or:
 Autopilot must:
 
 1. Read this file.
-2. Find the first task with status `pending`.
-3. Mark it `in_progress`.
-4. Execute only that task using the declared agent and scope.
-5. Validate the task.
-6. Review the task if applicable.
-7. If successful, mark it `done`.
-8. Commit it using the format: `Task <task-id>: <task-name>`.
-9. Continue to the next pending task.
+2. Find the first pending implementation task group.
+3. Mark the implementation row `in_progress`.
+4. Execute only that implementation task using the declared agent and scope.
+5. Mark the implementation row `done`, then mark the matching `*-test` row `in_progress` and validate the task.
+6. Mark the `*-test` row `done`, then mark the matching `*-review` row `in_progress` and review the task if applicable.
+7. If successful, mark the `*-review` row `done` so the implementation, validation, and review rows are all `done`.
+8. Commit the task group using the format: `Task <task-id>: <task-name>`.
+9. Continue to the next pending implementation task group without asking between implementation, validation, review, commit, and continuation.
 10. Stop only when:
    - no pending tasks remain
    - a task becomes blocked

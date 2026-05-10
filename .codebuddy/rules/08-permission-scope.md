@@ -28,9 +28,11 @@ If a task declares a scope, the agent may directly create, modify, or overwrite 
 
 The agent must not modify files outside the allowed scope.
 
-Agents must not start the next task automatically.
+Agents must not start the next task automatically in normal manual mode.
 
 Agents must not commit automatically unless the user explicitly says so.
+
+Explicitly starting Autopilot Safe Mode counts as permission for the automation defined in `.codebuddy/rules/09-autopilot-safe-mode.md`: Autopilot may run companion validation and review tasks, update task statuses, commit completed task groups, and continue to the next pending implementation task group without asking between steps.
 
 ---
 
@@ -179,7 +181,8 @@ Rules:
 * All list endpoints must be paginated.
 * Important permissions must be enforced on backend.
 * Add or update backend tests for important behavior.
-* Do not start the next task automatically.
+* Do not start the next task automatically in normal manual mode.
+* In Autopilot Safe Mode, follow `.codebuddy/rules/09-autopilot-safe-mode.md` for automatic validation, review, commit, and continuation.
 
 ---
 
@@ -237,7 +240,8 @@ Rules:
 * Use shadcn/ui.
 * Use React Hook Form and Zod for forms where appropriate.
 * UI must be mobile-first, simple, clean, and card-based.
-* Do not start the next task automatically.
+* Do not start the next task automatically in normal manual mode.
+* In Autopilot Safe Mode, follow `.codebuddy/rules/09-autopilot-safe-mode.md` for automatic validation, review, commit, and continuation.
 
 ---
 
@@ -356,10 +360,11 @@ Rules:
 * Run or guide relevant commands.
 * Fix only issues directly related to the current task.
 * Do not implement new modules.
-* Do not start the next task.
+* Do not start the next task in normal manual mode.
+* In Autopilot Safe Mode, run validation without asking for confirmation and return results to the Autopilot loop.
 * Do not perform broad refactors.
 * If a fix requires a design decision, stop and ask the user.
-* Do not commit automatically.
+* Do not commit automatically as `test-agent`; Autopilot may commit the completed task group after validation and review pass.
 
 Validation commands:
 
@@ -413,7 +418,8 @@ Rules:
 * Review by default.
 * Do not implement new features.
 * Do not make broad edits.
-* Do not start the next task.
+* Do not start the next task in normal manual mode.
+* In Autopilot Safe Mode, run review without asking for confirmation and return pass/must-fix results to the Autopilot loop.
 * Output must-fix issues separately from optional improvements.
 * If asked to fix something, only apply minimal fixes.
 
@@ -504,7 +510,7 @@ Task: Review Task 1 Diff
 
 # Commit Rule
 
-Agents must not commit automatically.
+Agents must not commit automatically in normal manual mode.
 
 They may suggest a commit message.
 
@@ -513,3 +519,5 @@ Only the human user commits unless the user explicitly says:
 ```text
 You may commit this change.
 ```
+
+or explicitly starts Autopilot Safe Mode. In Autopilot Safe Mode, `.codebuddy/rules/09-autopilot-safe-mode.md` controls automatic commits for completed task groups.
